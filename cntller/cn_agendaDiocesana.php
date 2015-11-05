@@ -1,10 +1,10 @@
 <?php 
-include("../clases/claAgenda.php");
+include("../clases/claAgendaDiocesana.php");
 session_start();
 if(array_key_exists('txtOperacion',$_POST))
 {
 	$laForm=$_POST;
-	$lobj_Tip= new claAgenda();
+	$lobj_Tip= new claAgendaDiocesana();
 	$lobj_Tip->f_SetsForm($laForm);
 }
 

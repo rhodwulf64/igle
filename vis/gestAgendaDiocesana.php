@@ -17,7 +17,7 @@
 	require_once("../clases/clsFuncionesGlobales.php");
 	$loFuncion = new clsFunciones;
 	$lobj_Calendario= new cls_Calendario();
-	$lobj_Calendario->Cargar('1'); //el numero 1 corresponde al tipo de Agenda, en este caso Diocesana
+	$lobj_Calendario->Cargar('tagendadiocesana'); //el nombre de la tabla agenda
 	$la_Campos=$_SESSION["Campos"];
 	unset($_SESSION["Campos"]);
 	$ano=$_GET["CalendarioA"];

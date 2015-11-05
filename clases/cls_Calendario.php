@@ -12,42 +12,47 @@ class  cls_Calendario extends  clsDatos{
 		public function __destruct()
 		{
 		}
-		public function Cargar($tipoAgenda){
+		public function Cargar($tabla){
 			$lii=0;
 			$ls_Sql="SELECT 
 			tage.codigoAgenda,
-			tage.codigo_actividad,
-			tage.fecha_actividad,
-			tage.hora_actividad,
-			DATE_FORMAT(tage.hora_actividad,'%h:%i %p') AS HoraExacta,
-			tage.codigo_pastoral,
+			tage.idFcodigo_actividad,
+			tage.fecha_act_Inicio,
+			tage.hora_act_Inicio,
+			tage.fecha_act_Fin,
+			tage.hora_act_Fin,
+			DATE_FORMAT(tage.hora_act_Inicio,'%h:%i %p') AS HoraExactaInicio,
+			DATE_FORMAT(tage.hora_act_Fin,'%h:%i %p') AS HoraExactaFin,
+			tage.idFcodigo_pastoral,
 			tage.lugar,
-			tage.codigo_grupo,
-			tage.idtipo,
+			tage.idFcodigo_grupo,
 			tage.FechaRegistro,
+			tage.EstadoAgenda,
 			tage.Estatus AS Agenda_Estatus,
 			tacti.codigoActividad,
 			tacti.nombre,
 			tacti.tipo_actividad,
 			tacti.Estatus AS Actividad_Estatus 
-			FROM tagenda AS tage 
-			LEFT JOIN tactividad AS tacti ON tage.codigo_actividad = tacti.codigoActividad 
-			WHERE tage.idtipo='".$tipoAgenda."'";							
+			FROM ".$tabla." AS tage 
+			LEFT JOIN tactividad AS tacti ON tage.idFcodigo_actividad = tacti.codigoActividad";							
 			$this->fpConectar();																								
 			$lr_Tabla=$this->frFiltro($ls_Sql);																			
 			while($la_Tupla=$this->faProximo($lr_Tabla)){		
 				$this->aa_Eventos[$lii]["Codigo"]=$la_Tupla["codigoAgenda"];
-				$this->aa_Eventos[$lii]["Actividad"]=$la_Tupla["codigo_actividad"];
-				$this->aa_Eventos[$lii]["Fecha_Ini"]=$la_Tupla["fecha_actividad"];
-				$this->aa_Eventos[$lii]["Hora_Ini"]=$la_Tupla["hora_actividad"];
-				$this->aa_Eventos[$lii]["HoraExacta"]=$la_Tupla["HoraExacta"];
-				$this->aa_Eventos[$lii]["codigoPastoral"]=$la_Tupla["codigo_pastoral"];
+				$this->aa_Eventos[$lii]["Actividad"]=$la_Tupla["idFcodigo_actividad"];
+				$this->aa_Eventos[$lii]["Fecha_Ini"]=$la_Tupla["fecha_act_Inicio"];
+				$this->aa_Eventos[$lii]["Hora_Ini"]=$la_Tupla["hora_act_Inicio"];
+				$this->aa_Eventos[$lii]["Hora_Fin"]=$la_Tupla["fecha_act_Fin"];
+				$this->aa_Eventos[$lii]["Hora_Fin"]=$la_Tupla["hora_act_Fin"];
+				$this->aa_Eventos[$lii]["HoraExacta"]=$la_Tupla["HoraExactaInicio"];
+				$this->aa_Eventos[$lii]["HoraExactaFin"]=$la_Tupla["HoraExactaFin"];
+				$this->aa_Eventos[$lii]["codigoPastoral"]=$la_Tupla["idFcodigo_pastoral"];
 				$this->aa_Eventos[$lii]["lugar_enc"]=$la_Tupla["lugar"];
-				$this->aa_Eventos[$lii]["codigoGrupo"]=$la_Tupla["codigo_grupo"];
-				$this->aa_Eventos[$lii]["idtipo"]=$la_Tupla["idtipo"];
+				$this->aa_Eventos[$lii]["codigoGrupo"]=$la_Tupla["idFcodigo_grupo"];
 				$this->aa_Eventos[$lii]["FechaRegistro"]=$la_Tupla["FechaRegistro"];
 				$this->aa_Eventos[$lii]["Nombre"]=$la_Tupla["nombre"];
 				$this->aa_Eventos[$lii]["tipo_acti"]=$la_Tupla["tipo_actividad"];
+				$this->aa_Eventos[$lii]["EstadoAgenda"]=$la_Tupla["EstadoAgenda"];
 				$this->aa_Eventos[$lii]["Agenda_Estatus"]=$la_Tupla["Agenda_Estatus"];
 				$this->aa_Eventos[$lii]["Actividad_Estatus"]=$la_Tupla["Actividad_Estatus"];
 				$this->aa_Eventos[$lii]["Color"]="ff0000";

@@ -1,6 +1,6 @@
 <?php
 include_once("clsDatos.php");
-class  claAgenda extends  clsDatos{
+class  claAgendaDiocesana extends  clsDatos{
 		private $aa_Form;
 		private $as_Cadena;
 
@@ -27,7 +27,7 @@ class  claAgenda extends  clsDatos{
 	/************************ Funcion Guardar   ***************************************************************************/
 	/* Se encarga de volcado de los datos en la base de datos															  */
 	/**********************************************************************************************************************/
-		public function fpIncluirActividad($idTipoAgenda){		
+		public function fpIncluirActividad($EstadoAgenda){		
 
 			$lbHecho=false;
 			$this->fpConectar();																								
@@ -64,14 +64,14 @@ class  claAgenda extends  clsDatos{
 				$IDTActividadIngresado=$this->aa_Form['Actividad'];
 			}
 
-				$lsSql="INSERT INTO tagenda (
-				codigo_actividad,
-				fecha_actividad,
-				hora_actividad,
-				codigo_pastoral,
+				$lsSql="INSERT INTO tagendadiocesana (
+				idFcodigo_actividad,
+				fecha_act_Inicio,
+				hora_act_Inicio,
+				idFcodigo_pastoral,
 				lugar,
-				codigo_grupo,
-				idtipo
+				idFcodigo_grupo,
+				EstadoAgenda
 				) VALUES (
 				'$IDTActividadIngresado',
 				'".$this->aa_Form['Fecha_Ini']."',
@@ -79,7 +79,7 @@ class  claAgenda extends  clsDatos{
 				".$nuloPastoral.",
 				'".$this->aa_Form['Lugar_enc']."',
 				".$nuloGrupo.",
-				'".$idTipoAgenda."')";
+				'".$EstadoAgenda."')";
 
 																			
 				$lbHecho=$this->fbEjecutarNoDie($lsSql);															
@@ -88,7 +88,7 @@ class  claAgenda extends  clsDatos{
 			return $lbHecho;																								
 		}			
 
-		public function fpModificarActividad($idTipoAgenda){		
+		public function fpModificarActividad($EstadoAgenda){		
 
 			$lbHecho=false;
 			$this->fpConectar();																								
@@ -125,14 +125,14 @@ class  claAgenda extends  clsDatos{
 				$IDTActividadIngresado=$this->aa_Form['Actividad'];
 			}
 
-				$lsSql="UPDATE tagenda SET 
-				codigo_actividad='$IDTActividadIngresado', 
-				fecha_actividad='".$this->aa_Form['Fecha_Ini']."', 
-				hora_actividad='".$this->aa_Form['Hora_Ini']."', 
-				codigo_pastoral=".$nuloPastoral.", 
+				$lsSql="UPDATE tagendadiocesana SET 
+				idFcodigo_actividad='$IDTActividadIngresado', 
+				fecha_act_Inicio='".$this->aa_Form['Fecha_Ini']."', 
+				hora_act_Inicio='".$this->aa_Form['Hora_Ini']."', 
+				idFcodigo_pastoral=".$nuloPastoral.", 
 				lugar='".$this->aa_Form['Lugar_enc']."', 
-				codigo_grupo=".$nuloGrupo.", 
-				idtipo='".$idTipoAgenda."' 
+				idFcodigo_grupo=".$nuloGrupo.", 
+				EstadoAgenda='".$EstadoAgenda."' 
 				WHERE  codigoAgenda='".$this->aa_Form['Codigo']."'";
 																			
 				$lbHecho=$this->fbEjecutarNoDie($lsSql);															
@@ -156,7 +156,7 @@ class  claAgenda extends  clsDatos{
 					break;
 			}
 			$lbHecho=false;																									
-			$lsSql="UPDATE tagenda SET 
+			$lsSql="UPDATE tagendadiocesana SET 
 				Estatus='".$variControl."' 
 				WHERE  codigoAgenda='".$this->aa_Form['Codigo']."'";
 
@@ -169,21 +169,21 @@ class  claAgenda extends  clsDatos{
 
 		
 
-		public function faListarActividades($tipoAgenda,$Reporte_FechaInicio,$Reporte_FechaFin)
+		public function faListarActividades($EstadoAgendaMostrar,$Reporte_FechaInicio,$Reporte_FechaFin)
 		{
 
 			$lsSql="SELECT 
 			tage.codigoAgenda,
-			tage.codigo_actividad,
-			tage.fecha_actividad,
-			date_format(tage.fecha_actividad,'%Y') AS Calendario_Anno,
-			date_format(tage.fecha_actividad,'%m') AS Calendario_Mes,
-			tage.hora_actividad,
-			DATE_FORMAT(tage.hora_actividad,'%h:%i %p') AS HoraExacta,
-			tage.codigo_pastoral,
+			tage.idFcodigo_actividad,
+			tage.fecha_act_Inicio,
+			date_format(tage.fecha_act_Inicio,'%Y') AS Calendario_Anno,
+			date_format(tage.fecha_act_Inicio,'%m') AS Calendario_Mes,
+			tage.hora_act_Inicio,
+			DATE_FORMAT(tage.hora_act_Inicio,'%h:%i %p') AS HoraExacta,
+			tage.idFcodigo_pastoral,
 			tage.lugar,
-			tage.codigo_grupo,
-			tage.idtipo,
+			tage.idFcodigo_grupo,
+			tage.EstadoAgenda,
 			tage.FechaRegistro,
 			tage.Estatus AS Agenda_Estatus,
 			tacti.codigoActividad,
@@ -206,13 +206,13 @@ class  claAgenda extends  clsDatos{
 			tgrup.vision AS Grupo_Vision,
 			tgrup.FechaRegistroGrupo AS Grupo_FechaRegistro,
 			tgrup.Estatus AS Grupo_Estatus
-			FROM tagenda AS tage 
-			LEFT JOIN tactividad AS tacti ON tage.codigo_actividad = tacti.codigoActividad 
+			FROM tagendadiocesana AS tage 
+			LEFT JOIN tactividad AS tacti ON tage.idFcodigo_actividad = tacti.codigoActividad 
 			INNER JOIN tipo_actividad AS tipoAc ON tacti.tipo_actividad = tipoAc.idtipo_actividad 
-			LEFT JOIN tpastoral AS tpast ON tage.codigo_pastoral = tpast.codigoPastoral 
-			LEFT JOIN tgrupo AS tgrup ON tage.codigo_grupo = tgrup.codigoGrupo 
-			WHERE tage.idtipo='".$tipoAgenda."' AND tage.fecha_actividad >= '$Reporte_FechaInicio' AND tage.fecha_actividad <= '$Reporte_FechaFin'
-			ORDER BY tage.fecha_actividad,tage.hora_actividad";
+			LEFT JOIN tpastoral AS tpast ON tage.idFcodigo_pastoral = tpast.codigoPastoral 
+			LEFT JOIN tgrupo AS tgrup ON tage.idFcodigo_grupo = tgrup.codigoGrupo 
+			WHERE tage.EstadoAgenda='".$EstadoAgendaMostrar."' AND tage.fecha_act_Inicio >= '$Reporte_FechaInicio' AND tage.fecha_act_Inicio <= '$Reporte_FechaFin'
+			ORDER BY tage.fecha_actividad,tage.hora_act_Inicio";
 
 			$laMatriz=array();
 			$this->fpConectar();
@@ -221,16 +221,16 @@ class  claAgenda extends  clsDatos{
 			while($laArreglo=$this->faProximo($lrTb))
 			{
 				$laMatriz[$liI]["codigoAgenda"]=$laArreglo["codigoAgenda"];
-				$laMatriz[$liI]["codigo_actividad"]=$laArreglo["codigo_actividad"];
-				$laMatriz[$liI]["fecha_actividad"]=$laArreglo["fecha_actividad"];
+				$laMatriz[$liI]["idFcodigo_actividad"]=$laArreglo["idFcodigo_actividad"];
+				$laMatriz[$liI]["fecha_act_Inicio"]=$laArreglo["fecha_act_Inicio"];
 				$laMatriz[$liI]["Calendario_Anno"]=$laArreglo["Calendario_Anno"];
 				$laMatriz[$liI]["Calendario_Mes"]=$laArreglo["Calendario_Mes"];
-				$laMatriz[$liI]["hora_actividad"]=$laArreglo["hora_actividad"];
+				$laMatriz[$liI]["hora_act_Inicio"]=$laArreglo["hora_act_Inicio"];
 				$laMatriz[$liI]["HoraExacta"]=$laArreglo["HoraExacta"];
-				$laMatriz[$liI]["codigo_pastoral"]=$laArreglo["codigo_pastoral"];
+				$laMatriz[$liI]["codigo_pastoral"]=$laArreglo["idFcodigo_pastoral"];
 				$laMatriz[$liI]["lugar"]=$laArreglo["lugar"];
-				$laMatriz[$liI]["codigo_grupo"]=$laArreglo["codigo_grupo"];
-				$laMatriz[$liI]["idtipo"]=$laArreglo["idtipo"];
+				$laMatriz[$liI]["codigo_grupo"]=$laArreglo["idFcodigo_grupo"];
+				$laMatriz[$liI]["EstadoAgenda"]=$laArreglo["EstadoAgenda"];
 				$laMatriz[$liI]["FechaRegistro"]=$laArreglo["FechaRegistro"];
 				$laMatriz[$liI]["Agenda_Estatus"]=$laArreglo["Agenda_Estatus"];
 				$laMatriz[$liI]["codigoActividad"]=$laArreglo["codigoActividad"];
