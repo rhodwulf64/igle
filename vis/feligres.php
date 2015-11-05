@@ -36,7 +36,7 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-		<title>'.$_SESSION['title'].' - Inscripción de '.$objetivo.'</title>
+		<title>'.$_SESSION['title'].' - Registro de '.$objetivo.'</title>
 
 	');
 			print(encabezado_menu("../"));

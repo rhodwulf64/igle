@@ -25,7 +25,7 @@ echo utf8_Decode('
 <!DOCTYPE html>
 <html lang="es">
   <head>
-<title>'.$_SESSION["title"].' - Bienvenido</title>
+<title>'.$_SESSION["title"].' - Bienvenidos</title>
 
 <style>
 
