@@ -1,0 +1,506 @@
+<html>
+	<head>
+				<link rel="stylesheet" href="../css/styles.css">
+				<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+				<script src="../jquery/script.js"></script>
+				<script type="text/javascript" src="javascript/sistema.js"></script>
+
+	</head>
+	<body>
+	<center>
+	<div class="formuRegistros">
+		<form name="fr_usuarios" action="" method="post" id="fr_usuarios">
+		<table id="tablaReg" border="1" class="Registros_tabla">
+		<tr>
+			<td colspan="2" align="center"><font class="Registros_tabla_titulo">Registro de Usuarios</font></td>
+		</tr>
+		<tr>
+			<td><font class="Registros_tabla_descripciones">Cedula del Usuario:</font></td>
+			<td><input type="text" name="f_cedula" id="f_cedula" class="Registros_tabla_campos" value="" onblur="fpPerderFocus(this.value)">
+			<p>Hola: <span id="muertralgo"></span></p>
+			</td>
+
+		</tr>
+		<tr>
+			<td><font class="Registros_tabla_descripciones">Nombres:</font></td>
+			<td><input type="text" name="f_nombres" id="f_nombres" class="Registros_tabla_campos" value="'.$lsNombre.'"></td>
+		</tr>		
+		<tr>
+			<td><font class="Registros_tabla_descripciones">Apellidos:</font></td>
+			<td><input type="text" name="f_apellidos" id="f_apellidos" class="Registros_tabla_campos" value="'.$lsApellido.'"></td>
+		</tr>
+		<tr>
+			<td><font class="Registros_tabla_descripciones">Sexo:</font></td>
+			<td><select name="f_sexo" id="Sexo" value=""><option value="N" '.$Nada.'><p><strong></strong></p></option><option value="F" '.$Fada.'><p><strong>F</strong></p></option><option value="M" '.$Mada.'><p><strong>M</strong></p></option></select></td>
+
+		</tr>
+		<tr>
+			<td><font class="Registros_tabla_descripciones">Dirección:</font></td>
+			<td><input type="text" name="f_direccion" id="f_direccion" class="Registros_tabla_campos" value="'.$lsDireccion.'"></td>
+		</tr>
+		<tr>
+			<td><font class="Registros_tabla_descripciones">Teléfono:</font></td>
+			<td><input type="text" name="f_telefono" id="f_telefono" class="Registros_tabla_campos" value="'.$lsTelefono.'"></td>
+		</tr>
+		<tr>
+			<td><font class="Registros_tabla_descripciones">Fecha de Nacimiento:</font></td>
+			<td><input type="date" name="f_fechaNac" id="f_fechaNac" class="Registros_tabla_campos" value="'.$lsFechaNaci.'"></td>
+		</tr>
+		<tr>
+			<td><font class="Registros_tabla_descripciones">Rol del Usuario:</font></td>
+			<td><select name="f_rolUser" id="f_rolUser" value=""><option value="N" '.$Nodo.'><p><strong></strong></p></option><option value="A" '.$Aodo.'><p><strong>Administrador</strong></p></option><option value="O" '.$Oodo.'><p><strong>Operador</strong></p></option><option value="S" '.$Sodo.'><p><strong>Sacerdote</strong></p></option></select></td>
+
+		</tr>
+		<tr>
+			<td><font class="Registros_tabla_descripciones">Contraseña:</font></td>
+			<td><input type="password" name="f_clavePri" id="f_clavePri" class="Registros_tabla_campos" value=""></td>
+		</tr>
+		<tr>
+			<td><font class="Registros_tabla_descripciones">Repita la Contraseña:</font></td>
+			<td><input type="password" name="f_claveSeg" id="f_claveSeg" class="Registros_tabla_campos" value=""></td>
+		</tr>
+		<tr>
+			<td><font class="Registros_tabla_descripciones">Pregunta de Seguridad:</font></td>
+			<td><input type="text" name="f_AskUser" id="f_AskUser" class="Registros_tabla_campos" value="'.$lsAskUser.'"></td>
+		</tr>
+		<tr>
+			<td><font class="Registros_tabla_descripciones">Respuesta de Seguridad:</font></td>
+			<td><input type="text" name="f_AnswerUser" id="f_AnswerUser" class="Registros_tabla_campos" value="'.$lsAnswerUser.'"></td>
+		</tr>
+			<tr>
+					<td colspan="2">
+
+					<input type="hidden" name="txtOperacion" id="txtOperacion" value="'.$lsOperacion.'">
+					<input type="hidden" name="txtHacer" id="txtHacer" value="'.$lsHacer.'">
+					<input type="hidden" name="txtHay" id="txtHay" value="'.$liHay.'">
+					<input type="hidden" name="KestadoActual" id="KestadoActual" value="'.$lsEstatus.'">
+					<input type="button" class="Registros_tabla_botones" name="b_Nuevo" value="Nuevo" onclick="fpNuevo()">
+					<input type="button" class="Registros_tabla_botones" name="b_Modificar" value="Modificar" onclick="fpModificar()">
+					<input type="button" class="Registros_tabla_botones" name="b_Buscar" value="Buscar" onclick="fpBuscar()">
+					<input type="button" class="Registros_tabla_botones" name="b_Eliminar" value="Desactivar" onclick="fpDesactivar()">
+					<input type="button" class="Registros_tabla_botones" name="b_Guardar" value="Guardar" onclick="fpGuardar()">
+					<input type="button" class="Registros_tabla_botones" name="b_Cancelar" value="Cancelar" onclick="fpCancelar()"></td>
+			</tr>
+		
+		</table>
+		</form>
+	</div>
+	</center>		
+
+
+
+
+	</body>
+	<script>
+	var loF=document.fr_usuarios;
+	function fpInicio()
+	{
+	
+			switch(loF.txtOperacion.value)
+			{
+				case "":
+					fpInicial();
+					loF.KestadoActual.value=1;
+					fpCancelar();
+					break;
+				case "buscar":
+					if(loF.txtHay.value==1)
+					{
+
+						fpCambioE();
+						fpApagar();
+
+					}
+					else
+					{
+						if (confirm("La cedula Ingresada No esta asignada a ningun usuario, desea registrarlo ahora?"))
+						{
+								loF.txtOperacion.value="incluir";
+								loF.txtHacer.value="buscar";
+								loF.f_cedula.focus();
+						}else{
+							fpCancelar();
+						}
+					}
+					break;
+				case "incluir":
+					if ((loF.txtHacer.value=="buscar")&&(loF.txtHay.value==2))
+					{
+						fpApagar();
+						alert("Ese Usuario ya se encuentra registrado");
+
+						fpCambioE();
+						
+					}
+					if ((loF.txtHacer.value=="buscar")&&(loF.txtHay.value==1))
+					{
+						fpCambioN();
+						fpEncenderUsuario();
+						loF.txtOperacion.value="incluir";
+						loF.txtHacer.value="incluir";
+						loF.txtHay.value=0;
+						loF.f_rolUser.focus();
+					}
+					if((loF.txtHacer.value=="buscar")&&(loF.txtHay.value==0))
+					{
+						loF.txtOperacion.value="incluir";
+						loF.txtHacer.value="incluir";
+						loF.txtHay.value=0;
+						fpCambioN();
+						fpEncender();
+						loF.f_cedula.disabled=true;
+						loF.f_nombres.focus();
+					}
+					if((loF.txtHacer.value=="incluir")&&(loF.txtHay.value==1))
+					{
+						fpCancelar();
+						alert("Usuario Incluido");
+						fpInicial();
+						loF.KestadoActual.value=1;
+						
+					}
+					if((loF.txtHacer.value=="incluir")&&(loF.txtHay.value==2))
+					{
+						fpCancelar();
+						alert("Registro No Incluido");
+						fpInicial();
+						loF.KestadoActual.value=1;
+						
+					}
+					break;
+				case "modificar":
+					if(loF.txtHay.value==1)
+					{
+						fpCancelar();
+						alert("Usuario Modificado");
+						fpInicial();
+						loF.KestadoActual.value=1;
+						
+					}
+					else if(loF.txtHay.value==2)
+					{
+						fpCancelar();
+						alert("Datos de Identidad Modificados");
+						fpInicial();
+						loF.KestadoActual.value=1;
+						
+					}
+					else
+					{
+						fpCancelar();
+						alert("No se modifico ningun Usuario");
+						fpInicial();
+						loF.KestadoActual.value=1;
+						
+					}
+					break;
+				case "eliminar":
+					if(loF.txtHay.value==1)
+					{
+						fpCancelar();
+						alert("Usuario Desactivado");
+						fpInicial();
+						loF.KestadoActual.value=1;
+						
+					}
+					else	
+					{
+						fpCancelar();
+						alert("No se pudo Desactivar el Usuario");
+						fpInicial();
+						loF.KestadoActual.value=1;
+						
+					}
+					break;
+				case "reactivar":
+					if(loF.txtHay.value==1)
+					{
+						fpCancelar();
+						alert("Usuario Reactivado");
+						fpInicial();
+						loF.KestadoActual.value=1;
+						
+					}
+					else	
+					{
+						fpCancelar();
+						alert("No se pudo Reactivar el Usuario");
+						fpInicial();
+						loF.KestadoActual.value=1;
+						
+					}
+					break;
+
+
+
+			}
+		}
+		
+		function fpNuevo()
+		{
+			fpCambioN();
+			fpEncender();
+			loF.txtOperacion.value="incluir";
+			loF.txtHacer.value="buscar";
+			loF.f_cedula.focus();
+		}
+		
+		function fpEncender()
+		{
+			loF.f_cedula.disabled=false;
+			loF.f_nombres.disabled=false;
+			loF.f_apellidos.disabled=false;
+			loF.f_sexo.disabled=false;
+			loF.f_direccion.disabled=false;
+			loF.f_telefono.disabled=false;
+			loF.f_fechaNac.disabled=false;
+			loF.f_rolUser.disabled=false;
+			loF.f_clavePri.disabled=false;
+			loF.f_claveSeg.disabled=false;
+			loF.f_AskUser.disabled=false;
+			loF.f_AnswerUser.disabled=false;
+		}
+		function fpEncenderUsuario()
+		{
+			loF.f_cedula.disabled=true;
+			loF.f_nombres.disabled=true;
+			loF.f_apellidos.disabled=true;
+			loF.f_sexo.disabled=true;
+			loF.f_direccion.disabled=true;
+			loF.f_telefono.disabled=true;
+			loF.f_fechaNac.disabled=true;
+			loF.f_rolUser.disabled=false;
+			loF.f_clavePri.disabled=false;
+			loF.f_claveSeg.disabled=false;
+			loF.f_AskUser.disabled=false;
+			loF.f_AnswerUser.disabled=false;
+		}
+		function fpApagar()
+		{
+			loF.f_cedula.disabled=true;
+			loF.f_nombres.disabled=true;
+			loF.f_apellidos.disabled=true;
+			loF.f_sexo.disabled=true;
+			loF.f_direccion.disabled=true;
+			loF.f_telefono.disabled=true;
+			loF.f_fechaNac.disabled=true;
+			loF.f_rolUser.disabled=true;
+			loF.f_clavePri.disabled=true;
+			loF.f_claveSeg.disabled=true;
+			loF.f_AskUser.disabled=true;
+			loF.f_AnswerUser.disabled=true;
+			fpEstadoActual();
+		}
+		
+		function fpCancelar()
+		{
+			loF.txtOperacion.value="";
+			loF.txtHacer.value="";
+			loF.txtHay.value=0;
+			loF.f_cedula.value="";
+			loF.f_nombres.value="";
+			loF.f_apellidos.value="";
+			loF.f_sexo.value="N";
+			loF.f_direccion.value="";
+			loF.f_telefono.value="";
+			loF.f_fechaNac.value="";
+			loF.f_rolUser.value="";
+			loF.f_clavePri.value="";
+			loF.f_claveSeg.value="";
+			loF.f_AskUser.value="";
+			loF.f_AnswerUser.value="";
+			fpApagar();
+			fpInicial();
+			loF.KestadoActual.value=1;
+		}
+		
+		function fpBuscar()
+		{
+			loF.txtOperacion.value="buscar";
+			loF.txtHacer.value="buscar";
+			loF.f_cedula.disabled=false;
+			fpCambioB();
+			loF.f_cedula.focus();
+		}
+		
+		function fpPerderFocus(cedulaUser)
+		{
+			if((loF.f_cedula.value!="")&&(loF.txtHacer.value=="buscar"))
+			{
+					
+
+					$("#fr_usuarios").submit(function(){
+
+										
+
+					$.ajax({
+						url: "../cntller/corUsuario.php",
+						dataType: "json",
+						type: "post",
+						data: $("#fr_usuarios").serialize(), success: function(data)
+          			{
+            		   alert(data);
+           			}
+
+ 						});
+
+					return false;
+
+				});
+
+			}
+			else
+			{
+				loF.f_cedula.focus();
+			}
+		}
+		
+		function fpGuardar()
+		{
+			if(fbValidar())
+			{
+				loF.f_cedula.disabled=false;
+				loF.submit();
+			}
+		}
+		
+		function fbValidar()
+		{
+			var lbValido=false;
+			
+			if(loF.f_cedula.value=="")
+			{
+				alert("Campo Cédula esta en Blanco");
+				loF.f_cedula.value="";
+				loF.f_cedula.focus();
+			}
+			else if(loF.f_nombres.value=="")
+			{
+				alert("Campo Nombre esta en Blanco");
+				loF.f_nombres.value="";
+				loF.f_nombres.focus();
+			}
+			else if(loF.f_apellidos.value=="")
+			{
+				alert("Campo Apellido esta en Blanco");
+				loF.f_apellidos.value="";
+				loF.f_apellidos.focus();
+			}
+			else if((loF.f_sexo.value=="N"))
+			{
+				alert("Sexo sin Seleccionar");
+				loF.f_sexo.focus();
+			}
+			else if((loF.f_direccion.value==""))
+			{
+				alert("Campo Direccion esta en Blanco");
+				loF.f_direccion.focus();
+			}
+			else if((loF.f_telefono.value==""))
+			{
+				alert("Campo Telefono esta en Blanco");
+				loF.f_telefono.focus();
+			}
+			else if(loF.f_fechaNac.value=="")
+			{
+				alert("Campo Fecha de Nacimiento esta en Blanco");
+				loF.f_fechaNac.value="";
+				loF.f_fechaNac.focus();
+			}
+			else if(loF.f_rolUser.value=="N")
+			{
+				alert("Rol sin Seleccionar");
+				loF.f_rolUser.value="N";
+				loF.f_rolUser.focus();
+			}
+			else if(loF.f_clavePri.value=="")
+			{
+				alert("Campo Contraseña esta en Blanco");
+				loF.f_clavePri.value="";
+				loF.f_clavePri.focus();
+			}
+			else if(loF.f_claveSeg.value=="")
+			{
+				alert("Campo Repita Contraseña esta en Blanco");
+				loF.f_claveSeg.value="";
+				loF.f_claveSeg.focus();
+			}
+			else if(loF.f_clavePri.value != loF.f_claveSeg.value)
+			{
+				alert("Las Claves ingresadas no coinciden");
+				loF.f_clavePri.value="";
+				loF.f_claveSeg.value="";
+				loF.f_clavePri.focus();
+			}
+			else if(loF.f_AskUser.value=="")
+			{
+				alert("Campo Pregunta de Seguridad esta en Blanco");
+				loF.f_AskUser.value="";
+				loF.f_AskUser.focus();
+			}
+			else if(loF.f_AnswerUser.value=="")
+			{
+				alert("Campo Respuesta de Seguridad esta en Blanco");
+				loF.f_AnswerUser.value="";
+				loF.f_AnswerUser.focus();
+			}
+			else
+			{
+				lbValido=true;
+			}
+			return lbValido;
+		}
+		
+		function fpModificar()
+		{
+			fpEncender();
+			fpCambioN();
+			loF.txtOperacion.value="modificar";
+			loF.txtHacer.value="modificar";
+			loF.f_cedula.disabled=true;
+			loF.f_nombres.focus();
+		}
+		
+		function fpEstadoActual()
+		{
+			var KedoActual=loF.KestadoActual.value;
+			if(KedoActual==1)
+			{
+				loF.b_Eliminar.value="Desactivar";
+			}
+			else
+			{
+				loF.b_Eliminar.value="Reactivar";
+			}
+			
+		}
+
+		function fpDesactivar()
+		{
+			if (loF.b_Eliminar.value=="Reactivar")
+			{
+				if(confirm("Desea Reactivar el Usuario?"))
+				{
+					loF.f_cedula.disabled=false;
+					loF.txtOperacion.value="reactivar";
+					loF.txtHacer.value="reactivar";
+					loF.submit();
+				}
+			}
+			else
+			{
+				if(confirm("Desea Desactivar el Usuario?"))
+				{
+					loF.f_cedula.disabled=false;
+					loF.txtOperacion.value="eliminar";
+					loF.txtHacer.value="eliminar";
+					loF.submit();
+				}
+			}
+		}
+
+
+
+</script>
+
+</html>

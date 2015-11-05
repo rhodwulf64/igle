@@ -1,0 +1,12 @@
+CREATE FUNCTION generoDescrip(val CHAR(1)) RETURNS VARCHAR(9)
+BEGIN
+        CASE val
+        
+        WHEN 'F' THEN
+            RETURN 'Femenino';
+        WHEN 'M' THEN
+            RETURN 'Masculino';
+        ELSE
+            RETURN 'Indefinido';
+        END CASE;
+END

@@ -1,0 +1,62 @@
+div#contendor_reporte{
+	margin:20px auto;
+	width:980px;
+}
+
+div#contendor_reporte table{
+	width:100%;
+}
+
+div#contendor_reporte table tr td{
+	padding:6px;
+
+
+	border: none;
+	border-collapse: collapse;
+
+}
+div#cabecera{
+	height: auto;
+	overflow: hidden;
+	margin:20px auto;
+}
+
+div#cabecera img{
+	width:120px;
+	height:120px;
+}
+div#cabecera img:first-child{
+	float:left;
+}
+div#cabecera img:last-child{
+	float:right;
+}
+div#cabecera h1{
+	display:inline-block;
+	width:720px;
+	margin:30px auto;
+	text-transform: uppercase;
+	text-align: center;
+	font-size:18px;
+	font-weight: bold;
+}
+div#fecha{
+	float:right;
+	padding:5px 0;
+	font-weight: bold;
+}
+div#tit{
+text-transform: uppercase;
+text-align: center;
+font-weight: bold;
+margin: 10px 0;
+}
+table#datos tr td{
+	text-align: center;
+}
+div#usuario{
+	margin:100px 80px;
+	font-weight: bold;
+	font-size: 12px;
+	float:left;
+}
