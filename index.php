@@ -173,21 +173,21 @@ echo utf8_decode('
 												<input type="hidden" class="btn btn-default" name="txtOperacion" id="txtOperacion" value="'.$lsOperacion.'">
 												<input type="hidden" class="btn btn-default" name="txtHacer" id="txtHacer" value="'.$lsHacer.'">
 												<input type="hidden" class="btn btn-default" name="txtHay" id="txtHay" value="'.$liHay.'">
-												<input type="submit" class="btn btn-dropbox" name="bsubmit" value="Entrar"><input type=button class="btn btn-vk" onClick="parent.location=\'vis/recuperar.php\'" value="¿Olvido Su Contraseña?">
+												<input type="submit" class="btn btn-dropbox" name="bsubmit" value="Entrar">  <input type=button class="btn btn-vk" onClick="parent.location=\'vis/recuperar.php\'" value="¿Olvido Su Contraseña?">
 		                        </div>
 		                    </div>
 
 							<div class="panel panel-warning">
 		                       	<div class="panel-heading">
-		                            Panel de Citas
+		                            Panel para Feligres
 		                        </div>
-		                        <div class="panel-body">
-		                            
-											
+		                        <div class="panel-body" align="justify">
+		                            Si aún no se ha registrado presione el botón "Registrar Nuevo Feligres", de esta manera podrá realizar las solicitudes que usted desee.
+										
 										
 		                        </div>
 		                        <div class="panel-footer">
-												<input type=button class="btn btn-vk" onClick="parent.location=\'vis/usuarioPublico.php\'" value="¿Solicitar Cita?">
+												<input type=button class="btn btn-vk" onClick="parent.location=\'vis/usuarioPublico.php\'" value="Registrar Nuevo Feligres">
 		                        </div>
 		                    </div>
 

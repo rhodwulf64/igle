@@ -459,6 +459,15 @@ function fpCreaReferencia(proxCamp,campoid,param)
 	}
 }
 
+function fpAvisaSeleccionar(valor)
+{
+	if (valor=="")
+	{
+		NotificaW("Debe presionar el boton \"Seleccionar\" antes de editar un elemento.");
+	}
+	
+}
+
 function consulta_ajax(url,parametros){
 	var http;
 

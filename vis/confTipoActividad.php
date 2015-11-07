@@ -45,23 +45,23 @@ echo utf8_Decode('
 				<tr colspan="2">
 					<th>
 						<center>
-							<div class="form-group has-default" id="haf_listarTipoActividad" style="width:400px;"><div class="on-focus clearfix" style="position: relative;"><font class="control-label">Seleccione Tipo de Actividad a Editar:</font><br><select name="f_listarTipoActividad" class="form-control" size="8" onchange="SeleccionaItem(this.value);" id="f_listarTipoActividad" value="">');
+							<div class="form-group has-default" onclick="fpAvisaSeleccionar(document.getElementById(\'KcodCombo\').value);" id="haf_listarTipoActividad" style="width:400px;"><div class="on-focus clearfix" style="position: relative;"><font class="control-label">Tipo de Actividad a Editar:</font><br><select title="Debe presionar el boton \'Seleccionar\' antes de editar un elemento."name="f_listarTipoActividad" class="form-control" size="8" onchange="SeleccionaItem(this.value);" id="f_listarTipoActividad" value="">');
 
 							echo utf8_decode($loFuncion->fncreateComboSelectConfDos("tipo_actividad","idtipo_actividad","nombre", $selecttipo_actividad)); 
 							echo utf8_Decode('
 							</select><div class="tool-tip  slideIn" id="ttipf_listarTipoActividad" style="display:none;"></div></div></div>
 							
-							<div class="form-group has-default" id="haKcodForaneo" style="width:200px;"><div class="on-focus clearfix" style="position: relative;">
+							<div class="form-group has-default" id="haf_descripcion" style="width:200px;"><div class="on-focus clearfix" style="position: relative;">
 							<font class="control-label">Nombre:</font>
-							<input type="text" id="KcodForaneo" name="KcodForaneo" class="form-control" onkeypress="vSoloLetras();" onblur="this.value=this.value.toUpperCase(); vCampoVacio(this.id);" value="">
-							<div class="tool-tip  slideIn" id="ttipKcodForaneo" style="display:none;"></div></div></div>
+							<input type="text" id="f_descripcion" name="f_descripcion" class="form-control" onkeypress="vSoloLetras();" onblur="this.value=this.value.toUpperCase(); vCampoVacio(this.id);" value="">
+							<div class="tool-tip  slideIn" id="ttipf_descripcion" style="display:none;"></div></div></div>
 						</center>
 					</th>
 				</tr>
 				<tr colspan="2">
 					<th><center>
 
-						<div class="form-group has-default" id="haf_descripcion" style="width:400px;"><div class="on-focus clearfix" style="position: relative;"><font class="control-label">Descripción:</font><input type="text" id="f_descripcion" name="f_descripcion" class="form-control" onkeypress="vSoloLetras();" onblur="this.value=this.value.toUpperCase(); vCampoVacio(this.id);" value=""><div class="tool-tip  slideIn" id="ttipf_descripcion" style="display:none;"></div></div></div>
+						<div class="form-group has-default" id="haKcodForaneo" style="width:400px;"><div class="on-focus clearfix" style="position: relative;"><font class="control-label">Descripción:</font><input type="text" id="KcodForaneo" name="KcodForaneo" class="form-control" onkeypress="vSoloLetras();" onblur="this.value=this.value.toUpperCase(); vCampoVacio(this.id);" value=""><div class="tool-tip  slideIn" id="ttipKcodForaneo" style="display:none;"></div></div></div>
 
 
 							</center>
@@ -81,7 +81,7 @@ echo utf8_Decode('
 			<th colspan="2"><center>
 					<input type="hidden" name="txtOperacion" id="txtOperacion" value="">
 					<input type="hidden" name="txtHay" id="txtHay" value="">
-					<input type="hidden" name="KcodCombo" value="">
+					<input type="hidden" name="KcodCombo" id="KcodCombo" value="">
 					<input type="hidden" name="KcharSelector" value="tipo_actividad">
 					<input type="hidden" name="KestadoActual" id="KestadoActual" value="">
 					<input type="button" class="btn btn-default" name="b_Nuevo" value="Nuevo" onclick="fpNuevo()">
@@ -115,11 +115,10 @@ echo utf8_Decode('
 		function fpNuevo()
 		{
 			fpCambioN();
-			loF.f_listarTipoActividad.disabled=false;
 			loF.KcodForaneo.disabled=false;
 			loF.f_descripcion.disabled=false;
 			loF.txtOperacion.value="incluir";
-			loF.f_listarTipoActividad.focus();
+			loF.f_descripcion.focus();
 		}
 		
 		function fpEncender()
@@ -151,7 +150,9 @@ echo utf8_Decode('
 			loF.f_listarTipoActividad.value="";
 			loF.KcodForaneo.value="";
 			loF.f_descripcion.value="";
-
+			$( ".tool-tip.slideIn" ).each(function(i) {$(this).css( "display", "none" );});
+			$( ".form-group.has-error" ).each(function(i) {$(this).attr( "class", "form-group has-default" );});
+			loF.KcodCombo.value="";
 			fpApagar();
 			fpInicial();
 
@@ -172,7 +173,7 @@ echo utf8_Decode('
 		{
 			loF.txtOperacion.value="modificar";
 			loF.txtHay.value=0;
-			loF.f_listarTipoActividad.disabled=false;
+			loF.f_listarTipoActividad.disabled=true;
 			loF.KcodForaneo.disabled=false;
 			loF.f_descripcion.disabled=false;
 			loF.f_descripcion.focus();
@@ -233,7 +234,7 @@ echo utf8_Decode('
 			var KedoActual=loF.KestadoActual.value;
 			if(KedoActual==1)
 			{
-				loF.b_Eliminar.value="Activado";
+				loF.b_Eliminar.value="Desactivar";
 
 			}
 			else if(KedoActual==2)
@@ -243,7 +244,7 @@ echo utf8_Decode('
 			}
 			else
 			{
-				loF.b_Eliminar.value="Desactivado";
+				loF.b_Eliminar.value="Activar";
 			}
 			
 		}
@@ -251,7 +252,7 @@ echo utf8_Decode('
 				
 		function fpDesactivar()
 		{
-			if (loF.b_Eliminar.value=="Activado")
+			if (loF.b_Eliminar.value=="Desactivar")
 			{
 				if(confirm("Desea Desactivar a "+loF.f_descripcion.value+"?"))
 				{
@@ -284,7 +285,7 @@ echo utf8_Decode('
 
 				}
 			}
-			else
+			if (loF.b_Eliminar.value=="Activar")
 			{
 				if(confirm("Desea Reactivar a "+loF.f_descripcion.value+"?"))
 				{
@@ -320,6 +321,7 @@ echo utf8_Decode('
 				}
 
 			}
+
 		}
 
 
@@ -327,17 +329,16 @@ echo utf8_Decode('
 		{
 			var lbValido=false;
 			var vInvalido=0;
+			if(loF.KcodForaneo.value=="")
+			{
+				loF.KcodForaneo.focus();
+				vCampoVacio("KcodForaneo");
+				vInvalido=1;
+			}
 			if(loF.f_descripcion.value=="")
 			{
 				loF.f_descripcion.focus();
 				vCampoVacio("f_descripcion");
-				vInvalido=1;
-			}
-			if(loF.f_listarTipoActividad.value=="")
-			{
-				NotificaW("Seleccione una opcion.");
-				loF.f_listarTipoActividad.focus();
-				vCampoVacio("f_listarTipoActividad");
 				vInvalido=1;
 			}
 			if (vInvalido==0)
@@ -364,35 +365,32 @@ echo utf8_Decode('
 				        success: function(data)
 				        {
 				        	var Confi=data[\'Confi\'];
-							if((Confi.liHay!=""))
-							{
 								if ((loF.txtOperacion.value=="incluir")&&(Confi.liHay==0))
 								{
-									NotificaE("No se pudo incluir el Registro.");
+									NotificaE("El nombre que ha introducido ya se encuentra registrado.");
+									loF.f_descripcion.focus();
 								}
 
 								if ((loF.txtOperacion.value=="incluir")&&(Confi.liHay==1))
 								{
 
 									NotificaS("Registro incluido con exito.");
-									document.location.reload();
+									setTimeout(function(){ document.location.reload(); }, 1500);
+									
 								}
 
 								if ((loF.txtOperacion.value=="modificar")&&(Confi.liHay==0))
 								{
-									NotificaE("No se pudo modificar el Registro.");
+									NotificaE("El dato que ha introducido ya se encuentra registrado.");
 								}
 
 								if ((loF.txtOperacion.value=="modificar")&&(Confi.liHay==1))
 								{
 
 									NotificaS("Registro modificado con exito.");
-									document.location.reload();
+									setTimeout(function(){ document.location.reload(); }, 1500);
 
 								}
-
-
-							}
 						}
 					});
 			}

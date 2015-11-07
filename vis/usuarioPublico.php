@@ -87,44 +87,59 @@ echo utf8_Decode('
 						</tr>
 						<tr>
 							<th>
-							<div class="form-group has-default" id="hacmb_Estado"><div class="on-focus clearfix" style="position: relative;"><select id="cmb_Estado" name="cmb_Estado" class="form-control" onchange="fpCombosDireccion(\'Estado\',this.id)"><option value="0">*Seleccione Estado</option>
+							<div class="form-group has-default" id="hacmb_Estado"><div class="on-focus clearfix" style="position: relative;"><select id="cmb_Estado" name="cmb_Estado" class="form-control" onblur="vCampoVacio(this.id);" onchange="fpCombosDireccion(\'Estado\',this.id)"><option value="0">*Seleccione Estado</option>
 							');
 							echo utf8_decode($loFuncion->fncreateComboSelect("estado", "","cod_estado","", ' ',"","descripcion", $selectestado,"", "", "")); 
 							echo utf8_Decode('</select><div class="tool-tip  slideIn" id="ttipcmb_Estado" style="display:none;"></div></div></div>
-							<div class="form-group has-default" id="hacmb_Municipio"><div class="on-focus clearfix" style="position: relative;"><select id="cmb_Municipio" name="cmb_Municipio" class="form-control" onchange="fpCombosDireccion(\'Municipio\',this.id)"><option value="0">*Seleccione Municipio</option>
+							<div class="form-group has-default" id="hacmb_Municipio"><div class="on-focus clearfix" style="position: relative;"><select id="cmb_Municipio" name="cmb_Municipio" class="form-control" onblur="vCampoVacio(this.id);" onchange="fpCombosDireccion(\'Municipio\',this.id)"><option value="0">*Seleccione Municipio</option>
 							');
 							echo utf8_decode($loFuncion->fncreateComboSelect("municipio", "","cod_municipio","", ' ',"","descripcion", $selectmunicipio,"", "cod_foraneo", "")); 
 							echo utf8_Decode('</select><div class="tool-tip  slideIn" id="ttipcmb_Municipio" style="display:none;"></div></div></div>
-							<div class="form-group has-default" id="hacmb_Parroquia"><div class="on-focus clearfix" style="position: relative;"><select id="cmb_Parroquia" name="cmb_Parroquia" class="form-control" onchange="fpCombosDireccion(\'Parroquia\',this.id)"><option value="0">*Seleccione Parroquia</option>
+							<div class="form-group has-default" id="hacmb_Parroquia"><div class="on-focus clearfix" style="position: relative;"><select id="cmb_Parroquia" name="cmb_Parroquia" class="form-control" onblur="vCampoVacio(this.id);" onchange="fpCombosDireccion(\'Parroquia\',this.id)"><option value="0">*Seleccione Parroquia</option>
 							');
 							echo utf8_decode($loFuncion->fncreateComboSelect("parroquia", "","cod_parroquia","", ' ',"","descripcion", $selectparroquia,"", "cod_foraneo", "")); 
 							echo utf8_Decode('</select><div class="tool-tip  slideIn" id="ttipcmb_Parroquia" style="display:none;"></div></div></div>
-							<div class="form-group has-default" id="hacmb_Ciudad"><div class="on-focus clearfix" style="position: relative;"><select id="cmb_Ciudad" name="cmb_Ciudad" class="form-control" onchange="fpCombosDireccion(\'Ciudad\',this.id)"><option value="0">*Seleccione Ciudad</option>
+							<div class="form-group has-default" id="hacmb_Ciudad"><div class="on-focus clearfix" style="position: relative;"><select id="cmb_Ciudad" name="cmb_Ciudad" class="form-control" onblur="vCampoVacio(this.id);" onchange="fpCombosDireccion(\'Ciudad\',this.id)"><option value="0">*Seleccione Ciudad</option>
 							');
 							echo utf8_decode($loFuncion->fncreateComboSelect("ciudad", "","cod_ciudad","", ' ',"","descripcion", $selectciudad,"", "cod_foraneo", "")); 
 							echo utf8_Decode('</select><div class="tool-tip  slideIn" id="ttipcmb_Ciudad" style="display:none;"></div></div></div>
 							</th>
-							<th><div class="form-group has-default" id="haf_direccion"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Dirección:</font><textarea name="f_direccion" id="f_direccion" class="form-control" style="resize:none; overflow-y:scroll; height:100px;" maxlenght="150" onblur="vCampoVacio(this.id);" disabled></textarea><div class="tool-tip  slideIn" id="ttipf_direccion" style="display:none;"><div class="tool-tip  slideIn" id="ttipf_direccion" style="display:none;"></div></div></div>
-							<div class="form-group has-default" id="hacmb_Iglesia"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Parroquia:</font><select id="cmb_Iglesia" name="cmb_Iglesia" class="form-control"  onblur="vCampoVacio(this.id);"><option value="0">Seleccione Iglesia</option>
+							<th>
+								<div class="form-group has-default" id="haf_direccion">
+									<div class="on-focus clearfix" style="position: relative;">
+										<span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Dirección:</font>
+										<textarea name="f_direccion" id="f_direccion" class="form-control" style="resize:none; overflow-y:scroll; height:100px;" maxlenght="150" onblur="vCampoVacio(this.id);" disabled></textarea>
+										<div class="tool-tip  slideIn" id="ttipf_direccion" style="display:none;">
+										</div>
+									</div>
+								</div>
+								<div class="form-group has-default" id="hacmb_Iglesia">
+									<div class="on-focus clearfix" style="position: relative;">
+										<span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Parroquia:</font>
+											<select id="cmb_Iglesia" name="cmb_Iglesia" class="form-control"  onblur="vCampoVacio(this.id);">
+											<option value="0">Seleccione Iglesia</option>
 							');
 							echo utf8_decode($loFuncion->fncreateComboSelect("tparroquiaiglesia", "","codigoParroquiaIglesia","", ' ',"","nombre", $selectiglesia,"", "", "")); 
-							echo utf8_Decode('</select><div class="tool-tip  slideIn" id="ttipcmb_Iglesia" style="display:none;"></div></div></div>
+							echo utf8_Decode('</select><div class="tool-tip  slideIn" id="ttipcmb_Iglesia" style="display:none;">
+									</div>
+								</div>
+
 							</th>
 						</tr>
 						<tr>
-							<th><div class="form-group has-success" id="haf_cedulaMadre"><div class="on-focus clearfix" style="position: relative;"><font class="control-label">CI de</font><font class="control-label" id="ntf_cedulaMadre"> la madre de '.$objetivo.':</font><input type="text" name="f_cedulaMadre" id="f_cedulaMadre" class="form-control" value="" size="6" maxlength="13" onfocus="MaskCedulaNac(this.id);" onkeypress="CedulaVenezolanaDefault(this.id);" onblur="this.value=this.value.toUpperCase(); vCampoVacio(this.id); fpPadres(this);" placeholder="V-99999999 (Opcional)"><div class="tool-tip  slideIn" id="ttipf_cedulaMadre" style="display:none;"></div></div></div></th>
-							<th><div class="form-group has-success" id="haf_cedulaPadre"><div class="on-focus clearfix" style="position: relative;"><font class="control-label">CI de</font><font class="control-label" id="ntf_cedulaPadre">l padre de '.$objetivo.':</font><input type="text" name="f_cedulaPadre" id="f_cedulaPadre" class="form-control" value="" size="6" maxlength="13" onfocus="MaskCedulaNac(this.id);" onkeypress="CedulaVenezolanaDefault(this.id);" onblur="this.value=this.value.toUpperCase(); vCampoVacio(this.id); fpPadres(this);" placeholder="V-99999999 (Opcional)"><div class="tool-tip  slideIn" id="ttipf_cedulaPadre" style="display:none;"></div></div></div></th>
+							<th><div class="form-group has-success" id="haf_cedulaMadre"><div class="on-focus clearfix" style="position: relative;"><font class="control-label">CI de</font><font class="control-label" id="ntf_cedulaMadre"> la madre de '.$objetivo.':</font><input type="text" name="f_cedulaMadre" id="f_cedulaMadre" class="form-control" value="" size="6" maxlength="13" onfocus="MaskCedulaNac(this.id);" onkeypress="CedulaVenezolanaDefault(this.id);" onblur="this.value=this.value.toUpperCase(); fpPadres(this);" placeholder="V-99999999 (Opcional)"><div class="tool-tip  slideIn" id="ttipf_cedulaMadre" style="display:none;"></div></div></div></th>
+							<th><div class="form-group has-success" id="haf_cedulaPadre"><div class="on-focus clearfix" style="position: relative;"><font class="control-label">CI de</font><font class="control-label" id="ntf_cedulaPadre">l padre de '.$objetivo.':</font><input type="text" name="f_cedulaPadre" id="f_cedulaPadre" class="form-control" value="" size="6" maxlength="13" onfocus="MaskCedulaNac(this.id);" onkeypress="CedulaVenezolanaDefault(this.id);" onblur="this.value=this.value.toUpperCase(); fpPadres(this);" placeholder="V-99999999 (Opcional)"><div class="tool-tip  slideIn" id="ttipf_cedulaPadre" style="display:none;"></div></div></div></th>
 						</tr>
 						<tr>
 							<th colspan="2"><center><h4>Datos Para el Usuario</h4></center></th>
 						</tr>
 						<tr>
-							<th><div class="form-group has-default" id="haf_clavePri"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Contraseña:</font><input type="password" name="f_clavePri" id="f_clavePri" class="form-control" value=""><div class="tool-tip  slideIn" id="ttipf_clavePri" style="display:none;"></div></div></div></th>
-							<th><div class="form-group has-default" id="haf_claveSeg"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Repita la Contraseña:</font><input type="password" name="f_claveSeg" id="f_claveSeg" class="form-control" value=""><div class="tool-tip  slideIn" id="ttipf_claveSeg" style="display:none;"></div></div></div></th>
+							<th><div class="form-group has-default" id="haf_clavePri"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Contraseña:</font><input type="password" name="f_clavePri" id="f_clavePri" onblur="vCampoVacio(this.id);" class="form-control" value=""><div class="tool-tip  slideIn" id="ttipf_clavePri" style="display:none;"></div></div></div></th>
+							<th><div class="form-group has-default" id="haf_claveSeg"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Repita la Contraseña:</font><input type="password" name="f_claveSeg" id="f_claveSeg" onblur="vCampoVacio(this.id);" class="form-control" value=""><div class="tool-tip  slideIn" id="ttipf_claveSeg" style="display:none;"></div></div></div></th>
 						</tr>
 						<tr>
-							<th><div class="form-group has-default" id="haf_AskUser"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Pregunta de Seguridad:</font><input type="text" name="f_AskUser" id="f_AskUser" class="form-control" value=""><div class="tool-tip  slideIn" id="ttipf_AskUser" style="display:none;"></div></div></div></th>
-							<th><div class="form-group has-default" id="haf_AnswerUser"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Respuesta de Seguridad:</font><input type="text" name="f_AnswerUser" id="f_AnswerUser" class="form-control" value=""><div class="tool-tip  slideIn" id="ttipf_AnswerUser" style="display:none;"></div></div></div></th>
+							<th><div class="form-group has-default" id="haf_AskUser"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Pregunta de Seguridad:</font><input type="text" name="f_AskUser" id="f_AskUser" onblur="vCampoVacio(this.id);" class="form-control" value=""><div class="tool-tip  slideIn" id="ttipf_AskUser" style="display:none;"></div></div></div></th>
+							<th><div class="form-group has-default" id="haf_AnswerUser"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Respuesta de Seguridad:</font><input type="text" name="f_AnswerUser" id="f_AnswerUser" onblur="vCampoVacio(this.id);" class="form-control" value=""><div class="tool-tip  slideIn" id="ttipf_AnswerUser" style="display:none;"></div></div></div></th>
 						</tr>		
 					</table>
 					<br>
@@ -143,9 +158,8 @@ echo utf8_Decode('
 						<input type="hidden" name="auxParroquia" id="auxParroquia" value="">		
 						<input type="hidden" name="temporal" id="temporal" value="">
 						<input type="hidden" name="f_refFeligres" id="f_refFeligres" value="">
-						<input type="button" class="btn btn-default" name="b_Nuevo" value="Nuevo" onclick="fpNuevo()">
 						<input type="button" class="btn btn-default" name="b_Guardar" value="Guardar" onclick="fpGuardar()">
-						<input type="button" class="btn btn-default" name="b_Cancelar" value="Cancelar" onclick="fpCancelar()"></center>
+						<input type="button" class="btn btn-default" name="b_Cancelar" value="Regresar" onclick="window.location.assign(\'../../\');"></center>
 					</th>
 				</tr>
 			</table>
@@ -159,65 +173,14 @@ echo utf8_Decode('
 </body>
 	<script>
 	var loF=document.fr_Persona;
-	function fpInicio()
-	{
-		
-			switch(loF.txtOperacion.value)
-			{
-				case "":
-					fpIniciald();
-					fpCancelar();
-					break;
-				case "buscar":
-					if(loF.txtHay.value==1)
-					{
-
-						fpCambioEd();
-						fpApagar();
-
-					}
-					else
-					{
-						NotificaE("No Existe");
-						fpCancelar();
-					}
-					break;
-				case "incluir":
-					if ((loF.txtHacer.value=="buscar")&&(loF.txtHay.value==1))
-					{
-						NotificaS("Ese Registro Existe");
-						fpCambioEd();
-						fpApagar();
-					}
-					if((loF.txtHacer.value=="buscar")&&(loF.txtHay.value==0))
-					{
-						loF.txtOperacion.value="incluir";
-						loF.txtHacer.value="incluir";
-						loF.txtHay.value=0;
-						fpCambioNd();
-						fpEncender();
-						loF.f_nombres.focus();
-					}
-					if((loF.txtHacer.value=="incluir")&&(loF.txtHay.value==1))
-					{
-						NotificaS("Registro Incluido");
-						
-						fpCancelar();
-					}
-					if((loF.txtHacer.value=="incluir")&&(loF.txtHay.value==2))
-					{
-						NotificaE("Registro No Incluido");
-						
-						fpCancelar();
-					}
-					break;
-
-			}
+		function fpInicio()
+		{
+			fpCancelar();
+			fpNuevo();
 		}
 		
 		function fpNuevo()
 		{
-			fpCambioNd();
 			fpEncender();
 			loF.txtOperacion.value="incluirPublico";
 			loF.txtHacer.value="buscar";
@@ -319,7 +282,6 @@ echo utf8_Decode('
 			document.getElementById("haf_AnswerUser").className = "form-group has-default";
 
 			fpApagar();
-			fpIniciald();
 		}
 		
 		function fpBuscarLike()
@@ -372,7 +334,6 @@ echo utf8_Decode('
 			loF.txtOperacion.value="buscar";
 			loF.txtHacer.value="buscar";
 			loF.f_cedula.disabled=false;
-			fpCambioBd();
 			loF.f_cedula.focus();
 		}
 
@@ -523,7 +484,8 @@ echo utf8_Decode('
 		
 		function fpPerderFocus(Rcampo)
 		{
-			if((loF.f_cedula.value!="")&&(loF.txtHacer.value=="buscar"))
+
+			if((loF.f_cedula.value!="")&&(loF.txtHacer.value=="buscar")&&(loF.f_cedula.value.trim().length>7))
 			{
 				
 						
@@ -543,7 +505,7 @@ echo utf8_Decode('
 									if((loF.txtHacer.value=="buscar")&&(persona.liHay==1))
 									{
 										Rcampo.value = persona.lsCedula;
-										document.getElementById("haf_cedula").className = "form-group has-warning";
+										document.getElementById("haf_cedula").className = "form-group has-danger";
 										loF.f_refFeligres.value = persona.lsIDpersona;
 										loF.f_nombres.value = persona.lsNombre;
 										loF.f_apellidos.value = persona.lsApellido;
@@ -558,13 +520,13 @@ echo utf8_Decode('
 										loF.f_cedulaPadre.value = persona.lsCedulaPadre;
 										document.getElementById("ntf_cedulaPadre").innerHTML=" "+persona.lsNombPadre+" (Padre)";
 										Rcampo.disabled=true;
-										fpCambioEd();
+
 										fpApagar();
 
 										if (loF.txtOperacion.value=="incluirPublico")
 										{
 											NotificaE("Esta cedula ya se encuentra registrada");
-											fpCancelar();
+											fpNuevo();
 									
 										}
 										$("#cmb_Ciudad").showOption(persona.lsCiudad);
@@ -615,6 +577,11 @@ echo utf8_Decode('
 					});
 		
 			}
+			else
+			{
+				NotificaW("Ingrese un número de cedula valido.")
+				loF.f_cedula.focus();
+			}
 		
 		}
 
@@ -632,7 +599,6 @@ echo utf8_Decode('
 				loF.txtHay.value=0;
 				loF.f_cedula.value=Cedu;
 				loF.f_nombres.focus();
-				fpCambioNd();
 
 			}
 		}

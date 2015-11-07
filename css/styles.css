@@ -230,7 +230,9 @@ div#buscador table#cargar tr td input{
 /* on hover of element containing tooltip default*/
 
 *:not(.on-focus):hover > .tool-tip,
-.on-focus input:focus + .tool-tip{
+.on-focus input + .tool-tip,
+.on-focus select + .tool-tip,
+.on-focus textarea + .tool-tip{
   visibility: visible;
   opacity: 1;
   -webkit-transition: all 240ms ease-in-out;
@@ -241,7 +243,7 @@ div#buscador table#cargar tr td input{
 }
 
 
-/* tool tip slide out */
+/* tool tip slide out 
 
 *:not(.on-focus) > .tool-tip.slideIn,
 .on-focus > .tool-tip{
@@ -255,8 +257,8 @@ div#buscador table#cargar tr td input{
 .on-focus > input:focus + .tool-tip.slideIn{
   z-index: 1;
 }
-
-/* bottom slideIn */
+*/
+/* bottom slideIn 
 
 *:not(.on-focus) > .tool-tip.slideIn.bottom,
 .on-focus > .tool-tip.slideIn.bottom{
@@ -271,8 +273,9 @@ div#buscador table#cargar tr td input{
 .on-focus > input:focus + .tool-tip.slideIn.bottom{
   top: 100%;
 }
+*/
 
-/* top slideIn */
+/* top slideIn 
 
 *:not(.on-focus) > .tool-tip.slideIn,
 *:not(.on-focus) > .tool-tip.slideIn.top,
@@ -287,8 +290,8 @@ div#buscador table#cargar tr td input{
 .on-focus > input:focus + .tool-tip.slideIn.top{
   bottom: 110%;
 } 
-
-/* left slideIn */
+*/
+/* left slideIn 
 
 *:not(.on-focus) > .tool-tip.slideIn.left,
 .on-focus > .tool-tip.slideIn.left{
@@ -299,8 +302,8 @@ div#buscador table#cargar tr td input{
 .on-focus > input:focus + .tool-tip.slideIn.left{
   right: 105%;    
 }
-
-/* right slideIn */
+*/
+/* right slideIn 
 
 *:not(.on-focus) > .tool-tip.slideIn.right,
 .on-focus > .tool-tip.slideIn.right{
@@ -311,7 +314,7 @@ div#buscador table#cargar tr td input{
 .on-focus > input:focus + .tool-tip.slideIn.right{
   left: 105%;
 }
-
+*/
 
 #encabezadox {
   margin: 0;

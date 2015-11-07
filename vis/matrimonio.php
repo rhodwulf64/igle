@@ -81,7 +81,7 @@ echo utf8_Decode('
 					<th><div class="form-group has-default" id="haf_ceduPadres4"><div class="on-focus clearfix" style="position: relative;"><font class="control-label">Padre del Novio:</font><font class="control-label" id="ntf_EncontroPadre4"></font><input type="text" id="f_ceduPadres4" name="f_ceduPadres4" class="form-control" onfocus="MaskCedulaNac(this.id);" onkeypress="CedulaVenezolanaDefault(this.id);" onblur="this.value=this.value.toUpperCase(); vCampoVacio(this.id);" placeholder="V-99999999" value=""><div class="tool-tip  slideIn" id="ttipf_ceduPadres4" style="display:none;"></div></div></div></th>
 				</tr>
 				<tr>
-					<th><div class="form-group has-default" id="haf_sacerdote"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Seleccione el Sacerdote:</font><br><select name="f_sacerdote" class="form-control" onblur="vCampoVacio(this.id);" id="f_sacerdote" value=""><option value=""><p><strong></strong></p></option>');
+					<th><div class="form-group has-default" id="haf_sacerdote"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">el Sacerdote:</font><br><select name="f_sacerdote" class="form-control" onblur="vCampoVacio(this.id);" id="f_sacerdote" value=""><option value=""><p><strong></strong></p></option>');
 
 					echo utf8_decode($loFuncion->fncreateComboSelect("tsacerdote", "tpersonas","idTsacerdote","nombres", ' ',"apellidos","concatext", $selectSacer,"INNER JOIN", "idFpersona", "idTpersonas")); 
 					echo utf8_Decode('

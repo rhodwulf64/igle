@@ -45,7 +45,7 @@ echo utf8_Decode('
 				<tr colspan="2">
 					<th>
 						<center>
-							<div class="form-group has-default" id="haf_listarActividad" style="width:400px;"><div class="on-focus clearfix" style="position: relative;"><font class="control-label">Seleccione Actividad a Editar:</font><br><select name="f_listarActividad" class="form-control" size="8" onchange="SeleccionaItem(this.value);" id="f_listarActividad" value="">');
+							<div class="form-group has-default" onclick="fpAvisaSeleccionar(document.getElementById(\'KcodCombo\').value);" id="haf_listarActividad" style="width:400px;"><div class="on-focus clearfix" style="position: relative;"><font class="control-label">Actividad a Editar:</font><br><select title="Debe presionar el boton \'Seleccionar\' antes de editar un elemento."name="f_listarActividad" class="form-control" size="8" onblur="vCampoVacio(this.id);" onchange="SeleccionaItem(this.value);" id="f_listarActividad" value="">');
 
 							echo utf8_decode($loFuncion->fncreateComboSelectConf("tactividad", "","codigoActividad","", ' ',"","nombre", $selectActividad,"", "tipo_actividad", "")); 
 							echo utf8_Decode('
@@ -81,7 +81,7 @@ echo utf8_Decode('
 			<th colspan="2"><center>
 					<input type="hidden" name="txtOperacion" id="txtOperacion" value="">
 					<input type="hidden" name="txtHay" id="txtHay" value="">
-					<input type="hidden" name="KcodCombo" value="">
+					<input type="hidden" name="KcodCombo" id="KcodCombo" value="">
 					<input type="hidden" name="KcodForaneo" value="">
 					<input type="hidden" name="KcharSelector" value="tactividad">
 					<input type="hidden" name="KestadoActual" id="KestadoActual" value="">
@@ -152,6 +152,9 @@ echo utf8_Decode('
 			loF.f_listarActividad.value="";
 			loF.f_listarParroquia.value="";
 			loF.f_descripcion.value="";
+			$( ".tool-tip.slideIn" ).each(function(i) {$(this).css( "display", "none" );});
+			$( ".form-group.has-error" ).each(function(i) {$(this).attr( "class", "form-group has-default" );});
+			loF.KcodCombo.value="";
 
 			fpApagar();
 			fpInicial();
@@ -173,7 +176,7 @@ echo utf8_Decode('
 		{
 			loF.txtOperacion.value="modificar";
 			loF.txtHay.value=0;
-			loF.f_listarActividad.disabled=false;
+			loF.f_listarActividad.disabled=true;
 			loF.f_listarParroquia.disabled=false;
 			loF.f_descripcion.disabled=false;
 			loF.f_descripcion.focus();
@@ -233,7 +236,7 @@ echo utf8_Decode('
 			var KedoActual=loF.KestadoActual.value;
 			if(KedoActual==1)
 			{
-				loF.b_Eliminar.value="Activado";
+				loF.b_Eliminar.value="Desactivar";
 
 			}
 			else if(KedoActual==2)
@@ -243,7 +246,7 @@ echo utf8_Decode('
 			}
 			else
 			{
-				loF.b_Eliminar.value="Desactivado";
+				loF.b_Eliminar.value="Activar";
 			}
 			
 		}
@@ -251,7 +254,7 @@ echo utf8_Decode('
 				
 		function fpDesactivar()
 		{
-			if (loF.b_Eliminar.value=="Activado")
+			if (loF.b_Eliminar.value=="Desactivar")
 			{
 				if(confirm("Desea Desactivar a "+loF.f_descripcion.value+"?"))
 				{
@@ -284,7 +287,7 @@ echo utf8_Decode('
 
 				}
 			}
-			else
+			if (loF.b_Eliminar.value=="Activar")
 			{
 				if(confirm("Desea Reactivar a "+loF.f_descripcion.value+"?"))
 				{
@@ -373,35 +376,32 @@ echo utf8_Decode('
 				        success: function(data)
 				        {
 				        	var Confi=data[\'Confi\'];
-							if((Confi.liHay!=""))
-							{
 								if ((loF.txtOperacion.value=="incluir")&&(Confi.liHay==0))
 								{
-									NotificaE("No se pudo incluir el Registro.");
+									NotificaE("La descripción que ha introducido ya se encuentra registrada.");
+									loF.f_descripcion.focus();
 								}
 
 								if ((loF.txtOperacion.value=="incluir")&&(Confi.liHay==1))
 								{
 
 									NotificaS("Registro incluido con exito.");
-									document.location.reload();
+									setTimeout(function(){ document.location.reload(); }, 1500);
+									
 								}
 
 								if ((loF.txtOperacion.value=="modificar")&&(Confi.liHay==0))
 								{
-									NotificaE("No se pudo modificar el Registro.");
+									NotificaE("El dato que ha introducido ya se encuentra registrado.");
 								}
 
 								if ((loF.txtOperacion.value=="modificar")&&(Confi.liHay==1))
 								{
 
 									NotificaS("Registro modificado con exito.");
-									document.location.reload();
+									setTimeout(function(){ document.location.reload(); }, 1500);
 
 								}
-
-
-							}
 						}
 					});
 			}
