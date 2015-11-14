@@ -72,24 +72,36 @@ echo utf8_Decode('
 
 
 	echo utf8_Decode('
-		<form name="fr_Apostolado" id="fr_Apostolado" action="../cntller/cn_apostolado.php" method="post">
+		<form name="fr_solicitudes" id="fr_solicitudes" action="../cntller/cn_solicitudFeligres.php" method="post">
 				<div class="col-lg-12">
 					<table class="table table-striped table-bordered table-hover"  border="1" >
 						<thead>		
 							<tr>
-								<th colspan="3"><center>Registro de Grupo Apostolado</center></th>
+								<th colspan="3"><center>Solicitud de Citas</center></th>
 							</tr>
 						</thead>
 						<tr>
-							<th><div class="form-group has-default" id="haf_nombre"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Nombre:</font><input type="text" name="f_nombre" id="f_nombre" class="form-control" value="" onkeypress="vSoloLetras();" tabindex="1" onblur="fpPerderFocus();vCampoVacio(this.id);"><div class="tool-tip  slideIn" id="ttipf_nombre" style="display:none;"></div></div></div></th>
-							<th>
+							<th colspan="2">
+								<center>
+									<div class="form-group has-default" id="haf_listarTipoSolicitud" style="width:400px;"><div class="on-focus clearfix" style="position: relative;"><font class="control-label">Tipo de Solicitud:</font><br><select name="f_listarTipoSolicitud" class="form-control" size="1" tabindex="1" onblur="vCampoVacio(this.id);" id="f_listarTipoSolicitud" value=""><option value="0">*Seleccione un tipo de Solicitud</opction>');
+
+									echo utf8_decode($loFuncion->fncreateComboSelect("tipo_solicitud", "","idTipoSolicitud","", ' ',"","descripcion", $selectTipoSolicitud,"", "", "")); 
+									echo utf8_Decode('
+									</select><div class="tool-tip  slideIn" id="ttipf_listarTipoSolicitud" style="display:none;"></div></div></div>
+								</center>
 							</th>
 						</tr>
 						<tr>
-							<th><div class="form-group has-default" id="haf_mision"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Misión:</font>
-							<textarea name="f_mision" id="f_mision" class="form-control" maxlength="100" tabindex="2" onblur="this.value=this.value.toUpperCase(); vCampoVacio(this.id);"></textarea><div class="tool-tip  slideIn" id="ttipf_mision" style="display:none;"></div></div></div></th>
-							<th><div class="form-group has-default" id="haf_vision"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Visión:</font>
-							<textarea name="f_vision" id="f_vision" class="form-control" maxlength="100" tabindex="3" onblur="this.value=this.value.toUpperCase(); vCampoVacio(this.id);"></textarea><div class="tool-tip  slideIn" id="ttipf_vision" style="display:none;"></div></div></div></th>
+							<th>
+								<font class="control-label">Requisitos:</font>
+								<textarea name="f_Requisitos" id="f_Requisitos" class="form-control" maxlength="100" tabindex="2" style="height:200px;" disabled></textarea>
+							</th>
+							<th><font class="control-label">Citas Pendientes a la fecha:</font><br><select name="f_listarCitasPendientes" class="form-control" size="11" tabindex="1" onchange="SeleccionaItem(this.value);" id="f_listarCitasPendientes" value="" disabled>');
+
+									//echo utf8_decode($loFuncion->fncreateComboSelect("tipo_solicitud", "","idTipoSolicitud","", ' ',"","descripcion", $selectTipoSolicitud,"", "", "")); 
+									echo utf8_Decode('
+									</select>
+							</th>
 						</tr>
 					</table>
 					<br>
@@ -103,6 +115,7 @@ echo utf8_Decode('
 						<input type="hidden" name="txtHacer" id="txtHacer" value="'.$lsHacer.'">
 						<input type="hidden" name="txtHay" id="txtHay" value="'.$liHay.'">
 						<input type="hidden" name="KestadoActual" id="KestadoActual" value="">
+						<input type="hidden" name="KopcionCita" id="KopcionCita" value="">
 						<input type="hidden" name="txtIdApostolado" id="txtIdApostolado" value="">		
 						<input type="hidden" name="temporal" id="temporal" value="">		
 						<input type="button" class="btn btn-default" name="b_Nuevo" value="Nuevo" onclick="fpNuevo()">
@@ -124,7 +137,7 @@ echo utf8_Decode('
 
 </body>
 	<script>
-	var loF=document.fr_Apostolado;
+	var loF=document.fr_solicitudes;
 	function fpInicio()
 	{
 	
@@ -251,7 +264,7 @@ echo utf8_Decode('
 		}
 		function buscar_like(e){
 			var parametros = "?AccionGet=buscar_like&txtcadena="+e.value;
-			var url = "../cntller/cn_apostolado.php";
+			var url = "../cntller/cn_solicitudFeligres.php";
 			consulta_ajax(url,parametros);
 			document.getElementById("cargar").innerHTML = document.getElementById("temporal").value;
 		}
@@ -297,6 +310,36 @@ echo utf8_Decode('
 			fpCancelar();			
 		}
 
+		function SeleccionaItem()
+		{
+			var valueIndex=loF.f_listarCitasPendientes.selectedIndex;
+			loF.KopcionCita.value=loF.f_listarCitasPendientes.options[valueIndex].text;
+			loF.txtOperacion.value="busEstatus";
+			var $forme = $("#fr_solicitudes");
+
+			$.ajax({
+				url: \'../cntller/cn_solicitudFeligres.php\',
+				dataType: \'json\',
+				type: \'post\',
+				data: $forme.serialize(),
+		        success: function(data){
+		        	var Cita=data[\'Cita\'];
+					if(Cita.liHay==1)
+					{
+							loF.KestadoActual.value=Confi.lsEstatus;	
+							fpEstadoActual();	
+					}
+					else	
+					{
+							NotificaE("Error en el Estatus del elemento.");
+															
+					}
+					
+				}
+			});
+
+		}
+
 		function fpBuscar()
 		{
 			loF.txtOperacion.value="buscar";
@@ -312,10 +355,10 @@ echo utf8_Decode('
 			{
 				
 						
-				var $forme = $("#fr_Apostolado");
+				var $forme = $("#fr_solicitudes");
 
 					$.ajax({
-						url: \'../cntller/cn_apostolado.php\',
+						url: \'../cntller/cn_solicitudFeligres.php\',
 						dataType: \'json\',
 						type: \'post\',
 						data: $forme.serialize(),
@@ -379,11 +422,11 @@ echo utf8_Decode('
 			if(fbValidar())
 			{
 				loF.f_nombre.disabled=false;
-				var $forme = $("#fr_Apostolado");
+				var $forme = $("#fr_solicitudes");
 				var pagAnterior="'.$_SESSION["UrlAnterior"].'";
 					$.ajax(
 					{
-						url: \'../cntller/cn_apostolado.php\',
+						url: \'../cntller/cn_solicitudFeligres.php\',
 						dataType: \'json\',
 						type: \'post\',
 						data: $forme.serialize(),
@@ -496,10 +539,10 @@ echo utf8_Decode('
 					loF.f_mision.disabled=false;
 					loF.txtOperacion.value="reactivar";
 					loF.txtHacer.value="reactivar";
-					var $forme = $("#fr_Apostolado");
+					var $forme = $("#fr_solicitudes");
 
 					$.ajax({
-						url: \'../cntller/cn_apostolado.php\',
+						url: \'../cntller/cn_solicitudFeligres.php\',
 						dataType: \'json\',
 						type: \'post\',
 						data: $forme.serialize(),
@@ -533,10 +576,10 @@ echo utf8_Decode('
 					loF.txtOperacion.value="desactivar";
 					loF.txtHacer.value="desactivar";
 
-					var $forme = $("#fr_Apostolado");
+					var $forme = $("#fr_solicitudes");
 
 					$.ajax({
-						url: \'../cntller/cn_apostolado.php\',
+						url: \'../cntller/cn_solicitudFeligres.php\',
 						dataType: \'json\',
 						type: \'post\',
 						data: $forme.serialize(),

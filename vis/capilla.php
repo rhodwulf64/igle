@@ -32,7 +32,7 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-		<title>'.$_SESSION['title'].' - Inscripción de Parroquia</title>
+		<title>'.$_SESSION['title'].' - Inscripción de Capilla</title>
 
 	');
 			print(encabezado_menu("../"));
@@ -43,7 +43,28 @@ echo utf8_Decode('
 	<body onload='.$FunIncio.'>
 <div class="mygrid-wrapper-div">
 <div class="container pre-scrollable" style="margin-top:5px; min-height: 530px; background: #FFFFFF; -webkit-box-shadow: 2px 0px 10px 2px #999; -moz-box-shadow: 2px 0px 10px 2px #999; box-shadow: 2px 0px 10px 2px #999;">
-
+<div id="mascara" onclick="salir();"></div>
+	<div class="modal-dialog" id="buscador" style="width:805px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" onclick="salir();" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">Buscador</h4>
+            </div>
+            <div class="modal-body pre-scrollable">
+				<table>
+					<tr>
+						<td><input type="text" onkeyup="buscar_like(this);" class="form-control" style="width:760px;" placeholder="Ingrese una palabra clave..." name="txtbuscador" id="txtbuscador"/></td>
+					</tr>
+				</table>
+				<br>
+				<table id="cargar" class="table table-striped table-bordered table-hover" style="width:640px;"></table>
+          	 </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="salir();">Cerrar</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
 	');
 
 	encab("../"); //logo de la iglesia
@@ -51,7 +72,7 @@ echo utf8_Decode('
 
 
 	echo utf8_Decode('
-		<form name="fr_Parroquia" id="fr_Parroquia" action="../cntller/cn_personas.php" method="post">
+		<form name="fr_Capilla" id="fr_Capilla" action="../cntller/cn_capilla.php" method="post">
 				<div class="col-lg-12">
 					<table class="table table-striped table-bordered table-hover"  border="1" >
 						<thead>		
@@ -60,17 +81,17 @@ echo utf8_Decode('
 							</tr>
 						</thead>
 						<tr>
-							<th><div class="form-group has-default" id="haf_nombre"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Nombre:</font><input type="text" name="f_nombre" id="f_nombre" class="form-control" value="" onkeypress="vSoloLetras();" tabindex="1" onblur="vCampoVacio(this.id);"><div class="tool-tip  slideIn" id="ttipf_nombre" style="display:none;"></div></div></div></th>
+							<th><div class="form-group has-default" id="haf_nombre"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Nombre:</font><input type="text" name="f_nombre" id="f_nombre" class="form-control" value="" onkeypress="vSoloLetras();" tabindex="1" onblur="fpPerderFocus();vCampoVacio(this.id);"><div class="tool-tip  slideIn" id="ttipf_nombre" style="display:none;"></div></div></div></th>
 							<th><div class="form-group has-default" id="haf_telefono"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Teléfono:</font><input type="text" name="f_telefono" id="f_telefono" size="8" maxlenght="12" class="form-control" value="" placeholder="(999)9999999" onfocus="MaskTelefono(this.id)" onkeypress="vSoloTelefono();" tabindex="2" onblur="vCampoVacio(this.id);" size="8" maxlenght="12"><div class="tool-tip  slideIn" id="ttipf_telefono" style="display:none;"></div></div></div></th>
 
 						</tr>
 						<tr>
 							<th><div class="form-group has-default" id="haf_direccion"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Dirección:</font><textarea name="f_direccion" id="f_direccion" class="form-control" style="resize:none; overflow-y:scroll; height:100px;" maxlenght="150" tabindex="3" onblur="vCampoVacio(this.id);" disabled></textarea><div class="tool-tip  slideIn" id="ttipf_direccion" style="display:none;"><div class="tool-tip  slideIn" id="ttipf_direccion" style="display:none;"></div></div></div>
-                                <div class="form-group has-default" id="hatxtCorreo1">
+                                <div class="form-group has-default" id="hatxtCorreo">
                                             <div class="on-focus clearfix" style="position: relative;">
                                                     <span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><label class="control-label">Correo Electronico Principal</label>
-                                                    <input type="text" id="txtCorreo1" name="txtCorreo1" class="form-control" placeholder="cliente@micorreo.com" onkeypress="vSoloCorreo();" tabindex="4" onblur="vCampoVacioUnder(this.id);vSoloEmail(this.id);" value="">
-                                                    <div class="tool-tip  slideIn" id="ttiptxtCorreo1" style="display:none;"></div>
+                                                    <input type="text" id="txtCorreo" name="txtCorreo" class="form-control" placeholder="cliente@micorreo.com" onkeypress="vSoloCorreo();" tabindex="4" onblur="vCampoVacioUnder(this.id);vSoloEmail(this.id);" value="">
+                                                    <div class="tool-tip  slideIn" id="ttiptxtCorreo" style="display:none;"></div>
                                             </div>
                                 </div>							
 							</th>
@@ -94,11 +115,11 @@ echo utf8_Decode('
 							</th>
 						</tr>
 						<tr>
-							<th><div class="form-group has-default" id="haf_fechaCreacion"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Fecha de Creación:</font><input type="date" name="f_fechaCreacion" id="f_fechaCreacion" class="form-control" tabindex="9" onblur="vSoloFechaAnterior(this.id);vMayorDeEdad(this.id);" value=""><div class="tool-tip  slideIn" id="ttipf_fechaCreacion" style="display:none;"></div></div></div></th>
+							<th><div class="form-group has-default" id="haf_fechaCreacion"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Fecha de Creación:</font><input type="date" name="f_fechaCreacion" id="f_fechaCreacion" class="form-control" tabindex="9" onblur="vSoloFechaAnterior(this.id);" value=""><div class="tool-tip  slideIn" id="ttipf_fechaCreacion" style="display:none;"></div></div></div></th>
 							<th>
-							<div class="form-group has-default" id="hacmb_ParroquiaIgle"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><label class="control-label">Parroquia:</label><select id="cmb_ParroquiaIgle" name="cmb_ParroquiaIgle" class="form-control" tabindex="10" onblur="vCampoVacio(this.id);" onchange="fpCombosDireccion(\'Ciudad\',this.id)"><option value="0">*Seleccione Parroquia</option>
+							<div class="form-group has-default" id="hacmb_ParroquiaIgle"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><label class="control-label">Parroquia Iglesia:</label><select id="cmb_ParroquiaIgle" name="cmb_ParroquiaIgle" class="form-control" tabindex="10" onblur="vCampoVacio(this.id);" onchange="fpCombosDireccion(\'Ciudad\',this.id)"><option value="0">*Seleccione Parroquia Iglesia</option>
 							');
-							echo utf8_decode($loFuncion->fncreateComboSelect("tparroquiaiglesia", "","codigoParroquiaIglesia","", ' ',"","nombre", $selectarchiprestazgo,"", "codigo_archi", "")); 
+							echo utf8_decode($loFuncion->fncreateComboSelect("tparroquiaiglesia", "","codigoParroquiaIglesia","", ' ',"","nombre", $selecttparroquiaiglesia,"", "codigo_archi", "")); 
 							echo utf8_Decode('</select><div class="tool-tip  slideIn" id="ttipcmb_ParroquiaIgle" style="display:none;"></div></div></div>
 							</th>
 							');
@@ -120,10 +141,12 @@ echo utf8_Decode('
 						<input type="hidden" name="txtCodigoCapilla" id="txtCodigoCapilla" value="">
 						<input type="hidden" name="auxCiudad" id="auxCiudad" value="">
 						<input type="hidden" name="auxMunicipio" id="auxMunicipio" value="">
-						<input type="hidden" name="auxParroquia" id="auxParroquia" value="">		
+						<input type="hidden" name="auxParroquia" id="auxParroquia" value="">	
+						<input type="hidden" name="txtidCapilla" id="txtidCapilla" value="">	
+						<input type="hidden" name="temporal" id="temporal" value="">	
 						<input type="button" class="btn btn-default" name="b_Nuevo" value="Nuevo" onclick="fpNuevo()">
 						<input type="button" class="btn btn-default" name="b_Modificar" value="Modificar" onclick="fpModificar()">
-						<input type="button" class="btn btn-default" name="b_Buscar" value="Buscar" onclick="fpBuscar()">
+						<input type="button" class="btn btn-default" name="b_Buscar" value="Buscar" onclick="fpBuscarLike()">
 						<input type="button" class="btn btn-default" name="b_Eliminar" value="Desactivar" onclick="fpDesactivar()">
 						<input type="button" class="btn btn-default" name="b_Guardar" value="Guardar" onclick="fpGuardar()">
 						<input type="button" class="btn btn-default" name="b_Cancelar" value="Cancelar" onclick="fpCancelar()"></center>
@@ -140,88 +163,13 @@ echo utf8_Decode('
 
 </body>
 	<script>
-	var loF=document.fr_Parroquia;
-	function fpInicio()
-	{
+	var loF=document.fr_Capilla;
 	
-			switch(loF.txtOperacion.value)
-			{
-				case "":
-					fpInicial();
-					fpCancelar();
-					break;
-				case "buscar":
-					if(loF.txtHay.value==1)
-					{
-
-						fpCambioE();
-						fpApagar();
-
-					}
-					else
-					{
-						NotificaE("No Existe");
-						fpCancelar();
-					}
-					break;
-				case "incluir":
-					if ((loF.txtHacer.value=="buscar")&&(loF.txtHay.value==1))
-					{
-						NotificaS("Ese Registro Existe");
-						fpCambioE();
-						fpApagar();
-					}
-					if((loF.txtHacer.value=="buscar")&&(loF.txtHay.value==0))
-					{
-						loF.txtOperacion.value="incluir";
-						loF.txtHacer.value="incluir";
-						loF.txtHay.value=0;
-						fpCambioN();
-						fpEncender();
-						loF.f_nombre.focus();
-					}
-					if((loF.txtHacer.value=="incluir")&&(loF.txtHay.value==1))
-					{
-						NotificaS("Registro Incluido");
-						
-						fpCancelar();
-					}
-					if((loF.txtHacer.value=="incluir")&&(loF.txtHay.value==2))
-					{
-						NotificaE("Registro No Incluido");
-						
-						fpCancelar();
-					}
-					break;
-				case "modificar":
-					if(loF.txtHay.value==1)
-					{
-						NotificaS("Registro Modificado");
-						
-						fpCancelar();
-					}
-					else
-					{
-						NotificaE("Registro No Modificado");
-						
-						fpCancelar();
-					}
-					break;
-				case "eliminar":
-					if(loF.txtHay.value==1)
-					{
-						NotificaS("Registro Eliminado");
-						
-						fpCancelar();
-					}
-					else
-					{
-						NotificaE("Registro No Eliminado");
-						
-						fpCancelar();
-					}
-					break;
-			}
+		function fpInicio()
+		{
+		
+			fpInicial();
+			fpCancelar();
 		}
 		
 		function fpNuevo()
@@ -236,7 +184,7 @@ echo utf8_Decode('
 		function fpEncender()
 		{
 			loF.f_nombre.disabled=false;
-			loF.txtCorreo1.disabled=false;
+			loF.txtCorreo.disabled=false;
 			loF.f_fechaCreacion.disabled=false;
 			loF.f_direccion.disabled=false;
 			loF.cmb_Estado.disabled=false;
@@ -245,15 +193,12 @@ echo utf8_Decode('
 			loF.cmb_Municipio.disabled=false;
 			loF.cmb_Parroquia.disabled=false;
 			loF.f_telefono.disabled=false;
-	
-
-
 		}
 		
 		function fpApagar()
 		{
 			loF.f_nombre.disabled=true;
-			loF.txtCorreo1.disabled=true;
+			loF.txtCorreo.disabled=true;
 			loF.f_fechaCreacion.disabled=true;
 			loF.f_direccion.disabled=true;
 			loF.cmb_Estado.disabled=true;
@@ -272,29 +217,20 @@ echo utf8_Decode('
 			loF.txtHacer.value="";
 			loF.txtHay.value=0;
 			loF.f_nombre.value="";
-			loF.txtCorreo1.value="";
+			loF.txtCorreo.value="";
 			loF.f_fechaCreacion.value="";
 			loF.f_direccion.value="";
 			loF.f_telefono.value="";
 
 			loF.cmb_Estado.value="0";
 			loF.cmb_Ciudad.value="0";
-			loF.cmb_ParroquiaIgle.value="0";
 			loF.cmb_Municipio.value="0";
 			loF.cmb_Parroquia.value="0";
+			loF.cmb_ParroquiaIgle.value="0";
 
 
-
-			document.getElementById("haf_nombre").className = "form-group has-default";
-			document.getElementById("hatxtCorreo1").className = "form-group has-default";
-			document.getElementById("haf_fechaCreacion").className = "form-group has-default";
-			document.getElementById("haf_telefono").className = "form-group has-default";
-			document.getElementById("haf_direccion").className = "form-group has-default";
-			document.getElementById("hacmb_Estado").className = "form-group has-default";
-			document.getElementById("hacmb_Ciudad").className = "form-group has-default";
-			document.getElementById("hacmb_ParroquiaIgle").className = "form-group has-default";
-			document.getElementById("hacmb_Municipio").className = "form-group has-default";
-			document.getElementById("hacmb_Parroquia").className = "form-group has-default";
+			$( ".tool-tip.slideIn" ).each(function(i) {$(this).css( "display", "none" );});
+			$( ".form-group" ).each(function(i) {$(this).attr( "class", "form-group has-default" );});
 
 
 			fpApagar();
@@ -302,11 +238,61 @@ echo utf8_Decode('
 			loF.KestadoActual.value=1;
 		}
 		
+		function buscar_like(e){
+			var parametros = "?AccionGet=buscar_like&txtcadena="+e.value;
+			var url = "../cntller/cn_capilla.php";
+			consulta_ajax(url,parametros);
+			document.getElementById("cargar").innerHTML = document.getElementById("temporal").value;
+		}
+
+		function fpBuscarLike()
+		{
+			var mas = document.getElementById("mascara");
+			var bus = document.getElementById("buscador");
+
+			mas.style.display = "block";
+			bus.style.display = "block";
+
+			document.getElementById("txtbuscador").focus();
+		}
+
+		function fpSelectLike(idlke)
+		{
+			var lke = document.getElementById(idlke);
+			var mas = document.getElementById("mascara");
+			var bus = document.getElementById("buscador");
+
+			mas.style.display = "none";
+			bus.style.display = "none";
+			loF.f_nombre.value=lke.nvaNombre.value;
+			loF.txtidCapilla.value=lke.nvaidCapilla.value;
+			loF.txtOperacion.value="buscar";
+			loF.txtHacer.value="buscar";
+			loF.txtHay.value="0";
+			fpPerderFocus();
+
+		}
+
+		function salir()
+		{
+			var mas = document.getElementById("mascara");
+			var bus = document.getElementById("buscador");
+			
+
+			mas.style.display = "none";
+			bus.style.display = "none";
+			
+
+			fpCancelar();			
+		}
+
 		function fpBuscar()
 		{
 			loF.txtOperacion.value="buscar";
 			loF.txtHacer.value="buscar";
+			loF.f_nombre.disabled=false;
 			fpCambioB();
+			loF.f_nombre.focus();
 		}
 
 		function fpCombosDireccion(orden,objeto)
@@ -454,82 +440,80 @@ echo utf8_Decode('
 	  	
 		}
 		
-		function fpPerderFocus(Rcampo)
+		function fpPerderFocus()
 		{
-			if(loF.txtHacer.value=="buscar")
-			{
-				
-						
-				var $forme = $("#fr_Parroquia");
+									
+				var $forme = $("#fr_Capilla");
 
 					$.ajax({
-						url: \'../cntller/cn_personas.php\',
+						url: \'../cntller/cn_capilla.php\',
 						dataType: \'json\',
 						type: \'post\',
 						data: $forme.serialize(),
 				        success: function(data)
 				        {
-				        	var persona=data[\'Person\'];
-           					var padres=data[\'Padres\'];
-							if((persona.lsCedula!=""))
+				        	var arrayDato=data[\'ArrDatos\'];
+           					var arrayFeligres=data[\'Feligres\'];
+							
+								
+							if((loF.txtHacer.value=="buscar")&&(arrayDato.liHay==1))
 							{
-									if((loF.txtHacer.value=="buscar")&&(persona.liHay==1))
-									{
-										Rcampo.value = persona.lsCedula;
-										loF.f_nombre.value = persona.lsNombre;
-										loF.txtCorreo1.value = persona.lsApellido;
-										loF.f_fechaCreacion.value = persona.lsFechaNaci;
-										loF.f_telefono.value = persona.lsTelefono;
-										loF.f_direccion.value = persona.lsDireccion;
-										loF.KestadoActual.value = persona.lsEstatus;
-										Rcampo.disabled=true;
-										fpCambioE();
-										fpApagar();
+								loF.txtidCapilla.value = arrayDato.lsidCapilla;
+								loF.f_nombre.value = arrayDato.lsNombre;
+								loF.txtCorreo.value = arrayDato.lsCorreo;
+								loF.f_fechaCreacion.value = arrayDato.lsFecha_creacion;
+								loF.f_telefono.value = arrayDato.lsTelefono;
+								loF.f_direccion.value = arrayDato.lsDireccion;
+								loF.KestadoActual.value = arrayDato.lsEstatus;
+								fpCambioE();
+								fpApagar();
 
-										if (loF.txtOperacion.value=="incluir")
-										{
-											NotificaE("Esta cedula ya se encuentra registrada");
-											fpCambioE();
-											fpApagar();
-										}
-										$("#cmb_Ciudad").showOption(persona.lsCiudad);
-										$("#cmb_Municipio").showOption(persona.lsMunicipio);
-										$("#cmb_Parroquia").showOption(persona.lsParroquia);
-										loF.cmb_Estado.value = persona.lsEstado;
-										loF.cmb_Ciudad.value = persona.lsCiudad;
-										loF.cmb_ParroquiaIgle.value = persona.lsArchiprestasgo;
-										loF.cmb_Municipio.value = persona.lsMunicipio;
-										loF.cmb_Parroquia.value = persona.lsParroquia;
-									}
+								if (loF.txtOperacion.value=="incluir")
+								{
+									document.getElementById("haf_nombre").className = "form-group has-warning";
+									loF.f_nombre.disabled=true;
+									NotificaE("Esta cedula ya se encuentra registrada");
+									fpCambioE();
+									fpApagar();
+								}
+
+								$("#cmb_Ciudad").showOption(arrayDato.lsidFciudad);
+								$("#cmb_Municipio").showOption(arrayDato.lsidFmunicipio);
+								$("#cmb_Parroquia").showOption(arrayDato.lsidFparroquia);
+								loF.cmb_Estado.value = arrayDato.lsidFestado;
+								loF.cmb_Ciudad.value = arrayDato.lsidFciudad;
+								loF.cmb_ParroquiaIgle.value = arrayDato.lsCodigo_ParroquiaIgle;
+								loF.cmb_Municipio.value = arrayDato.lsidFmunicipio;
+								loF.cmb_Parroquia.value = arrayDato.lsidFparroquia;
+							}
 													
 
-									if((loF.txtOperacion.value=="incluir")&&(loF.txtHacer.value=="buscar")&&(persona.liHay==0))
-									{
-										Rcampo.disabled=true;
-										loF.f_nombre.focus();
-										loF.txtOperacion.value="incluir";
-										loF.txtHacer.value="incluir";
-										loF.txtHay.value=0;
+							if((loF.txtOperacion.value=="incluir")&&(loF.txtHacer.value=="buscar")&&(arrayDato.liHay==0))
+							{
+								document.getElementById("haf_nombre").className = "form-group has-success";
+								loF.f_nombre.disabled=true;
+								loF.f_telefono.focus();
+								loF.txtOperacion.value="incluir";
+								loF.txtHacer.value="incluir";
+								loF.txtHay.value=0;
 
-									}
+							}
 
-									if ((loF.txtOperacion.value=="buscar")&&(loF.txtHacer.value=="buscar")&&(persona.liHay==0))
-									{
-										loF.txtOperacion.value="buscar";
-										loF.txtHacer.value="buscar";
-										loF.txtHay.value="0";
-										Rcampo.value="";
-										Rcampo.focus();
-										NotificaE("No se encontro Feligres con la cedula ingresada.")
-									}
+							if ((loF.txtOperacion.value=="buscar")&&(loF.txtHacer.value=="buscar")&&(arrayDato.liHay==0))
+							{
+								loF.txtOperacion.value="buscar";
+								loF.txtHacer.value="buscar";
+								loF.txtHay.value="0";
+								loF.f_nombre.value="";
+								loF.f_nombre.focus();
+								NotificaE("No se encontro Capilla con la cedula ingresada.")
+							}
 
 							
-							}
+							
 						}
 					});
-		
-			}
-		
+				
 		}
 
 		function fpPredeterminado()
@@ -539,12 +523,12 @@ echo utf8_Decode('
 			if (Cedu!="")
 			{
 				fpEncender();
-				document.getElementById("hatxtCodigoCapilla").className = "form-group has-success";
-				loF.txtCodigoCapilla.disabled=true;
+				document.getElementById("haf_nombre").className = "form-group has-success";
+				loF.f_nombre.disabled=true;
 				loF.txtOperacion.value="incluir";
 				loF.txtHacer.value="incluir";
 				loF.txtHay.value=0;
-				loF.txtCodigoCapilla.value=Cedu;
+				loF.f_nombre.value=Cedu;
 				loF.f_nombre.focus();
 				fpCambioN();
 
@@ -552,12 +536,12 @@ echo utf8_Decode('
 		}
 		function fpBusquedaForanea()
 		{
-			loF.txtCodigoCapilla.value="'.$CeduImportada.'";
-			loF.txtCodigoCapilla.disabled=false;
+			loF.f_nombre.value="'.$CeduImportada.'";
+			loF.f_nombre.disabled=false;
 			loF.txtOperacion.value="buscar";
 			loF.txtHacer.value="buscar";
 			loF.txtHay.value=0;
-			fpPerderFocus(document.getElementById("txtCodigoCapilla"));
+			fpPerderFocus();
 		}
 
 		function fpPadres(PCampos)
@@ -566,38 +550,38 @@ echo utf8_Decode('
 				var HacerOld=loF.txtHacer.value;	//respalda hacer
 				loF.txtOperacion.value="ExaminaPadre";	
 				loF.txtHacer.value=PCampos.id;	
-				var $forme = $("#fr_Parroquia");
+				var $forme = $("#fr_Capilla");
 
 					$.ajax(
 					{
-						url: \'../cntller/cn_personas.php\',
+						url: \'../cntller/cn_capilla.php\',
 						dataType: \'json\',
 						type: \'post\',
 						data: $forme.serialize(),
 				        success: function(data)
 				        {
-				        	var persona=data[\'Person\'];
-           					var padres=data[\'Padres\'];
-							if((persona.lsCedula!=""))
+				        	var arrayDato=data[\'ArrDatos\'];
+           					var arrayFeligres=data[\'Feligres\'];
+							if((arrayDato.lsCedula!=""))
 							{
 
-								if((persona.lsOperacion=="ExaminaPadre")&&(persona.liHay==1))
+								if((arrayDato.lsOperacion=="ExaminaPadre")&&(arrayDato.liHay==1))
 								{
-									PCampos.value = persona.lsCedula;
+									PCampos.value = arrayDato.lsCedula;
 									document.getElementById("ha"+PCampos.id).className = "form-group has-success";
-									document.getElementById("nt"+PCampos.id).innerHTML=" "+persona.lsNombre;
+									document.getElementById("nt"+PCampos.id).innerHTML=" "+arrayDato.lsNombre;
 									PCampos.disabled = true;
 
 								}
-								else if((persona.lsOperacion=="ExaminaPadre")&&(persona.liHay==0))
+								else if((arrayDato.lsOperacion=="ExaminaPadre")&&(arrayDato.liHay==0))
 								{
 									document.getElementById("ha"+PCampos.id).className = "form-group has-warning";
 									document.getElementById("nt"+PCampos.id).innerHTML=" "+" (No especificado)";
 								}
 
-								if((persona.lsOperacion=="ExaminaPadre")&&(persona.liHay==3))
+								if((arrayDato.lsOperacion=="ExaminaPadre")&&(arrayDato.liHay==3))
 								{
-									PCampos.value = persona.lsCedula;
+									PCampos.value = arrayDato.lsCedula;
 									document.getElementById("ha"+PCampos.id).className = "form-group has-error";
 
 							 	 	NotificaE("Lo siento, la cedula ingresada no es del sexo femenino");
@@ -606,9 +590,9 @@ echo utf8_Decode('
 									
 
 								}
-								if((persona.lsOperacion=="ExaminaPadre")&&(persona.liHay==4))
+								if((arrayDato.lsOperacion=="ExaminaPadre")&&(arrayDato.liHay==4))
 								{
-									PCampos.value = persona.lsCedula;
+									PCampos.value = arrayDato.lsCedula;
 									document.getElementById("ha"+PCampos.id).className = "form-group has-error";
 
 							 	 	NotificaE("Lo siento, la cedula ingresada no es del sexo masculino");
@@ -630,31 +614,28 @@ echo utf8_Decode('
 		{
 			if(fbValidar())
 			{
-		
+				loF.f_nombre.disabled=false;
 
-				var $forme = $("#fr_Parroquia");
-				var Cedu="'.$CeduImportada.'";
-				var pagAnterior="'.$_SESSION["UrlAnterior"].'";
+				var $forme = $("#fr_Capilla");
 					$.ajax(
 					{
-						url: \'../cntller/cn_personas.php\',
+						url: \'../cntller/cn_capilla.php\',
 						dataType: \'json\',
 						type: \'post\',
 						data: $forme.serialize(),
 				        success: function(data)
 				        {
-				        	var persona=data[\'Person\'];
-           					var padres=data[\'Padres\'];
-							if((persona.liHay!=""))
-							{
-								if ((loF.txtHacer.value=="incluir")&&(persona.liHay==0))
+				        	var arrayDato=data[\'ArrDatos\'];
+           					var arrayFeligres=data[\'Feligres\'];
+						
+								if ((loF.txtHacer.value=="incluir")&&(arrayDato.liHay==0))
 								{
 
 									NotificaE("El Registro no se pudo incluir.");
 
 								}
 
-								if ((loF.txtHacer.value=="incluir")&&(Cedu=="")&&(persona.liHay==1))
+								if ((loF.txtHacer.value=="incluir")&&(arrayDato.liHay==1))
 								{
 
 									NotificaS("Registro incluido con exito.");
@@ -663,32 +644,25 @@ echo utf8_Decode('
 
 								}
 										
-								if ((loF.txtHacer.value=="incluir")&&(Cedu!="")&&(persona.liHay==1))
-								{
-
-									NotificaS("Registro incluido con exito.");
-									
-									window.location=pagAnterior;
-
-								}
-								
-								if ((loF.txtHacer.value=="modificar")&&(persona.liHay==0))
+								if ((loF.txtHacer.value=="modificar")&&(arrayDato.liHay==0))
 								{
 
 									NotificaE("El Registro no se pudo modificar.");
 
 								}
 
-								if ((loF.txtHacer.value=="modificar")&&(persona.liHay==1))
+								if ((loF.txtHacer.value=="modificar")&&(arrayDato.liHay==1))
 								{
 
 									NotificaS("Registro modificado con exito.");
-
-									fpCancelar();
+									loF.txtOperacion.value="buscar";
+									loF.txtHacer.value="buscar";
+									loF.txtHay.value="0";
+									fpPerderFocus();							
 
 								}
 
-							}
+						
 						}
 					});
 
@@ -711,7 +685,7 @@ echo utf8_Decode('
 			{
 				invalido=1;
 			}
-			if(vCampoVacio("txtCorreo1"))
+			if(vCampoVacio("txtCorreo"))
 			{
 				invalido=1;
 			}
@@ -786,20 +760,20 @@ echo utf8_Decode('
 		{
 			if (loF.b_Eliminar.value=="Reactivar")
 			{
-				if(confirm("Desea Reactivar Parroquia?"))
+				if(confirm("Desea Reactivar Capilla?"))
 				{
 					loF.txtOperacion.value="reactivar";
 					loF.txtHacer.value="reactivar";
-					var $forme = $("#fr_Parroquia");
+					var $forme = $("#fr_Capilla");
 
 					$.ajax({
-						url: \'../cntller/cn_personas.php\',
+						url: \'../cntller/cn_capilla.php\',
 						dataType: \'json\',
 						type: \'post\',
 						data: $forme.serialize(),
 				        success: function(data){
-				        	var persona=data[\'Person\'];
-							if(persona.liHay==1)
+				        	var arrayDato=data[\'ArrDatos\'];
+							if(arrayDato.liHay==1)
 							{
 									fpCancelar();
 									NotificaS("Registro de Capilla ha sido Reactivado");
@@ -809,7 +783,7 @@ echo utf8_Decode('
 							else	
 							{
 									fpCancelar();
-									NotificaE("No se pudo Reactivar Parroquia");
+									NotificaE("No se pudo Reactivar Capilla");
 									loF.KestadoActual.value=1;
 									fpInicial();									
 							}
@@ -821,21 +795,21 @@ echo utf8_Decode('
 			}
 			else
 			{
-				if(confirm("Desea Desactivar Parroquia?"))
+				if(confirm("Desea Desactivar Capilla?"))
 				{
 					loF.txtOperacion.value="desactivar";
 					loF.txtHacer.value="desactivar";
 
-					var $forme = $("#fr_Parroquia");
+					var $forme = $("#fr_Capilla");
 
 					$.ajax({
-						url: \'../cntller/cn_personas.php\',
+						url: \'../cntller/cn_capilla.php\',
 						dataType: \'json\',
 						type: \'post\',
 						data: $forme.serialize(),
 				        success: function(data){
-				        	var persona=data[\'Person\'];
-							if(persona.liHay==1)
+				        	var arrayDato=data[\'ArrDatos\'];
+							if(arrayDato.liHay==1)
 							{
 									fpCancelar();
 									NotificaS("Registro de Capilla ha sido Desactivado");
@@ -845,7 +819,7 @@ echo utf8_Decode('
 							else	
 							{
 									fpCancelar();
-									NotificaE("No se pudo Desactivar Parroquia.");
+									NotificaE("No se pudo Desactivar Capilla.");
 									loF.KestadoActual.value=1;
 									fpInicial();									
 							}

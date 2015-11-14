@@ -169,7 +169,8 @@
 								 <li  class="'.$confArchiprestasgo.'"><a href="'.$rut.'confArchiprestasgo.php"><span>Archiprestasgo</span></a></li>	
 								 <li  class="'.$confTipoActividad.'"><a href="'.$rut.'confTipoActividad.php"><span>Tipo de Actividad</span></a></li>	
 								 <li  class="'.$confActividad.'"><a href="'.$rut.'confActividad.php"><span>Actividad</span></a></li>	
-								
+								 <li  class="'.$grupoapostolado.'"><a href="'.$rut.'confGrupoapostolado.php"><span>Grupo de Apostolado</span></a></li>
+								 <li  class="'.$pastoral.'"><a href="'.$rut.'confPastoral.php"><span>Pastoral</span></a></li>								
 								 ');
 					
 						if ($_SESSION['rol']=='ZZ')
@@ -186,10 +187,8 @@
 							<ul>
 								 <li  class="'.$bautismo.'"><a href="'.$rut.'bautismo.php"><span>Bautizo</span></a></li>
 								 <li  class="'.$matrimonio.'"><a href="'.$rut.'matrimonio.php"><span>Matrimonio</span></a></li>
-								 <li  class="'.$parroquiaIglesia.'"><a href="'.$rut.'parroquiaIglesia.php"><span>Parroquia</span></a></li>
+								 <li  class="'.$parroquiaIglesia.'"><a href="'.$rut.'parroquiaIglesia.php"><span>Parroquia Iglesia</span></a></li>
 								 <li  class="'.$capilla.'"><a href="'.$rut.'capilla.php"><span>Capilla</span></a></li>
-								 <li  class="'.$grupoapostolado.'"><a href="'.$rut.'grupoapostolado.php"><span>Grupo de Apostolado</span></a></li>
-								 <li  class="'.$pastoral.'"><a href="'.$rut.'pastoral.php"><span>Pastoral</span></a></li>
 								 ');
 					
 						if (($_SESSION['rol']=='S')||($_SESSION['rol']=='C'))
@@ -211,6 +210,8 @@
 						}
 						$menu .= utf8_decode('	
 						 <li  class="'.$feligres.'"><a href="'.$rut.'feligres.php?obj=4"><span>Feligres</span></a></li>	
+						 <li  class="'.$Agregar_Feligres_Grupo.'"><a href="'.$rut.'Agregar_Feligres_Grupo.php"><span>Miembros de Grupo Apostolado</span></a></li>	
+					   	 <li  class="'.$Agregar_Feligres_Pastoral.'"><a href="'.$rut.'Agregar_Feligres_Pastoral.php"><span>Miembros de Pastoral</span></a></li>
 
 							</ul>
 						</li>
@@ -225,8 +226,8 @@
 							<li class="'.$gestMatrimonio.'"><a href="'.$rut.'gestMatrimonio.php"><span>Matrimonio</span></a></li>
 							<li class="'.$gestAgendaD.'"><a href="'.$rut.'gestAgendaDiocesana.php"><span>Agenda Diocesana</span></a></li>
 							<li class="'.$gestAgendaP.'"><a href="'.$rut.'gestAgendaParroquial.php"><span>Agenda Parroqial</span></a></li>
-							<li  class="'.$gestAgregar_Grupo.'"><a href="'.$rut.'gestAgregar_Grupo.php"><span>Grupo Apostolado</span></a></li>	
-							<li  class="'.$gestAgregar_Pastoral.'"><a href="'.$rut.'gestAgregar_Pastoral.php"><span>Pastoral</span></a></li>	
+					   		<li  class="'.$gestAgendaCitas.'"><a href="'.$rut.'gestAgendaCitas.php"><span>Agenda de Citas</span></a></li>
+	
 								
 					    </ul>
 

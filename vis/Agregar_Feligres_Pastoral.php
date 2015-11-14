@@ -22,7 +22,7 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-		<title>'.$_SESSION['title'].' - Inscripción de Feligreses en Grupo Apostolado</title>
+		<title>'.$_SESSION['title'].' - Inscripción de Feligreses en Pastoral</title>
 		');
 			print(encabezado_menu("../"));
 
@@ -59,27 +59,21 @@
 		
 echo utf8_Decode('
 	
-	<form name="fr_grupoApostolado" id="fr_grupoApostolado" action="../con/cn_apostoladoFeligres.php" method="post">
+	<form name="fr_Pastoral" id="fr_Pastoral" action="../con/cn_matrimonio.php" method="post">
 		<div class="col-lg-12">
-			
+			<input type="hidden" id="temporal"/>
 				<table class="table table-striped table-bordered table-hover"  border="1" >
 					<thead>		
 						<tr>
-							<th colspan="2"><center><div class="alert alert-info" id="divf_cambiaMatri"><font id="ntf_cambiaMatri" onclick="accionEstados(this.id)">Inscripción de Feligreses en Grupo Apostolado</font><br><i id="CargaReporteIco" style="display:none;" class="fa fa-circle-o-notch fa-spin"></i></div></center></th>
+							<th colspan="2"><center><div class="alert alert-info" id="divf_cambiaMatri"><font id="ntf_cambiaMatri" onclick="accionEstados(this.id)">Inscripción de Feligreses en Pastoral</font><br><i id="CargaReporteIco" style="display:none;" class="fa fa-circle-o-notch fa-spin"></i></div></center></th>
 						</tr>
 					</thead>
 				<tr>
 					<th>
-						<div class="form-group has-default" id="hacmb_GrupoApostolado"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Grupo Apostolado:</font><select id="cmb_GrupoApostolado" name="cmb_GrupoApostolado" class="form-control"  onblur="vCampoVacio(this.id);" onchange="fpCombosIncluir(\'\');"><option value="0">Seleccione Grupo Apostolado</option>
+						<div class="form-group has-default" id="hacmb_Pastoral"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Pastoral:</font><select id="cmb_Pastoral" name="cmb_Pastoral" class="form-control"  onblur="vCampoVacio(this.id);" onchange="fpCombosIncluir(\'\');"><option value="0">Seleccione Pastoral</option>
 						');
-						echo utf8_decode($loFuncion->fncreateComboSelect("tgrupo", "","codigoGrupo","", ' ',"","nombre", $selecttgrupo,"", "", "")); 
-						echo utf8_Decode('</select><div class="tool-tip  slideIn" id="ttipcmb_GrupoApostolado" style="display:none;"></div></div></div>
-					</th>
-					<th>
-						<div class="form-group has-default" id="hacmb_Iglesia"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Parroquia:</font><select id="cmb_Iglesia" name="cmb_Iglesia" class="form-control"  onblur="vCampoVacio(this.id);" onchange="fpCombosIncluir(\'\');"><option value="0">Seleccione La Parroquia</option>
-						');
-						echo utf8_decode($loFuncion->fncreateComboSelect("tparroquiaiglesia", "","codigoParroquiaIglesia","", ' ',"","nombre", $selectiglesia,"", "", "")); 
-						echo utf8_Decode('</select><div class="tool-tip  slideIn" id="ttipcmb_Iglesia" style="display:none;"></div></div></div>
+						echo utf8_decode($loFuncion->fncreateComboSelect("tpastoral", "","codigoPastoral","", ' ',"","nombre", $selecttpastoral,"", "", "")); 
+						echo utf8_Decode('</select><div class="tool-tip  slideIn" id="ttipcmb_Pastoral" style="display:none;"></div></div></div>
 					</th>
 				</tr>
 				
@@ -144,22 +138,18 @@ echo utf8_Decode('
 		<tr>
 			<th colspan="2">
 			<div class="controls form-inline">
-					<center >
+					<center>
 					<input type="hidden" name="txtOperacion" id="txtOperacion" value="">
 					<input type="hidden" name="txtHacer" id="txtHacer" value="">
 					<input type="hidden" name="txtHay" id="txtHay" value="">
-					<input type="hidden" name="KestadoActual" id="KestadoActual" value="">
 					<input type="hidden" name="txtFila" value="0">
-					<input type="hidden" name="CIpadriAlter" value="0">
 					<input type="hidden" name="auxiliarHacer" value="">
 					<input type="hidden" name="auxiliarOpera" value="">
 					<input type="hidden" name="auxiliarFeligres" value="">
 					<input type="hidden" name="txtidRegistro" id="txtidRegistro" value="">
 					<input type="hidden" id="temporal" name="temporal" value="">
 					<input type="button" class="btn btn-default" name="b_Nuevo" value="Nuevo" onclick="fpNuevo()">
-					<input type="button" class="btn btn-default" name="b_Modificar" value="Modificar" onclick="fpModificar()">
 					<input type="button" class="btn btn-default" name="b_Buscar" value="Buscar" onclick="fpBuscarLike()">
-					<input type="button" class="btn btn-default" name="b_Eliminar" value="Estado" disabled>
 					<input type="button" class="btn btn-default" name="b_Guardar" value="Guardar" onclick="fpGuardar()">
 					<input type="button" class="btn btn-default" name="b_Cancelar" value="Cancelar" onclick="fpCancelar()">
 					</center>
@@ -176,12 +166,13 @@ echo utf8_Decode('
 
 </body>
 <script>
-	var loF=document.fr_grupoApostolado;
+	var loF=document.fr_Pastoral;
 	function fpInicio()
 	{	
 
-			fpInicial();
+			fpInicialnoElimMod();
 			fpCancelar();
+			fpNuevo();
 						
 
 	}
@@ -189,19 +180,17 @@ echo utf8_Decode('
 		function fpNuevo()
 		{
 			var liFila=Number(loF.txtFila.value);
-			loF.cmb_Iglesia.disabled=false;
-			loF.cmb_GrupoApostolado.disabled=false;
+			loF.cmb_Pastoral.disabled=false;
 			loF.txtOperacion.value="incluir";
 			loF.txtHacer.value="buscar";
-			loF.cmb_GrupoApostolado.focus();
-			fpCambioN();
+			loF.cmb_Pastoral.focus();
+			fpCambioNnoElimMod();
 		}
 		
 		function fpEncender()
 		{
 			var liFila=Number(loF.txtFila.value);
-			loF.cmb_Iglesia.disabled=false;
-			loF.cmb_GrupoApostolado.disabled=false;
+			loF.cmb_Pastoral.disabled=false;
 			loF.btnAgregar.disabled=false;
 
 			for(liY=1;liY<=liFila;liY++)
@@ -223,8 +212,7 @@ echo utf8_Decode('
 		
 		function fpEnciendeCampos()
 		{
-			loF.cmb_Iglesia.disabled=false;
-			loF.cmb_GrupoApostolado.disabled=false;
+			loF.cmb_Pastoral.disabled=false;
 			var liFila=Number(loF.txtFila.value);
 			for(liY=1;liY<=liFila;liY++)
 	        {
@@ -241,8 +229,7 @@ echo utf8_Decode('
 		function fpApagar()
 		{
 			var liFila=Number(loF.txtFila.value);
-			loF.cmb_Iglesia.disabled=true;
-			loF.cmb_GrupoApostolado.disabled=true;
+			loF.cmb_Pastoral.disabled=true;
 
 			loF.btnAgregar.disabled=true;
 		    for(liY=1;liY<=liFila;liY++)
@@ -254,9 +241,9 @@ echo utf8_Decode('
 				document.getElementById("f_padParroquia"+liY).disabled=true;
 			}
 			
-			document.getElementById("ntf_cambiaMatri").innerHTML="Registro de Feligreses a Grupo Apostolado";
+			document.getElementById("ntf_cambiaMatri").innerHTML="Registro de Feligreses a Pastoral";
 			document.getElementById("divf_cambiaMatri").className = "alert alert-info";
-			loF.b_Eliminar.disabled=true;	
+
 		}
 
 		function fpCancelar()
@@ -265,19 +252,14 @@ echo utf8_Decode('
 			loF.txtOperacion.value="";
 			loF.txtHacer.value="";
 			loF.txtHay.value=0;
-			loF.cmb_Iglesia.value=0;
-			loF.cmb_GrupoApostolado.value=0;		
-			document.getElementById("hacmb_Iglesia").className = "form-group has-default";
-			document.getElementById("hacmb_GrupoApostolado").className = "form-group has-default";
+			loF.cmb_Pastoral.value=0;	
+			$( ".tool-tip.slideIn" ).each(function(i) {$(this).css( "display", "none" );});
+			$( ".form-group.has-error" ).each(function(i) {$(this).attr( "class", "form-group has-default" );});	
 
 			loF.auxiliarHacer.value="buscar";		
 			fpEliminaFilas();
 			fpApagar();
-			fpInicial();
-			loF.KestadoActual.value=9;
-			fpEstadoActual();
-			
-
+			fpInicialnoElimMod();
 		}
 
 		function fpBuscarLike()
@@ -302,13 +284,11 @@ echo utf8_Decode('
 			bus.style.display = "none";
 			
 
-			loF.cmb_GrupoApostolado.value=lke.nvaidApostolado.value;
-			loF.cmb_Iglesia.value=lke.nvaidParroquiaIglesia.value;
+			loF.cmb_Pastoral.value=lke.nvaidPastoral.value;
 			loF.txtOperacion.value="buscar";
 			loF.txtHacer.value="buscar";
 			loF.txtHay.value="0";
-			loF.cmb_GrupoApostolado.disabled=false;
-			loF.cmb_Iglesia.disabled=false;
+			loF.cmb_Pastoral.disabled=false;
 			fpPerderFocus();
 
 		}
@@ -330,30 +310,27 @@ echo utf8_Decode('
 		{
 			loF.txtOperacion.value="buscar";
 			loF.txtHacer.value="buscar";
-			loF.cmb_Iglesia.disabled=false;
-			loF.cmb_GrupoApostolado.disabled=false;
-			loF.cmb_Iglesia.focus();
-			fpCambioB();
+			loF.cmb_Pastoral.disabled=false;
+			loF.cmb_Pastoral.focus();
+			fpCambioBnoElimMod();
 			
 		}
 
 		function fpCombosIncluir()
 		{
-			var campo1=loF.cmb_GrupoApostolado.value;
-			var campo2=loF.cmb_Iglesia.value;
+			var campo1=loF.cmb_Pastoral.value;
 
-			if ((campo1!="0")&&(campo2!="0"))
+			if (campo1!="0")
 			{
 				loF.txtOperacion.value="incluir";
 				loF.txtHacer.value="buscar";
 				loF.txtHay.value="0";
-				loF.cmb_GrupoApostolado.disabled=false;
-				loF.cmb_Iglesia.disabled=false;
+				loF.cmb_Pastoral.disabled=false;
 				fpPerderFocus();
 			}
 		}
 
-		function fpPerderFocus(Rcampo)
+		function fpPerderFocus()
 		{
 		var obje="";
 			
@@ -361,42 +338,39 @@ echo utf8_Decode('
 			{
 				
 						
-				var $forme = $("#fr_grupoApostolado");
+				var $forme = $("#fr_Pastoral");
 
 					$.ajax({
-						url: \'../cntller/cn_apostoladoFeligres.php\',
+						url: \'../cntller/cn_pastoralFeligres.php\',
 						dataType: \'json\',
 						type: \'post\',
 						data: $forme.serialize(),
 				        success: function(data){
-				        	var apostolo=data[\'AposFeligres\'];
+				        	var pastoro=data[\'PastoFeligres\'];
            					var padres=data[\'Padres\'];
            					var Feligres=data[\'Feli\'];
 											
-								if ((loF.txtHacer.value=="buscar")&&(apostolo.liHay==1))
+								if ((loF.txtHacer.value=="buscar")&&(pastoro.liHay==1))
 								{
-									fpCambioE();
+									fpCambioNnoElimMod();
 									fpApagar();
-									fpEstadoActual();
 									fpListarFeligres(Feligres);
+									if(loF.txtOperacion.value=="buscar")
+									{
+										fpModificar();
+									}
 												
 								}
 
-								if ((loF.txtOperacion.value=="buscar")&&(apostolo.liHay==0))
+								if ((loF.txtOperacion.value=="buscar")&&(pastoro.liHay==0))
 								{
-									NotificaE("No se encontro ningun Feligres Asociado a Grupo Apostolado activo con la Referencia ingresada");
-									Rcampo.value="";
-									Rcampo.focus();
+									NotificaE("No se encontro ningun Feligres Asociado a Pastoral activo con la Referencia ingresada");
 								}
 								if ((loF.txtOperacion.value=="incluir")&&(loF.txtHacer.value=="buscar"))
 								{
 									loF.txtOperacion.value="incluir";
 									loF.txtHacer.value="incluir";
-									loF.txtHay.value="0";
-									if (loF.txtHay.value==0)
-									{
-										loF.btnAgregar.disabled=false;
-									}
+									loF.btnAgregar.disabled=false;
 								}
 						}
 					});
@@ -412,42 +386,42 @@ echo utf8_Decode('
 			if(fbValidar())
 			{
 				fpEnciendeCampos();
-				var $forme = $("#fr_grupoApostolado");
+				var $forme = $("#fr_Pastoral");
 
 					$.ajax(
 					{
-						url: \'../cntller/cn_apostoladoFeligres.php\',
+						url: \'../cntller/cn_pastoralFeligres.php\',
 						dataType: \'json\',
 						type: \'post\',
 						data: $forme.serialize(),
 				        success: function(data)
 				        {
-				        	var apostolo=data[\'AposFeligres\'];
+				        	var pastoro=data[\'PastoFeligres\'];
            					var Feligres=data[\'Padri\'];
 
-							if ((loF.txtHacer.value=="incluir")&&(apostolo.liHay==0))
+							if ((loF.txtHacer.value=="incluir")&&(pastoro.liHay==0))
 							{
 								NotificaE("El Registro no pudo ser incluido.");
 
 
 							}
 
-							if ((loF.txtHacer.value=="incluir")&&(apostolo.liHay==1))
+							if ((loF.txtHacer.value=="incluir")&&(pastoro.liHay==1))
 							{
 
-								NotificaS("Registro incluido con exito. Numero de Referencia: "+apostolo.lsDetalle_Grupocol);
+								NotificaS("Registro incluido con exito.");
 								fpCancelar();
 
 
 							}
-							if ((loF.txtHacer.value=="modificar")&&(apostolo.liHay==0))
+							if ((loF.txtHacer.value=="modificar")&&(pastoro.liHay==0))
 							{
 								NotificaE("El Registro no pudo ser modificado.");
 
 
 							}
 
-							if ((loF.txtHacer.value=="modificar")&&(apostolo.liHay==1))
+							if ((loF.txtHacer.value=="modificar")&&(pastoro.liHay==1))
 							{
 
 								NotificaS("Registro modificado con exito.");
@@ -464,16 +438,10 @@ echo utf8_Decode('
 		{
 			var lbValido=false;
 			var vInvalido=0;
-			if(loF.cmb_Iglesia.value=="0")
+			if(loF.cmb_Pastoral.value=="0")
 			{
-				loF.cmb_Iglesia.focus();
-				vCampoVacio("cmb_Iglesia");
-				vInvalido=1;
-			}
-			if(loF.cmb_GrupoApostolado.value=="0")
-			{
-				loF.cmb_GrupoApostolado.focus();
-				vCampoVacio("cmb_GrupoApostolado");
+				loF.cmb_Pastoral.focus();
+				vCampoVacio("cmb_Pastoral");
 				vInvalido=1;
 			}
 			if (vInvalido==0)
@@ -489,6 +457,7 @@ echo utf8_Decode('
 			return lbValido;
 		}
 
+
 		function fbValidaFeligres()
 		{
 			var lbValido=false;
@@ -499,6 +468,15 @@ echo utf8_Decode('
 	            for(liY=1;liY<=liFila;liY++)
 	            {
 	            	
+					for(liO=1;liO<=liFila;liO++)
+	            	{
+						if((document.getElementById("f_padCedula"+liY).value.trim()==document.getElementById("f_padCedula"+liO).value.trim())&&(liY!=liO))
+						{
+							document.getElementById("f_padCedula"+liY).focus();
+							vInvalido=1;
+						}
+					}
+
 					if(document.getElementById("f_padCedula"+liY).value=="")
 					{
 
@@ -524,6 +502,18 @@ echo utf8_Decode('
 						vCampoVacio("f_padSexo"+liY);
 						vInvalido=1;
 					}
+					if(document.getElementById("f_padTelefono"+liY).value=="")
+					{
+						document.getElementById("f_padTelefono"+liY).focus();
+						vCampoVacio("f_padTelefono"+liY);
+						vInvalido=1;
+					}
+					if(document.getElementById("f_padCorreo"+liY).value=="")
+					{
+						document.getElementById("f_padCorreo"+liY).focus();
+						vCampoVacio("f_padCorreo"+liY);
+						vInvalido=1;
+					}
 					if(document.getElementById("f_padParroquia"+liY).value=="")
 					{
 						document.getElementById("f_padParroquia"+liY).focus();
@@ -546,68 +536,37 @@ echo utf8_Decode('
 		function fpModificar()
 		{
 			fpEncender();
-			fpCambioN();
+			fpCambioNnoElimMod();
 			loF.txtOperacion.value="modificar";
 			loF.txtHacer.value="modificar";
 			loF.txtHay.value=0;
-			loF.cmb_Iglesia.disabled=true;
-			loF.cmb_GrupoApostolado.disabled=true;
-			loF.cmb_Iglesia.focus();
+			loF.cmb_Pastoral.disabled=true;
+			loF.cmb_Pastoral.focus();
 		}
 		
-		function fpEstadoActual()
-		{
-			loF.b_Eliminar.disabled=true;
-			var KedoActual=loF.KestadoActual.value;
-			if(KedoActual==0)
-			{
-				loF.b_Eliminar.value="Pendiente";
-
-			}
-			else if(KedoActual==1)
-			{
-				loF.b_Eliminar.value="Casado";
-
-			}
-			else if(KedoActual==2)
-			{
-				loF.b_Eliminar.value="Suspendido";
-			}
-			else if(KedoActual==3)
-			{
-				loF.b_Eliminar.value="Anulado";
-
-			}
-			else
-			{
-				loF.b_Eliminar.value="Estado";
-			}
-		
-		}
-
 		function fpCambiaEstadoFeli(idRegis,opera,fila)
         {
             loF.txtidRegistro.value=idRegis;
             loF.txtOperacion.value=opera;
             loF.txtHacer.value=opera;
             loF.txtHay.value="0";
-            var $forme = $("#fr_grupoApostolado");
+            var $forme = $("#fr_Pastoral");
 			$.ajax({
-				url: \'../cntller/cn_apostoladoFeligres.php\',
+				url: \'../cntller/cn_pastoralFeligres.php\',
                     dataType: \'json\',
                     type: \'post\',
                     data: $forme.serialize(),
                     success: function(data)
                     {
-			        	var AposFeligres=data[\'AposFeligres\']
+			        	var pastoro=data[\'PastoFeligres\']
 			        	var FeliEncontrado=data[\'FeliEncontrado\'];
                         
-                            if ((loF.txtHacer.value=="activarFeli")&&(AposFeligres.liHay==0))
+                            if ((loF.txtHacer.value=="activarFeli")&&(pastoro.liHay==0))
                             {
                                 NotificaE("Feligres no pudo ser activado.");
 
                             }
-                            if ((loF.txtHacer.value=="activarFeli")&&(AposFeligres.liHay==1))
+                            if ((loF.txtHacer.value=="activarFeli")&&(pastoro.liHay==1))
                             {
                                 NotificaS("Feligres activado con exito.");
                                 document.getElementById("estadoTR"+fila).className="success";
@@ -616,13 +575,13 @@ echo utf8_Decode('
                                 document.getElementById("btnEstadoFeli"+fila).innerHTML="<i class=\"fa fa-times\"></i>";
                             }
 
-                            if ((loF.txtHacer.value=="desactivarFeli")&&(AposFeligres.liHay==0))
+                            if ((loF.txtHacer.value=="desactivarFeli")&&(pastoro.liHay==0))
                             {
                                 NotificaE("Feligres no pudo ser desactivado.");
 
                             }
 
-                            if ((loF.txtHacer.value=="desactivarFeli")&&(AposFeligres.liHay==1))
+                            if ((loF.txtHacer.value=="desactivarFeli")&&(pastoro.liHay==1))
                             {
                                 NotificaS("Feligres desactivado con exito.");
                                 document.getElementById("estadoTR"+fila).className="danger";
@@ -639,150 +598,76 @@ echo utf8_Decode('
 
         }
 
-		function fpDesactivar()
-		{
-			if (loF.b_Eliminar.value=="Reactivar")
-			{
-				if(confirm("Desea Reactivar el Registro?"))
-				{
-					loF.f_cedunovia.disabled=false;
-					loF.txtOperacion.value="reactivar";
-					loF.txtHacer.value="reactivar";
-					loF.f_cedunovia.disabled=false;
-					loF.f_cedunovio.disabled=false;
-					
-					var $forme = $("#fr_grupoApostolado");
-
-					$.ajax({
-						url: \'../cntller/cn_apostoladoFeligres.php\',
-						dataType: \'json\',
-						type: \'post\',
-						data: $forme.serialize(),
-				        success: function(data){
-				        	var apostolo=data[\'A\'];
-							if(apostolo.liHay==1)
-							{
-									fpCancelar();
-									NotificaS("Registro Reactivado");
-									loF.KestadoActual.value=1;
-									fpInicial();
-							}
-							else	
-							{
-									fpCancelar();
-									NotificaE("No se pudo Reactivar el Registro");
-									loF.KestadoActual.value=1;
-									fpInicial();									
-							}
-						}
-					});
-
-
-				}
-			}
-			else
-			{
-				if(confirm("Desea Desactivar el Registro?"))
-				{
-					loF.f_cedunovia.disabled=false;
-					loF.txtOperacion.value="desactivar";
-					loF.txtHacer.value="desactivar";
-					loF.f_cedunovia.disabled=false;
-					loF.f_cedunovio.disabled=false;
-
-					var $forme = $("#fr_grupoApostolado");
-
-					$.ajax({
-						url: \'../cntller/cn_apostoladoFeligres.php\',
-						dataType: \'json\',
-						type: \'post\',
-						data: $forme.serialize(),
-				        success: function(data){
-				        	var apostolo=data[\'A\'];
-							if(apostolo.liHay==1)
-							{
-									fpCancelar();
-									NotificaS("Registro Desactivado");
-									loF.KestadoActual.value=1;
-									fpInicial();							
-							}
-							else	
-							{
-									fpCancelar();
-									NotificaE("No se pudo Desactivar el Registro, solo se puede desactivar si el mismo no se ha llevado a cabo.");
-									loF.KestadoActual.value=1;
-									fpInicial();									
-							}
-						}
-					});
-
-				}
-			}
-		}
-
 		function BuscaUnFeli(linea)
 		{
-			loF.auxiliarHacer.value=loF.txtHacer.value;
-			loF.auxiliarOpera.value=loF.txtOperacion.value;
-			var cedufeli=document.getElementById("f_padCedula"+linea).value.split(\' \').join(\'\');
-			loF.txtOperacion.value="buscarFeli";
-			loF.txtHacer.value="buscarFeli";
-			document.getElementById("f_padCedula"+linea).disabled=false;
-			
-			if (cedufeli.length>7)
-			{
-				loF.auxiliarFeligres.value=cedufeli;
-				var $forme = $("#fr_grupoApostolado");
-
-				$.ajax({
-					url: \'../cntller/cn_apostoladoFeligres.php\',
-					dataType: \'json\',
-					type: \'post\',
-					data: $forme.serialize(),
-			        success: function(data){
-			        	var AposFeligres=data[\'AposFeligres\']
-			        	var FeliEncontrado=data[\'FeliEncontrado\'];
-						if((AposFeligres.liHay==1)&&(AposFeligres.lsHacer=="buscarFeli"))
-						{
-							document.getElementById("haf_padCedula"+linea).className = "form-group has-warning";				
-							document.getElementById("f_padCedula"+linea).value = FeliEncontrado.lscedu;
-							document.getElementById("f_padNombres"+linea).value = FeliEncontrado.lsNomb;
-							document.getElementById("f_padApellidos"+linea).value = FeliEncontrado.lsApel;
-							document.getElementById("f_padSexo"+linea).value = FeliEncontrado.lsSexo;
-							document.getElementById("f_padTelefono"+linea).value = FeliEncontrado.lsTelefono;
-							document.getElementById("f_padCorreo"+linea).value = FeliEncontrado.lsCorreo;
-							document.getElementById("f_padParroquia"+linea).value = FeliEncontrado.lsParroquiaIglesia;
-							document.getElementById("f_padCedula"+linea).disabled = true;
-							document.getElementById("f_padNombres"+linea).disabled = true;
-							document.getElementById("f_padApellidos"+linea).disabled = true;
-							document.getElementById("f_padSexo"+linea).disabled = true;
-							document.getElementById("f_padTelefono"+linea).disabled = true;
-							document.getElementById("f_padCorreo"+linea).disabled = true;
-							document.getElementById("f_padParroquia"+linea).disabled = true;
-							document.getElementById("haf_padNombres"+linea).className = "form-group has-default";
-							document.getElementById("haf_padApellidos"+linea).className = "form-group has-default";
-							document.getElementById("haf_padSexo"+linea).className = "form-group has-default";
-							document.getElementById("haf_padTelefono"+linea).className = "form-group has-default";
-							document.getElementById("haf_padCorreo"+linea).className = "form-group has-default";
-							document.getElementById("haf_padParroquia"+linea).className = "form-group has-default";
-
-						}
-						else	
-						{
-							document.getElementById("haf_padCedula"+linea).className = "form-group has-success";
-							document.getElementById("f_padCedula"+linea).disabled=true;
-						}
-					}
-				});
+			var liFila=Number(loF.txtFila.value);
+			var EnviaConsulta=true;
+			for(liO=1;liO<=liFila;liO++)
+	    	{
+				if((document.getElementById("f_padCedula"+linea).value.trim()==document.getElementById("f_padCedula"+liO).value.trim())&&(linea!=liO))
+				{
+					NotificaE("Lo siento, no puede incluir un feligres que ya se encuentra agregado.");
+					document.getElementById("f_padCedula"+linea).focus();
+					EnviaConsulta=false;
+				}
 			}
-			else
+			if (EnviaConsulta)
 			{
-				NotificaE(\'La cedula debe contener al menos 7 digitos numericos\');
-				document.getElementById("haf_padCedula"+linea).className = "form-group has-error";
-			}
+				loF.auxiliarHacer.value=loF.txtHacer.value;
+				loF.auxiliarOpera.value=loF.txtOperacion.value;
+				var cedufeli=document.getElementById("f_padCedula"+linea).value.split(\' \').join(\'\');
+				loF.txtOperacion.value="buscarFeli";
+				loF.txtHacer.value="buscarFeli";
+				document.getElementById("f_padCedula"+linea).disabled=false;
+				
+				if (cedufeli.length>7)
+				{
+					loF.auxiliarFeligres.value=cedufeli;
+					var $forme = $("#fr_Pastoral");
 
-		loF.txtHacer.value=loF.auxiliarHacer.value;
-		loF.txtOperacion.value=loF.auxiliarOpera.value;
+					$.ajax({
+						url: \'../cntller/cn_pastoralFeligres.php\',
+						dataType: \'json\',
+						type: \'post\',
+						data: $forme.serialize(),
+				        success: function(data){
+				        	var pastoro=data[\'PastoFeligres\']
+				        	var FeliEncontrado=data[\'FeliEncontrado\'];
+							if((pastoro.liHay==1)&&(pastoro.lsHacer=="buscarFeli"))
+							{
+								document.getElementById("haf_padCedula"+linea).className = "form-group has-warning";				
+								document.getElementById("f_padCedula"+linea).value = FeliEncontrado.lscedu;
+								document.getElementById("f_padNombres"+linea).value = FeliEncontrado.lsNomb;
+								document.getElementById("f_padApellidos"+linea).value = FeliEncontrado.lsApel;
+								document.getElementById("f_padSexo"+linea).value = FeliEncontrado.lsSexo;
+								document.getElementById("f_padTelefono"+linea).value = FeliEncontrado.lsTelefono;
+								document.getElementById("f_padCorreo"+linea).value = FeliEncontrado.lsCorreo;
+								document.getElementById("f_padParroquia"+linea).value = FeliEncontrado.lsParroquiaIglesia;
+								document.getElementById("f_padCedula"+linea).disabled = true;
+								document.getElementById("haf_padNombres"+linea).className = "form-group has-default";
+								document.getElementById("haf_padApellidos"+linea).className = "form-group has-default";
+								document.getElementById("haf_padSexo"+linea).className = "form-group has-default";
+								document.getElementById("haf_padTelefono"+linea).className = "form-group has-default";
+								document.getElementById("haf_padCorreo"+linea).className = "form-group has-default";
+								document.getElementById("haf_padParroquia"+linea).className = "form-group has-default";
+
+							}
+							else	
+							{
+								document.getElementById("haf_padCedula"+linea).className = "form-group has-success";
+								document.getElementById("f_padCedula"+linea).disabled=true;
+							}
+						}
+					});
+				}
+				else
+				{
+					NotificaE(\'La cedula debe contener al menos 7 digitos numericos\');
+					document.getElementById("haf_padCedula"+linea).className = "form-group has-error";
+				}
+				loF.txtHacer.value=loF.auxiliarHacer.value;
+				loF.txtOperacion.value=loF.auxiliarOpera.value;
+			}		
 		}
 
 		function fpListarPadres(arre)
@@ -813,7 +698,6 @@ echo utf8_Decode('
 			liFila=liFila+arre.length;
 			loF.txtFila.value=liFila;
 
-				
 
 		    $.each(arre, function(a, padrino) {
    			i=a+1;
@@ -995,14 +879,14 @@ echo utf8_Decode('
 			if (padrino.Estatus=="0")
             {
                 lobtnEstado.setAttribute(\'title\',"Click Para Activar el Feligres");
-                lobtnEstado.setAttribute(\'onclick\',"fpCambiaEstadoFeli("+padrino.Detalle_Grupocol+",\"activarFeli\","+i+");");
+                lobtnEstado.setAttribute(\'onclick\',"fpCambiaEstadoFeli("+padrino.Detalle_Pastoralcol+",\"activarFeli\","+i+");");
                 var lobtnMinus = document.createElement("i");
                 lobtnMinus.setAttribute(\'class\',"fa fa-check");
             }
             else
             {
                 lobtnEstado.setAttribute(\'title\',"Click Para Desactivar el Feligres");
-                lobtnEstado.setAttribute(\'onclick\',"fpCambiaEstadoFeli("+padrino.Detalle_Grupocol+",\"desactivarFeli\","+i+");");
+                lobtnEstado.setAttribute(\'onclick\',"fpCambiaEstadoFeli("+padrino.Detalle_Pastoralcol+",\"desactivarFeli\","+i+");");
                 var lobtnMinus = document.createElement("i");
                 lobtnMinus.setAttribute(\'class\',"fa fa-times");
             }
@@ -1019,20 +903,20 @@ echo utf8_Decode('
             loCelda7.appendChild(halof_padParroquia).appendChild(ttipclearfix.cloneNode(false)).appendChild(lof_padParroquia).appendChild(ttiplof_padParroquia);
  			loCelda8.appendChild(lobtnEstado).appendChild(lobtnMinus);
 
-            document.getElementById("f_padCedula"+i).disabled="true";
    			document.getElementById("f_padCedula"+i).value=padrino.Cedula;
 			document.getElementById("f_padNombres"+i).value=padrino.Nombres;
-			document.getElementById("f_padNombres"+i).disabled="true";
 			document.getElementById("f_padApellidos"+i).value=padrino.Apellidos;
-			document.getElementById("f_padApellidos"+i).disabled="true";
 			document.getElementById("f_padSexo"+i).value=padrino.Sexo;
-			document.getElementById("f_padSexo"+i).disabled="true";
 			document.getElementById("f_padTelefono"+i).value=padrino.Telefono;
-			document.getElementById("f_padTelefono"+i).disabled="true";
 			document.getElementById("f_padCorreo"+i).value=padrino.Correo;
-			document.getElementById("f_padCorreo"+i).disabled="true";
 			document.getElementById("f_padParroquia"+i).value=padrino.idFparroquiaCodigo;
 			document.getElementById("f_padIDPersona"+i).value=padrino.idTpersonas;
+			document.getElementById("f_padCedula"+i).disabled="true";
+			document.getElementById("f_padNombres"+i).disabled="true";
+			document.getElementById("f_padApellidos"+i).disabled="true";
+			document.getElementById("f_padSexo"+i).disabled="true";
+			document.getElementById("f_padTelefono"+i).disabled="true";
+			document.getElementById("f_padCorreo"+i).disabled="true";
 			document.getElementById("f_padParroquia"+i).disabled="true";
 		
   			});
@@ -1287,16 +1171,12 @@ echo utf8_Decode('
 		
         function buscar_like(e){
 			var parametros = "?AccionGet=buscar_like&txtcadena="+e.value;
-			var url = "../cntller/cn_apostoladoFeligres.php";
+			var url = "../cntller/cn_pastoralFeligres.php";
 			consulta_ajax(url,parametros);
 			document.getElementById("cargar").innerHTML = document.getElementById("temporal").value;
 		}
 
 </script>
-
-
-
-</html>
 '); 
 
 

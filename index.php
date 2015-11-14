@@ -7,6 +7,10 @@
 
 require_once("vis/menu_principal.php");
 require_once("vis/encabezado.php");
+require_once("clases/claAgendaCitas.php");
+require_once("clases/clsFuncionesGlobales.php");
+$loFuncion =new clsFunciones();
+$loCitas=new claAgendaCitas();
 
     $lsOperacion=$_GET["lsOperacion"];
 	$lsHacer=$_GET["lsHacer"];
@@ -76,15 +80,19 @@ echo('</head><body onload="'.$inicia.'"><div class="mygrid-wrapper-div"><div cla
 encab("");
 menu_general("vis/");
 
-
-
-
 echo utf8_decode('
-			<form name="fr_InicioSesion" action="cntller/cValidaUser.php" method="post" autocomplete="off">
-				
+
 					<div class="row">
 						<div class="col-lg-8">
 						<br>
+	');
+  if(!array_key_exists("usuario", $_SESSION)) 
+	{
+						
+
+echo utf8_decode('
+				
+
 						 
 
 				<div class="panel panel-info">
@@ -127,9 +135,151 @@ echo utf8_decode('
 		                        </div>
 	                    	</div>
 
-						</div>
-						<div class="col-lg-4">
-							<br>');
+						');
+	}
+	else
+	{
+
+		if ($_SESSION["rol"]=="O")
+		{
+			echo utf8_decode('
+				<div class="panel panel-info">
+					<form name="fr_Busqueda" id="fr_Busqueda">
+	                    <div class="panel-heading">
+	                        Citas Pendientes 
+	                       	<div class="col-md-5 pull-right">
+	                       		<div class="input-group">
+	                       			<input type="text" class="form-control" placeholder="Cedula Feligres, Nro Solicitud" style="z-index:1">
+	                       			<span class="input-group-addon"><span class="fa fa-search fa-lg"></span></span>
+	                       		</div>
+	                       	</div>
+	                    </div>
+	                </form>
+	                    <!-- /.panel-heading -->
+	                    <div class="panel-body">');
+			$arrCitas=$loCitas->fpListaCitasSecretaria();
+			echo utf8_decode('
+ 			<div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Feligres</th>
+                                            <th>Nro Solicitud</th>
+                                            <th>Tipo de Cita</th>
+                                            <th>Fecha de Cita</th>
+                                            <th>Hora de Cita</th>
+                                            <th>Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>');
+			for($i=0;$i<count($arrCitas);$i++)
+			{
+				switch ($arrCitas[$i]['EstadoSolicitud']) 
+				{
+					case 0:
+						$estadoCita='info';
+						break;
+					case 1:
+						$estadoCita='success';
+						break;
+					case 2:
+						$estadoCita='warning';
+						break;
+					case 3:
+						$estadoCita='danger';
+						break;
+
+					default:
+						$estadoCita='info';
+						break;
+				}			
+            echo utf8_decode('  <tr class="'.$estadoCita.'">
+                                    <td>'.intval($i+1).'</td>
+                                    <td>'.$arrCitas[$i]['Cedula'].' '.$arrCitas[$i]['Nombres'].' '.$arrCitas[$i]['Apellidos'].'</td>
+                                    <td>'.$arrCitas[$i]['idTSolicitud'].'</td>
+                                    <td>'.$arrCitas[$i]['descripcion'].'</td>
+                                    <td>'.$loFuncion->fDameFechaEscrita($arrCitas[$i]['FechaCita']).'</td>
+                                    <td>'.$loFuncion->fDameHoraEstandar($arrCitas[$i]['HoraCita']).'</td>
+                                    <td><div class="controls form-inline" style="display:flex;"><input type="button" dato="'.$arrCitas[$i]['idTSolicitud'].'" class="btn btn-success" style="width: 75px; display:inline-block;" name="b_Proc" value="Procesar" onclick=""> <input type="button" dato="'.$arrCitas[$i]['idTSolicitud'].'" style="width: 90px; display:inline-block;" class="btn btn-warning" name="b_susp" value="Suspender" onclick=""></div></td>
+                                </tr>');
+			}
+            echo utf8_decode('
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.table-responsive -->
+			');
+			echo utf8_decode('
+	                	</div>
+	                <!-- /.panel-body -->
+	            </div>');
+		}
+		elseif ($_SESSION["rol"]=="F")
+		{
+			echo utf8_decode('
+				<div class="panel panel-info">
+	                    <div class="panel-heading">
+	                       Mis Citas Pendientes
+	                    </div>
+	                    <!-- /.panel-heading -->
+	                    <div class="panel-body">');
+			$loCitas->asidtPersona=$_SESSION["IDTpersona"];
+			$arrCitas=$loCitas->fpListaCitasFeligres();
+			echo utf8_decode('
+ 			<div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Tipo de Cita</th>
+                                            <th>Requisitos</th>
+                                            <th>Fecha de Cita</th>
+                                            <th>Hora de Cita</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>');
+			for($i=0;$i<count($arrCitas);$i++)
+			{
+            echo utf8_decode('  <tr class="success">
+                                    <td>'.$arrCitas[$i]['idTSolicitud'].'</td>
+                                    <td>'.$arrCitas[$i]['descripcion'].'</td>
+                                    <td>'.$arrCitas[$i]['requisitos'].'</td>
+                                    <td>'.$loFuncion->fDameFechaEscrita($arrCitas[$i]['FechaCita']).'</td>
+                                    <td>'.$loFuncion->fDameHoraEstandar($arrCitas[$i]['HoraCita']).'</td>
+                                </tr>');
+			}
+            echo utf8_decode('
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.table-responsive -->
+			');
+			echo utf8_decode('
+	                	</div>
+	                <!-- /.panel-body -->
+	            </div>');
+		}
+		else
+		{	
+				echo utf8_decode('
+					<div class="panel panel-info">
+		                    <div class="panel-heading">
+		                        Bienvenido
+		                    </div>
+		                    <!-- /.panel-heading -->
+		                    <div class="panel-body">
+		                	</div>
+		                <!-- /.panel-body -->
+		            </div>');
+		}
+	}
+	echo utf8_decode('
+</div>
+	<div class="col-lg-4">
+		<br>
+
+		');
 
 					  if(array_key_exists("usuario", $_SESSION)) 
 						{
@@ -155,6 +305,7 @@ echo utf8_decode('
 						
 						echo utf8_decode('
 							
+						<form name="fr_InicioSesion" action="cntller/cValidaUser.php" method="post" autocomplete="off">
 							<div class="panel panel-primary">
 		                       	<div class="panel-heading">
 		                            Acceso Usuario
@@ -176,7 +327,7 @@ echo utf8_decode('
 												<input type="submit" class="btn btn-dropbox" name="bsubmit" value="Entrar">  <input type=button class="btn btn-vk" onClick="parent.location=\'vis/recuperar.php\'" value="¿Olvido Su Contraseña?">
 		                        </div>
 		                    </div>
-
+						</form>
 							<div class="panel panel-warning">
 		                       	<div class="panel-heading">
 		                            Panel para Feligres
@@ -194,26 +345,32 @@ echo utf8_decode('
 
 		                    ');
 						}
+			if(!array_key_exists("usuario", $_SESSION)) 
+			{
+						
 							echo utf8_decode('
 							<center>
-							<div redes>
-							 	<img src="vis/img/old/papa.gif" class="img-rounded" width="49%" height="220" alt="Diócesis Acarigua-Araure">
-							 	<img src="vis/img/old/imagen.gif" class="img-rounded" width="49%" height="220" alt="Diócesis Acarigua-Araure">
-								
-							</div>
-							<br>
-							<div class="panel panel-primary">
-		                        <div class="panel-heading">
-		                            Síguenos en:
-		                        </div>
-		                        <div class="panel-body">
-		                          	<a title="Twitter" href="https://twitter.com/DiocesisA"><img title="Twitter" src="vis/img/old/twitter.png" width="100px" height="100px" style="margin-left:35px; ">
-									<a title="Facebook" href="https://www.facebook.com/profile.php?id=100004937207282"><img title="Facebook" src="vis/img/old/facebook.png" width="100px" height="100px" style="float:right; margin-right:35px; ">
-		                        </div>
-		  
-		                    </div>
-					<br><br>
-							 </center> 
+								<div redes>
+								 	<img src="vis/img/old/papa.gif" class="img-rounded" width="49%" height="220" alt="Diócesis Acarigua-Araure">
+								 	<img src="vis/img/old/imagen.gif" class="img-rounded" width="49%" height="220" alt="Diócesis Acarigua-Araure">
+									
+								</div>
+								<br>
+								<div class="panel panel-primary">
+			                        <div class="panel-heading">
+			                            Síguenos en:
+			                        </div>
+			                        <div class="panel-body">
+			                          	<a title="Twitter" href="https://twitter.com/DiocesisA"><img title="Twitter" src="vis/img/old/twitter.png" width="100px" height="100px" style="margin-left:35px; ">
+										<a title="Facebook" href="https://www.facebook.com/profile.php?id=100004937207282"><img title="Facebook" src="vis/img/old/facebook.png" width="100px" height="100px" style="float:right; margin-right:35px; ">
+			                        </div>
+			  
+			                    </div>
+									<br><br>
+							</center> ');
+			}
+echo utf8_decode('
+
 						</div>
 				</div>
 <center>		   
@@ -237,7 +394,7 @@ echo utf8_decode('
 
 	footer(); // pie de pagina
 
-	echo utf8_decode('</form>
+	echo utf8_decode('
 </div>
 
 </body>

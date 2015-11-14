@@ -88,7 +88,7 @@
 				$this->idFparroquia=$laArreglo["idFparroquia"];
 				$this->asFecha_creacion=$laArreglo["fecha_creacion"];
 				$this->asCodigo_archi=$laArreglo["codigo_archi"];
-				$this->asNombreArchi=$laArreglo["Estatus"];
+				$this->asNombreArchi=$laArreglo["nombreArchi"];
 				$this->asEstatus=$laArreglo["Estatus"];
 				$lbEnc=true;
 			}
@@ -139,7 +139,7 @@
 				$this->idFparroquia=$laArreglo["idFparroquia"];
 				$this->asFecha_creacion=$laArreglo["fecha_creacion"];
 				$this->asCodigo_archi=$laArreglo["codigo_archi"];
-				$this->asNombreArchi=$laArreglo["Estatus"];
+				$this->asNombreArchi=$laArreglo["nombreArchi"];
 				$this->asEstatus=$laArreglo["Estatus"];
 				$lbEnc=true;
 			}

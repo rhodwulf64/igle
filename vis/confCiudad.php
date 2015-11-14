@@ -270,7 +270,7 @@ echo utf8_Decode('
 							{
 									fpCancelar();
 									NotificaS(loF.f_descripcion.value+" Desactivado");
-									document.location.reload();
+									setTimeout(function(){ document.location.reload(); }, 1500);
 									fpInicial();							
 							}
 							else	
@@ -303,7 +303,7 @@ echo utf8_Decode('
 							{
 									fpCancelar();
 									NotificaS(loF.f_descripcion.value+" Reactivado");
-									document.location.reload();
+									setTimeout(function(){ document.location.reload(); }, 1500);
 
 									fpInicial();							
 							}

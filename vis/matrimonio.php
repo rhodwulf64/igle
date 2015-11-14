@@ -73,12 +73,12 @@ echo utf8_Decode('
 					<th><div class="form-group has-default" id="haf_cedunovio"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label" id="ntf_EncontroNovio"></font><font class="control-label" id="TituNovio"></font><input type="text" id="f_cedunovio" name="f_cedunovio" class="form-control" onfocus="MaskCedulaNac(this.id);" onkeypress="CedulaVenezolanaDefault(this.id);" onblur="this.value=this.value.toUpperCase(); vCampoVacio(this.id); fpPerderFocus(this);" placeholder="V-99999999" value=""><div class="tool-tip  slideIn" id="ttipf_cedunovio" style="display:none;"></div></div></div></th>
 				</tr>
 				<tr>
-					<th><div class="form-group has-default" id="haf_ceduPadres1"><div class="on-focus clearfix" style="position: relative;"><font class="control-label">Madre de la Novia:</font><font class="control-label" id="ntf_EncontroPadre1"></font><input type="text" id="f_ceduPadres1" name="f_ceduPadres1" class="form-control" onfocus="MaskCedulaNac(this.id);" onkeypress="CedulaVenezolanaDefault(this.id);" onblur="this.value=this.value.toUpperCase(); vCampoVacio(this.id);" placeholder="V-99999999" value=""><div class="tool-tip  slideIn" id="ttipf_ceduPadres1" style="display:none;"></div></div></div></th>
-					<th><div class="form-group has-default" id="haf_ceduPadres3"><div class="on-focus clearfix" style="position: relative;"><font class="control-label">Madre del Novio:</font><font class="control-label" id="ntf_EncontroPadre3"></font><input type="text" id="f_ceduPadres3" name="f_ceduPadres3" class="form-control" onfocus="MaskCedulaNac(this.id);" onkeypress="CedulaVenezolanaDefault(this.id);" onblur="this.value=this.value.toUpperCase(); vCampoVacio(this.id);" placeholder="V-99999999" value=""><div class="tool-tip  slideIn" id="ttipf_ceduPadres3" style="display:none;"></div></div></div></th>
+					<th><div class="form-group has-default" id="haf_ceduPadres1"><div class="on-focus clearfix" style="position: relative;"><font class="control-label">Madre de la Novia:</font><font class="control-label" id="ntf_EncontroPadre1"></font><input type="text" id="f_ceduPadres1" name="f_ceduPadres1" class="form-control" onfocus="MaskCedulaNac(this.id);" onkeypress="CedulaVenezolanaDefault(this.id);" onblur="this.value=this.value.toUpperCase(); vCampoVacio(this.id);" placeholder="" value=""><div class="tool-tip  slideIn" id="ttipf_ceduPadres1" style="display:none;"></div></div></div></th>
+					<th><div class="form-group has-default" id="haf_ceduPadres3"><div class="on-focus clearfix" style="position: relative;"><font class="control-label">Madre del Novio:</font><font class="control-label" id="ntf_EncontroPadre3"></font><input type="text" id="f_ceduPadres3" name="f_ceduPadres3" class="form-control" onfocus="MaskCedulaNac(this.id);" onkeypress="CedulaVenezolanaDefault(this.id);" onblur="this.value=this.value.toUpperCase(); vCampoVacio(this.id);" placeholder="" value=""><div class="tool-tip  slideIn" id="ttipf_ceduPadres3" style="display:none;"></div></div></div></th>
 				</tr>
 				<tr>
-					<th><div class="form-group has-default" id="haf_ceduPadres2"><div class="on-focus clearfix" style="position: relative;"><font class="control-label">Padre de la Novia:</font><font class="control-label" id="ntf_EncontroPadre2"></font><input type="text" id="f_ceduPadres2" name="f_ceduPadres2" class="form-control" onfocus="MaskCedulaNac(this.id);" onkeypress="CedulaVenezolanaDefault(this.id);" onblur="this.value=this.value.toUpperCase(); vCampoVacio(this.id);" placeholder="V-99999999" value=""><div class="tool-tip  slideIn" id="ttipf_ceduPadres2" style="display:none;"></div></div></div></th>
-					<th><div class="form-group has-default" id="haf_ceduPadres4"><div class="on-focus clearfix" style="position: relative;"><font class="control-label">Padre del Novio:</font><font class="control-label" id="ntf_EncontroPadre4"></font><input type="text" id="f_ceduPadres4" name="f_ceduPadres4" class="form-control" onfocus="MaskCedulaNac(this.id);" onkeypress="CedulaVenezolanaDefault(this.id);" onblur="this.value=this.value.toUpperCase(); vCampoVacio(this.id);" placeholder="V-99999999" value=""><div class="tool-tip  slideIn" id="ttipf_ceduPadres4" style="display:none;"></div></div></div></th>
+					<th><div class="form-group has-default" id="haf_ceduPadres2"><div class="on-focus clearfix" style="position: relative;"><font class="control-label">Padre de la Novia:</font><font class="control-label" id="ntf_EncontroPadre2"></font><input type="text" id="f_ceduPadres2" name="f_ceduPadres2" class="form-control" onfocus="MaskCedulaNac(this.id);" onkeypress="CedulaVenezolanaDefault(this.id);" onblur="this.value=this.value.toUpperCase(); vCampoVacio(this.id);" placeholder="" value=""><div class="tool-tip  slideIn" id="ttipf_ceduPadres2" style="display:none;"></div></div></div></th>
+					<th><div class="form-group has-default" id="haf_ceduPadres4"><div class="on-focus clearfix" style="position: relative;"><font class="control-label">Padre del Novio:</font><font class="control-label" id="ntf_EncontroPadre4"></font><input type="text" id="f_ceduPadres4" name="f_ceduPadres4" class="form-control" onfocus="MaskCedulaNac(this.id);" onkeypress="CedulaVenezolanaDefault(this.id);" onblur="this.value=this.value.toUpperCase(); vCampoVacio(this.id);" placeholder="" value=""><div class="tool-tip  slideIn" id="ttipf_ceduPadres4" style="display:none;"></div></div></div></th>
 				</tr>
 				<tr>
 					<th><div class="form-group has-default" id="haf_sacerdote"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">el Sacerdote:</font><br><select name="f_sacerdote" class="form-control" onblur="vCampoVacio(this.id);" id="f_sacerdote" value=""><option value=""><p><strong></strong></p></option>');
@@ -1007,30 +1007,7 @@ echo utf8_Decode('
 				vCampoVacio("f_cedunovio");
 				vInvalido=1;
 			}
-			if(loF.f_ceduPadres1.value=="")
-			{
-				loF.f_ceduPadres1.focus();
-				vCampoVacio("f_ceduPadres1");
-				vInvalido=3;
-			}
-			if(loF.f_ceduPadres2.value=="")
-			{
-				loF.f_ceduPadres2.focus();
-				vCampoVacio("f_ceduPadres2");
-				vInvalido=3;
-			}
-			if(loF.f_ceduPadres3.value=="")
-			{
-				loF.f_ceduPadres3.focus();
-				vCampoVacio("f_ceduPadres3");
-				vInvalido=3;
-			}
-			if(loF.f_ceduPadres4.value=="")
-			{
-				loF.f_ceduPadres4.focus();
-				vCampoVacio("f_ceduPadres4");
-				vInvalido=3;
-			}
+			
 			if(loF.f_sacerdote.value=="")
 			{
 				loF.f_sacerdote.focus();

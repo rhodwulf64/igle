@@ -859,3 +859,12 @@ float:left;
     top: 26px;
   }
 }
+
+
+.btn-default{
+    background: #4CB6EA!important;
+}
+input[disabled],input:disabled,button[disabled],button:disabled,.btn-default[disabled],.btn-default:disabled{
+    cursor: not-allowed!important;
+    background: #aaa!important;
+}

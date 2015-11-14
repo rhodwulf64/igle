@@ -239,18 +239,8 @@ echo utf8_Decode('
 			loF.cmb_Parroquia.value="0";
 			loF.cmb_Archiprestasgo.value="0";
 
-			document.getElementById("haf_mision").className = "form-group has-default";
-			document.getElementById("haf_nombre").className = "form-group has-default";
-			document.getElementById("hatxtCorreo").className = "form-group has-default";
-			document.getElementById("haf_vision").className = "form-group has-default";
-			document.getElementById("haf_fechaCreacion").className = "form-group has-default";
-			document.getElementById("haf_telefono").className = "form-group has-default";
-			document.getElementById("haf_direccion").className = "form-group has-default";
-			document.getElementById("hacmb_Estado").className = "form-group has-default";
-			document.getElementById("hacmb_Ciudad").className = "form-group has-default";
-			document.getElementById("hacmb_Archiprestasgo").className = "form-group has-default";
-			document.getElementById("hacmb_Municipio").className = "form-group has-default";
-			document.getElementById("hacmb_Parroquia").className = "form-group has-default";
+			$( ".tool-tip.slideIn" ).each(function(i) {$(this).css( "display", "none" );});
+			$( ".form-group" ).each(function(i) {$(this).attr( "class", "form-group has-default" );});
 
 
 			fpApagar();
@@ -649,8 +639,7 @@ echo utf8_Decode('
 				        {
 				        	var arrayDato=data[\'ArrDatos\'];
            					var arrayFeligres=data[\'Feligres\'];
-							if((arrayDato.liHay!=""))
-							{
+
 								if ((loF.txtHacer.value=="incluir")&&(arrayDato.liHay==0))
 								{
 
@@ -685,7 +674,6 @@ echo utf8_Decode('
 
 								}
 
-							}
 						}
 					});
 
@@ -705,6 +693,10 @@ echo utf8_Decode('
 			var invalido=0;
 			
 			if(vCampoVacio("f_mision"))
+			{
+				invalido=1;
+			}			
+			if(vCampoVacio("f_vision"))
 			{
 				invalido=1;
 			}

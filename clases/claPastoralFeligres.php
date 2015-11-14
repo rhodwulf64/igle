@@ -6,14 +6,13 @@
 	$loFuncion =new clsFunciones();
 	
     $loPersonas=new claPersonas();
-	class claApostoladoFeligres extends clsDatos
+	class claPastoralFeligres extends clsDatos
 	{
 
-		private $asDetalle_Grupocol;
+		private $asDetalle_Pastoralcol;
 		private $ascodigo_persona;
-		private $ascodigo_grupo;
+		private $ascodigo_pastoral;
 		private $asFechaRegistro;
-		private $asidFparroquiaIglesia;
 		private $asEstatus;
 		private $asFilaFeli;
 		private $asNombreGrupo;
@@ -21,11 +20,10 @@
 		
 		public function __construct()
 		{
-			$this->asDetalle_Grupocol= "";
+			$this->asDetalle_Pastoralcol= "";
 			$this->ascodigo_persona="";
-			$this->ascodigo_grupo="";
+			$this->ascodigo_pastoral="";
 			$this->asFechaRegistro="";
-			$this->asidFparroquiaIglesia="";
 			$this->asEstatus="";
 			$this->asFilaFeli="";
 			$this->asNombreGrupo="";
@@ -75,7 +73,6 @@
 			return $lbEnc;
 
 		}
-
 		
 		public function EsSacerdoteCedula($IDpersona)
 		{
@@ -99,8 +96,8 @@
 		{
 				$this->fpConectar();
 				$lsSql="SELECT 
-				A.Detalle_Grupocol,
-				A.codigo_grupo,
+				A.Detalle_Pastoralcol,
+				A.codigo_pastoral,
 				B.idTpersonas,
 				B.Cedula,
 				B.Nombres,
@@ -111,21 +108,18 @@
 				B.Correo,
 				B.idFparroquiaCodigo,
 				C.nombre AS NombreGrupo,
-				D.codigoParroquiaIglesia,
-				A.Estatus,
-				D.nombre AS NombreParroquia
-				FROM detalle_grupo AS A
+				A.Estatus
+				FROM detalle_pastoral AS A
 				INNER JOIN tpersonas AS B ON A.codigo_persona = B.idTpersonas 	 	
-				INNER JOIN tgrupo AS C ON A.codigo_grupo = C.codigoGrupo
-				INNER JOIN tparroquiaiglesia AS D ON A.idFparroquiaIglesia = D.codigoParroquiaIglesia
-				WHERE A.codigo_grupo='$this->ascodigo_grupo' AND A.idFparroquiaIglesia='$this->asidFparroquiaIglesia'";
+				INNER JOIN tpastoral AS C ON A.codigo_pastoral = C.codigoPastoral
+				WHERE A.codigo_pastoral='$this->ascodigo_pastoral'";
 				$laMatriz=array();
 				$lrTb=$this->frFiltro($lsSql);
 				$liI=0;
 				while($laArreglo=$this->faProximo($lrTb))
 			{
-				$laMatriz[$liI]["Detalle_Grupocol"]=$laArreglo["Detalle_Grupocol"];
-				$laMatriz[$liI]["codigo_grupo"]=$laArreglo["codigo_grupo"];
+				$laMatriz[$liI]["Detalle_Pastoralcol"]=$laArreglo["Detalle_Pastoralcol"];
+				$laMatriz[$liI]["codigo_pastoral"]=$laArreglo["codigo_pastoral"];
 				$laMatriz[$liI]["idTpersonas"]=$laArreglo["idTpersonas"];
 				$laMatriz[$liI]["Cedula"]=$laArreglo["Cedula"];
 				$laMatriz[$liI]["Nombres"]=$laArreglo["Nombres"];
@@ -136,8 +130,6 @@
 				$laMatriz[$liI]["Correo"]=$laArreglo["Correo"];
 				$laMatriz[$liI]["idFparroquiaCodigo"]=$laArreglo["idFparroquiaCodigo"];
 				$laMatriz[$liI]["NombreGrupo"]=$laArreglo["NombreGrupo"];
-				$laMatriz[$liI]["codigoParroquiaIglesia"]=$laArreglo["codigoParroquiaIglesia"];
-				$laMatriz[$liI]["NombreParroquia"]=$laArreglo["NombreParroquia"];
 				$laMatriz[$liI]["Estatus"]=$laArreglo["Estatus"];
 				$liI++;
 
@@ -152,38 +144,32 @@
 			switch($tipo){
 				case "cc":
 					$lsSql=("SELECT 
-					A.Detalle_Grupocol,
-					A.codigo_grupo,
-					count(A.codigo_grupo) AS cantFeligreses,
+					A.Detalle_Pastoralcol,
+					A.codigo_pastoral,
+					count(A.codigo_pastoral) AS cantFeligreses,
 					A.FechaRegistro,
 					A.Estatus,
-					B.nombre AS NombreGrupo,
-					C.codigoParroquiaIglesia,
-					C.nombre AS NombreParroquia
-					FROM detalle_grupo AS A
-					INNER JOIN tgrupo AS B ON A.codigo_grupo=B.codigoGrupo
-					INNER JOIN tparroquiaiglesia AS C ON A.idFparroquiaIglesia=C.codigoParroquiaIglesia
+					B.nombre AS NombreGrupo
+					FROM detalle_pastoral AS A
+					INNER JOIN tpastoral AS B ON A.codigo_pastoral=B.codigoPastoral
 					WHERE B.nombre = '$this->asNombreGrupo'
-					GROUP BY A.codigo_grupo,C.nombre
-					ORDER BY A.Detalle_Grupocol ASC");
+					GROUP BY A.codigo_pastoral
+					ORDER BY A.Detalle_Pastoralcol ASC");
 
 				break;
 				case "proximo":
 					$lsSql=("SELECT 
-					A.Detalle_Grupocol,
-					A.codigo_grupo,
-					count(A.codigo_grupo) AS cantFeligreses,
+					A.Detalle_Pastoralcol,
+					A.codigo_pastoral,
+					count(A.codigo_pastoral) AS cantFeligreses,
 					A.FechaRegistro,
 					A.Estatus,
-					B.nombre AS NombreGrupo,
-					C.codigoParroquiaIglesia,
-					C.nombre AS NombreParroquia
-					FROM detalle_grupo AS A
-					INNER JOIN tgrupo AS B ON A.codigo_grupo=B.codigoGrupo
-					INNER JOIN tparroquiaiglesia AS C ON A.idFparroquiaIglesia=C.codigoParroquiaIglesia
-					WHERE ( (A.Detalle_Grupocol like '%$cadena%') or (B.nombre like '%$cadena%') or (B.mision like '%$cadena%') or (C.nombre like '%$cadena%') )
-					GROUP BY A.codigo_grupo,C.nombre
-					ORDER BY A.Detalle_Grupocol ASC");
+					B.nombre AS NombreGrupo
+					FROM detalle_pastoral AS A
+					INNER JOIN tpastoral AS B ON A.codigo_pastoral=B.codigoPastoral
+					WHERE ( (A.Detalle_Pastoralcol like '%$cadena%') or (B.nombre like '%$cadena%') or (B.mision like '%$cadena%') )
+					GROUP BY A.codigo_pastoral
+					ORDER BY A.Detalle_Pastoralcol ASC");
 				break;
 			}
 			$this->fpConectar();
@@ -210,8 +196,8 @@
 			}
 			return $cadena;
 		}
-	
-		public function fbModificarFeligresApostolado()
+
+		public function fbModificarFeligresPastoral()
 		{
 			$lbHecho=false;
 			$lbHecho1=false;
@@ -233,19 +219,15 @@
 					$IDTpersona=$this->fpGetIDinsertado();
 
 
-					if($lbHecho1)
-					{	
-						$lsSql="INSERT INTO detalle_grupo (
-						codigo_persona,
-						codigo_grupo,
-						idFparroquiaIglesia
-						) VALUES (
-						'$IDTpersona',
-						'$this->ascodigo_grupo',
-						'$this->asidFparroquiaIglesia')";
-						$lbHecho1=$this->fbEjecutarNoDie($lsSql);
-						$conttrue++;
-					}
+					$lsSql="INSERT INTO detalle_pastoral (
+					codigo_persona,
+					codigo_pastoral
+					) VALUES (
+					'$IDTpersona',
+					'$this->ascodigo_pastoral')";
+					$lbHecho1=$this->fbEjecutarNoDie($lsSql);
+					$conttrue++;
+			
 
 					$lbHecho1=false;		
 
@@ -267,7 +249,7 @@
 			
 			$lbHecho=false;
 			$this->fpConectar();
-			$lsSql="UPDATE detalle_grupo SET Estatus='$psVar' WHERE Detalle_Grupocol='$this->asDetalle_Grupocol'";
+			$lsSql="UPDATE detalle_pastoral SET Estatus='$psVar' WHERE Detalle_Pastoralcol='$this->asDetalle_Pastoralcol'";
 			$lbHecho=$this->fbEjecutar($lsSql);
 			$this->fpDesconectar();
 			return $lbHecho;
@@ -277,8 +259,8 @@
 		{
 		
 			$lsSql="SELECT 
-				A.Detalle_Grupocol,
-				A.codigo_grupo,
+				A.Detalle_Pastoralcol,
+				A.codigo_pastoral,
 				B.idTpersonas,
 				B.Cedula,
 				B.Nombres,
@@ -287,24 +269,20 @@
 				B.Direccion,
 				B.Telefono,
 				B.Correo,
-				B.idFparroquiaCodigo,
 				C.nombre AS NombreGrupo,
-				D.codigoParroquiaIglesia,
-				D.nombre AS NombreParroquia,
 				A.Estatus
-				FROM detalle_grupo AS A
+				FROM detalle_pastoral AS A
 				INNER JOIN tpersonas AS B ON A.codigo_persona = B.idTpersonas 	 	
-				INNER JOIN tgrupo AS C ON A.codigo_grupo = C.codigoGrupo
-				INNER JOIN tparroquiaiglesia AS D ON A.idFparroquiaIglesia = D.codigoParroquiaIglesia
-				ORDER BY A.Detalle_Grupocol ASC";
+				INNER JOIN tpastoral AS C ON A.codigo_pastoral = C.codigoPastoral
+				ORDER BY A.Detalle_Pastoralcol ASC";
 			$laMatriz=array();
 			$this->fpConectar();
 			$lrTb=$this->frFiltro($lsSql);
 			$liI=0;
 			while($laArreglo=$this->faProximo($lrTb))
 			{
-				$laMatriz[$liI]["Detalle_Grupocol"]=$laArreglo["Detalle_Grupocol"];
-				$laMatriz[$liI]["codigo_grupo"]=$laArreglo["codigo_grupo"];
+				$laMatriz[$liI]["Detalle_Pastoralcol"]=$laArreglo["Detalle_Pastoralcol"];
+				$laMatriz[$liI]["codigo_pastoral"]=$laArreglo["codigo_pastoral"];
 				$laMatriz[$liI]["idTpersonas"]=$laArreglo["idTpersonas"];
 				$laMatriz[$liI]["Cedula"]=$laArreglo["Cedula"];
 				$laMatriz[$liI]["Nombres"]=$laArreglo["Nombres"];
@@ -313,10 +291,7 @@
 				$laMatriz[$liI]["Direccion"]=$laArreglo["Direccion"];
 				$laMatriz[$liI]["Telefono"]=$laArreglo["Telefono"];
 				$laMatriz[$liI]["Correo"]=$laArreglo["Correo"];
-				$laMatriz[$liI]["idFparroquiaCodigo"]=$laArreglo["idFparroquiaCodigo"];
 				$laMatriz[$liI]["NombreGrupo"]=$laArreglo["NombreGrupo"];
-				$laMatriz[$liI]["codigoParroquiaIglesia"]=$laArreglo["codigoParroquiaIglesia"];
-				$laMatriz[$liI]["NombreParroquia"]=$laArreglo["NombreParroquia"];
 				$laMatriz[$liI]["Estatus"]=$laArreglo["Estatus"];
 				$liI++;
 
