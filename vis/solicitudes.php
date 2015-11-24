@@ -99,14 +99,14 @@ echo utf8_Decode('
 								<font class="control-label">Requisitos:</font>
 								<textarea name="f_Requisitos" id="f_Requisitos" class="form-control" maxlength="100" tabindex="2" style="height:200px;" disabled></textarea>
 							</th>
-							<th><font class="control-label">Citas Pendientes a la fecha:</font><br>
+							<th id="tDespliegue"><font class="control-label">Citas Pendientes a la fecha:</font><br>
 							');
 								$arrCitas=$loCitas->fpListaCitasFeligresPendiente();	
 								$i=0;
 								foreach ($arrCitas as &$ACitas) 
 								{
 									$i++;
-									echo utf8_decode('<div class="alert alert-success" id="citas'.$i.'"><div style="display: inline-block;" val="'.$ACitas['idTSolicitud'].'*'.$ACitas['descripcion'].'*'.$ACitas['requisitos'].'" onclick="fpSeleccionaSolicitudListaC($(this).attr(\'val\'));">'.$i.'-'.$ACitas['descripcion'].' ('.$loFuncion->fDameFechaEscrita($ACitas['FechaCita']).' - '.$loFuncion->fDameHoraEstandar($ACitas['HoraCita']).')</div> <input type="button" class="btn btn-danger" name="b_Anular" value="Anular" onclick="fpPreAnularCitaMotivo(\''.$ACitas['idTSolicitud'].'\',\''.$ACitas['descripcion'].'\','.$i.');"></div>');
+									echo utf8_decode('<div class="alert alert-success" id="citas'.$i.'"><div style="display: inline-block;" val="'.$ACitas['idTSolicitud'].'*'.$ACitas['descripcion'].'*'.$ACitas['requisitos'].'" onclick="fpSeleccionaSolicitudListaC($(this).attr(\'val\'));">'.$ACitas['descripcion'].' "'.$ACitas['idTSolicitud'].'" ('.$loFuncion->fDameFechaEscrita($ACitas['FechaCita']).' - '.$loFuncion->fDameHoraEstandar($ACitas['HoraCita']).')</div> <input type="button" class="btn btn-danger" name="b_Anular" value="Anular" onclick="fpPreAnularCitaMotivo(\''.$ACitas['idTSolicitud'].'\',\''.$ACitas['descripcion'].'\','.$i.');"></div>');
 								}
 								echo utf8_Decode('
 									
@@ -129,6 +129,7 @@ echo utf8_Decode('
 						<input type="hidden" name="txtDescriCita" id="txtDescriCita" value="">		
 						<input type="hidden" name="txtNumeCita" id="txtNumeCita" value="">		
 						<input type="hidden" name="txtMotivoCita" id="txtMotivoCita" value="">		
+						<input type="hidden" name="txtLlaveCancel" id="txtLlaveCancel" value="0">		
 						<input type="hidden" name="txtDescripcionCita" id="txtDescripcionCita" value="">		
 						<input type="hidden" name="temporal" id="temporal" value="">		
 						<input type="button" class="btn btn-default" name="b_Guardar" value="Solicitar" onclick="fpGuardar()">
@@ -172,6 +173,10 @@ echo utf8_Decode('
 		
 		function fpCancelar()
 		{
+			if(loF.txtLlaveCancel.value=="1")
+			{
+				document.location.reload();
+			}
 			loF.txtOperacion.value="";
 			loF.txtHacer.value="";
 			loF.txtHay.value=0;
@@ -327,8 +332,8 @@ echo utf8_Decode('
 								data: $forme.serialize(),
 						        success: function(data)
 						        {
-
 						        		var arrayDato=data[\'Solici\'];
+						        		var CitaNueva=data[\'ArrCita\'];
 
 										if ((loF.txtHacer.value=="buscar")&&(arrayDato.liHay==1))
 										{
@@ -343,7 +348,10 @@ echo utf8_Decode('
 										if ((loF.txtHacer.value=="solicitaCita")&&(arrayDato.liHay==1))
 										{
 											NotificaS("Registro incluido con exito.");
-											location.reload();
+											loF.txtLlaveCancel.value=\'1\';
+											document.getElementById(\'tDespliegue\').innerHTML=\'<font class="control-label">Comprobante de Cita:</font><br><div class="alert alert-success" id="citas1">Nro. de Cita \'+CitaNueva.idTSolicitud+\'<br>Nombre y Apellido \'+CitaNueva.nombreFull+\'<br>Tipo de Cita \'+CitaNueva.descripcion+\'<br>Fecha y Hora \'+CitaNueva.FechaHora+\'<br><input type="button" class="btn btn-warning" name="b_Imprimir" value="Imprimir" onclick="window.print();"> <input type="button" class="btn btn-success" name="b_volver" value="Volver" onclick="document.location.reload();"></div>\';
+											
+											
 										}
 								
 										if ((loF.txtHacer.value=="modificar")&&(arrayDato.liHay==0))

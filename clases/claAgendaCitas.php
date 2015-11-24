@@ -7,6 +7,8 @@ class  claAgendaCitas extends  clsDatos{
 		private $asOpcionSolicitud;
 		private $asFechaParaCita;
 		private $asHoraParaCita;
+		private $AsIDcita;
+		private $arrCitaNueva;
 		private $asErroNume;
 
 		public function __construct(){
@@ -16,6 +18,8 @@ class  claAgendaCitas extends  clsDatos{
 			$this->asOpcionSolicitud="";
 			$this->asFechaParaCita="";
 			$this->asHoraParaCita="";
+			$this->AsIDcita="";
+			$this->arrCitaNueva="";
 			$this->asErroNume="";
 		}
 
@@ -38,6 +42,11 @@ class  claAgendaCitas extends  clsDatos{
 		public function __set($atributo, $valor){ $this->$atributo = strtoupper($valor);}		
 		//metodo get
 		public function __get($atributo){ return trim(strtoupper($this->$atributo)); }
+
+		public function fDameArrayCitas()
+		{
+			return $this->arrCitaNueva;
+		}
 
 	/************************ Funcion Guardar   ***************************************************************************/
 	/* Se encarga de volcado de los datos en la base de datos															  */
@@ -342,7 +351,36 @@ class  claAgendaCitas extends  clsDatos{
 				'$this->asFechaParaCita',
 				'$this->asHoraParaCita')";
 																		
-				$lbHecho=$this->fbEjecutarNoDie($lsSql);															
+				$lbHecho=$this->fbEjecutarNoDie($lsSql);	
+				$this->AsIDcita=$this->fpGetIDinsertado();	
+
+				$lsSql="SELECT 
+				tsol.idTSolicitud,
+				tsol.idFSolicitante,
+				tsol.idFtipoSolicitud,
+				tsol.FechaCita,
+				tsol.HoraCita,
+				tsol.FechaRegistro,
+				tsol.EstadoSolicitud,
+				tsol.Estatus,
+				tpsol.descripcion,
+				tpsol.requisitos,
+				tpers.Cedula,
+				CONCAT(tpers.Nombres,' ',tpers.Apellidos) AS nombreFull,
+				generoDescrip(tpers.Sexo) AS SexoDescrip, 
+				tpers.Telefono,
+				tpers.Correo,
+				tpers.idFparroquiaCodigo
+				FROM tsolicitud AS tsol 
+				INNER JOIN tipo_solicitud AS tpsol ON tsol.idFtipoSolicitud=tpsol.idTipoSolicitud
+				INNER JOIN tpersonas AS tpers ON tsol.idFSolicitante=tpers.idTpersonas
+				WHERE idTSolicitud='$this->AsIDcita'";
+				$lrTb=$this->frFiltro($lsSql);
+				if ($laArreglo=$this->faProximo($lrTb))
+				{
+					$this->arrCitaNueva=$laArreglo;
+				}
+
 				$this->fpDesconectar();																										
 																						
 			return $lbHecho;																								

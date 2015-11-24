@@ -45,7 +45,8 @@
 
 					if ($loCita->solicitarDiaCita())
 					{  
-
+						$arrCitasNuevas=$loCita->fDameArrayCitas();
+						$arrCitasNuevas["FechaHora"]='('.$loFuncion->fDameFechaEscrita($arrCitasNuevas['FechaCita']).' - '.$loFuncion->fDameHoraEstandar($arrCitasNuevas['HoraCita']).')';
 						$liHay = 1;
 					}
 					else
@@ -144,7 +145,7 @@
 		header('Content-type: text/javascript');
 		$json = array( "lsCod_Combo" => $lsCod_Combo, "lsCod_Foraneo" => $lsCod_Foraneo, "lsDescripcion" => $lsDescripcion, "lsEstatus" => $lsEstatus, "lsOperacion" => $lsOperacion, "liHay" => $liHay, "liError" => $liError);
 		
-		$envi = array("Solici"=>$json);
+		$envi = array("Solici"=>$json,"ArrCita"=>$arrCitasNuevas);
 
 		echo json_encode( $envi );
 		
