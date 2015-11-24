@@ -4,11 +4,19 @@ class  claAgendaCitas extends  clsDatos{
 		private $aa_Form;
 		private $as_Cadena;
 		private $asidtPersona;
+		private $asOpcionSolicitud;
+		private $asFechaParaCita;
+		private $asHoraParaCita;
+		private $asErroNume;
 
 		public function __construct(){
 			$this->aa_Form=Array();
 			$this->as_Cadena="";
 			$this->asidtPersona="";
+			$this->asOpcionSolicitud="";
+			$this->asFechaParaCita="";
+			$this->asHoraParaCita="";
+			$this->asErroNume="";
 		}
 
 		public function __destruct()
@@ -93,7 +101,253 @@ class  claAgendaCitas extends  clsDatos{
 				$this->fpDesconectar();																										
 																						
 			return $lbHecho;																								
-		}			
+		}		
+
+
+		public function fpermiteCrearCita($fechaNDiasAtras)
+		{
+			$lbEnc=false;
+			$this->fpConectar();
+			$lsSql="SELECT 
+			A.FechaCita,
+			A.EstadoSolicitud,
+			B.SolicitudUnica
+			FROM tsolicitud AS A 
+			INNER JOIN tipo_solicitud AS B ON A.idFtipoSolicitud = B.idTipoSolicitud
+			WHERE A.idFSolicitante='$this->asidtPersona' AND A.idFtipoSolicitud='$this->asOpcionSolicitud'
+			ORDER BY A.FechaCita DESC LIMIT 1";
+			$lrTb=$this->frFiltro($lsSql);
+			if($laArreglo=$this->faProximo($lrTb))
+			{
+				$lsFechaCita=$laArreglo["FechaCita"];
+				$lsEstadoSolicitud=$laArreglo["EstadoSolicitud"];
+				$lsSolicitudUnica=$laArreglo["SolicitudUnica"];
+				if ($lsFechaCita<$fechaNDiasAtras)
+				{
+					if ($lsEstadoSolicitud==0)	//estado pendiente de atender
+					{
+						$this->asErroNume=10;// lo siento debe cancelar la cita antes de crear una identica
+					}
+					elseif ($lsEstadoSolicitud==1) //estado atendido Satisfactoriamente
+					{
+						if ($lsSolicitudUnica==1)
+						{
+							$this->asErroNume=9;// lo siento usted ya fue atendido para este requerimiento
+						}
+						else
+						{
+							$lbEnc=true;
+						}
+					}
+					else 			//2 atendido por secretaria pero no se pudo procesar su solicitud. 3 pospuesta la cita. 4 rechazada la cita.
+					{
+						$lbEnc=true;
+					}
+				}
+			}
+			
+			$this->fpCierraFiltro($lrTb);
+			$this->fpDesconectar();
+			
+			return $lbEnc;
+		}	
+
+
+		public function fDiasDeCitaDesactivados($citaXdia,$pofunc)
+		{
+			$KHoraXdia=8; //correspondiente a las 8 horas por dia laboral (No es modificable porque se usa para calcular la hora en de las citas en el dia y no para modificar el rango de tiempo)
+			$fechaHoy=date("Y-m-j");
+			$fechaManana=$pofunc->fSumaDiasAfecha($fechaHoy,'1');
+			$HoraActual=time();
+			$lbEnc=false;
+			$this->fpConectar();
+			$lsSql="SELECT 
+			A.codigoDiasDesactivados,
+			A.idFresponsableDes,
+			A.FechaInicioDes,
+			A.HoraInicioDes,
+			A.FechaFinDes,
+			A.HoraFinDes,
+			A.motivoDes,
+			A.FechaRegistroDes,
+			A.Estatus
+			FROM tcitas_dias_desactivados AS A 
+			WHERE A.FechaInicioDes<='$this->asFechaParaCita' AND A.FechaFinDes>='$this->asFechaParaCita' AND A.Estatus='1'
+			ORDER BY A.FechaFinDes DESC,A.HoraFinDes DESC LIMIT 1";
+			$lrTb=$this->frFiltro($lsSql);
+			if($laArreglo=$this->faProximo($lrTb))
+			{
+				$lsFechaCitaIncrementable=$laArreglo["FechaFinDes"];
+				$lsFechaCita=$laArreglo["FechaFinDes"];
+				$lsHoraPrimera=$laArreglo["HoraInicioDes"];
+				$lsHoraUltima=$laArreglo["HoraFinDes"];
+				$diaSemanaFecha= date('N', strtotime($lsFechaCitaIncrementable)); 	
+				if ($lsHoraUltima>='18:00:00')
+				{
+					$diaSemanaFecha=7; // si la hora del desbloqueo es mayor a las 6 de la tarde, pues entra al while para cambiar la fecha a la siguiente
+				}
+				while (($diaSemanaFecha==6)OR($diaSemanaFecha==7))
+				{
+					$lsFechaCitaIncrementable=$pofunc->fSumaDiasAfecha($lsFechaCitaIncrementable,'1');
+					$diaSemanaFecha = date('N', strtotime($lsFechaCitaIncrementable)); 						
+				}
+				$fechaProxCita=$lsFechaCitaIncrementable;
+				if($fechaProxCita==$lsFechaCita)
+				{
+					if ($this->asHoraParaCita<=$lsHoraUltima)
+					{
+						$horaProxCita=$lsHoraUltima;
+					}
+					else
+					{
+						$horaProxCita=$this->asHoraParaCita;
+					}
+				}
+				else
+				{
+					$horaProxCita='08:00:00';
+				}
+
+				$this->asFechaParaCita=$fechaProxCita;
+				$this->asHoraParaCita=$horaProxCita;
+
+				$lbEnc=true;
+			}
+			
+			$this->fpCierraFiltro($lrTb);
+			$this->fpDesconectar();
+
+			if ($fechaProxCita!=$lsFechaCita)
+			{
+				$lbEnc=$this->fDiasDeCitaDesactivados($citaXdia,$pofunc);
+			}
+
+			return $lbEnc;
+		}	
+
+		public function fDameFechaDeCita($citaXdia,$pofunc)
+		{
+
+			$KHoraXdia=8; //correspondiente a las 8 horas por dia laboral (No es modificable porque se usa para calcular la hora en de las citas en el dia y no para modificar el rango de tiempo)
+			$fechaHoy=date("Y-m-j");
+			$diaSemanaHoy= date('N', strtotime($fechaHoy)); 	
+			$HoraActual=time();
+			$lbEnc=false;
+			$this->fpConectar();
+			$lsSql="SELECT 
+			A.FechaCita,
+			A.EstadoSolicitud,
+			max(A.HoraCita) AS HoraUltima,
+			count(A.FechaCita) AS cantiPorDia
+			FROM tsolicitud AS A 
+			INNER JOIN tipo_solicitud AS B ON A.idFtipoSolicitud = B.idTipoSolicitud
+			WHERE A.FechaCita>=NOW()
+			GROUP BY A.FechaCita
+			ORDER BY A.FechaCita DESC LIMIT 1";
+			$lrTb=$this->frFiltro($lsSql);
+			if($laArreglo=$this->faProximo($lrTb))
+			{
+				$lsFechaCita=$laArreglo["FechaCita"];
+				$lsHoraUltima=$laArreglo["HoraUltima"];
+				$lsCantiActual=$laArreglo["cantiPorDia"];
+				$restanCitas=$citaXdia-$lsCantiActual;
+				$fechaManana=$pofunc->fSumaDiasAfecha($lsFechaCita,'1');
+				$diaSemanaManana= date('N', strtotime($fechaManana)); 	
+				if($lsFechaCita=="")
+				{
+					$lsFechaCita=$fechaHoy;
+					while (($diaSemanaHoy==6)OR($diaSemanaHoy==7))
+					{
+						$lsFechaCita=$pofunc->fSumaDiasAfecha($fechaHoy,'1');
+						$diaSemanaHoy = date('N', strtotime($lsFechaCita)); 						
+					}
+					$lsHoraUltima='8:00:00';
+				}
+				if($lsHoraUltima=="")
+				{
+					$lsHoraUltima='8:00:00';
+				}
+
+				if($restanCitas<=0)	//Si se completaron las citas por dia
+				{
+					while (($diaSemanaManana==6)OR($diaSemanaManana==7))
+					{
+						$fechaManana=$pofunc->fSumaDiasAfecha($fechaManana,'1');
+						$diaSemanaManana = date('N', strtotime($fechaManana)); 						
+					}
+					$fechaProxCita=$fechaManana;
+					$horaProxCita='8:00:00';//Hora de inicio
+				}
+				else
+				{
+					$fechaProxCita=$lsFechaCita;
+					$DecMinutosEntreCitas=$KHoraXdia/$citaXdia;
+					if($DecMinutosEntreCitas>0)
+					{
+						$MinEntreCitas=$DecMinutosEntreCitas*60;
+						$minutosRestantes = fmod( $MinEntreCitas, 60 );
+						$minutosAhoras = ( $MinEntreCitas - $minutosRestantes ) / 60;
+					}
+					else
+					{
+						$minutosAhoras=0;
+						$minutosRestantes=$DecMinutosEntreCitas*60;
+					}
+					list($horaX, $minuX, $seguX) = split('[:]', $lsHoraUltima);
+
+					if($horaX+$minutosAhoras==12)
+					{
+						$horaX+=2;
+						$minuX=0;
+						$minutosRestantes=0;
+					}
+					elseif($horaX+$minutosAhoras==13)
+					{
+						$horaX+=1;
+						$minuX=0;
+						$minutosRestantes=0;
+					}
+					
+
+					$horaProxCita=date("H:i:s", mktime($horaX+$minutosAhoras, $minuX+$minutosRestantes, 00));
+					if ($horaProxCita>'18:00:00')
+					{
+						$horaProxCita='18:00:00';
+					}
+				}
+
+				$this->asFechaParaCita=$fechaProxCita;
+				$this->asHoraParaCita=$horaProxCita;
+				$lbEnc=true;
+			}
+			
+			$this->fpCierraFiltro($lrTb);
+			$this->fpDesconectar();
+			
+			return $lbEnc;
+		}	
+
+
+		public function solicitarDiaCita(){		
+			$lbHecho=false;
+			$this->fpConectar();																								
+			$lsSql="INSERT INTO tsolicitud (
+				idFSolicitante,
+				idFtipoSolicitud,
+				FechaCita,
+				HoraCita
+				) VALUES (
+				'$this->asidtPersona',
+				'$this->asOpcionSolicitud',
+				'$this->asFechaParaCita',
+				'$this->asHoraParaCita')";
+																		
+				$lbHecho=$this->fbEjecutarNoDie($lsSql);															
+				$this->fpDesconectar();																										
+																						
+			return $lbHecho;																								
+		}		
+
 
 		public function fpListaCitasFeligres()
 		{
@@ -121,6 +375,68 @@ class  claAgendaCitas extends  clsDatos{
 		INNER JOIN tpersonas AS tper ON tsoli.idFSolicitante=tper.idTpersonas	
 		INNER JOIN tipo_solicitud AS tips ON tsoli.idFtipoSolicitud=tips.idTipoSolicitud	
 		WHERE tsoli.idFSolicitante='$this->asidtPersona'
+		ORDER BY tsoli.FechaCita ASC,tsoli.HoraCita ASC";
+
+			$laMatriz=array();
+			$this->fpConectar();
+			$lrTb=$this->frFiltro($lsSql);
+			$liI=0;
+			while($laArreglo=$this->faProximo($lrTb))
+			{
+				$laMatriz[$liI]["idTSolicitud"]=$laArreglo["idTSolicitud"];
+				$laMatriz[$liI]["idFSolicitante"]=$laArreglo["idFSolicitante"];
+				$laMatriz[$liI]["idFtipoSolicitud"]=$laArreglo["idFtipoSolicitud"];
+				$laMatriz[$liI]["FechaCita"]=$laArreglo["FechaCita"];
+				$laMatriz[$liI]["HoraCita"]=$laArreglo["HoraCita"];
+				$laMatriz[$liI]["FechaRegistro"]=$laArreglo["FechaRegistro"];
+				$laMatriz[$liI]["EstadoSolicitud"]=$laArreglo["EstadoSolicitud"];
+				$laMatriz[$liI]["EstatusSoli"]=$laArreglo["EstatusSoli"];
+				$laMatriz[$liI]["Cedula"]=$laArreglo["Cedula"];
+				$laMatriz[$liI]["Nombres"]=$laArreglo["Nombres"];
+				$laMatriz[$liI]["Apellidos"]=$laArreglo["Apellidos"];
+				$laMatriz[$liI]["Sexo"]=$laArreglo["Sexo"];
+				$laMatriz[$liI]["Telefono"]=$laArreglo["Telefono"];
+				$laMatriz[$liI]["Correo"]=$laArreglo["Correo"];
+				$laMatriz[$liI]["idFparroquiaCodigo"]=$laArreglo["idFparroquiaCodigo"];
+				$laMatriz[$liI]["EstatusPersona"]=$laArreglo["EstatusPersona"];
+				$laMatriz[$liI]["descripcion"]=$laArreglo["descripcion"];
+				$laMatriz[$liI]["requisitos"]=$laArreglo["requisitos"];
+			
+				$liI++;
+
+			}
+			$this->fpCierraFiltro($lrTb);
+			$this->fpDesconectar();
+			
+			return $laMatriz;
+		}
+
+		public function fpListaCitasFeligresPendiente()
+		{
+
+	$lsSql="SELECT 
+		tsoli.idTSolicitud,
+		tsoli.idFSolicitante,
+		tsoli.idFtipoSolicitud,
+		tsoli.FechaCita,
+		tsoli.HoraCita,
+		tsoli.FechaRegistro,
+		tsoli.EstadoSolicitud,
+		tsoli.Estatus AS EstatusSoli,
+		tper.Cedula,
+		tper.Nombres,
+		tper.Apellidos,
+		tper.Sexo,
+		tper.Telefono,
+		tper.Correo,
+		tper.idFparroquiaCodigo,
+		tper.Estatus AS EstatusPersona,
+		tips.descripcion,
+		tips.requisitos
+		FROM tsolicitud AS tsoli
+		INNER JOIN tpersonas AS tper ON tsoli.idFSolicitante=tper.idTpersonas	
+		INNER JOIN tipo_solicitud AS tips ON tsoli.idFtipoSolicitud=tips.idTipoSolicitud	
+		WHERE tsoli.idFSolicitante='$this->asidtPersona' AND EstadoSolicitud='0'
 		ORDER BY tsoli.FechaCita ASC,tsoli.HoraCita ASC";
 
 			$laMatriz=array();
@@ -298,6 +614,19 @@ class  claAgendaCitas extends  clsDatos{
 				$this->fpDesconectar();			
 																				
 			return $lbHecho;																								
+		}	
+
+		public function fpAnularCitaFeligres($idCita){	
+
+			$lbHecho=false;																									
+				$lsSql="UPDATE tsolicitud SET 
+				EstadoSolicitud= '3' 
+				WHERE  idTSolicitud='$idCita'";
+				$this->fpConectar();	
+				$lbHecho=$this->fbEjecutarNoDie($lsSql);															
+				$this->fpDesconectar();			
+																				
+			return $lbHecho;																								
 		}		
 
 		
@@ -399,30 +728,30 @@ class  claAgendaCitas extends  clsDatos{
 			$hoyFecha=date('Y-m-j');
 			$FechaLimiteMuestra = strtotime ( '-1 month' , strtotime ( $hoyFecha ) ) ;
 			$FechaLimiteMuestra = date ( 'Y-m-j' , $FechaLimiteMuestra );
-	$lsSql="SELECT 
-		tsoli.idTSolicitud,
-		tsoli.idFSolicitante,
-		tsoli.idFtipoSolicitud,
-		tsoli.FechaCita,
-		tsoli.HoraCita,
-		tsoli.FechaRegistro,
-		tsoli.EstadoSolicitud,
-		tsoli.Estatus AS EstatusSoli,
-		tper.Cedula,
-		tper.Nombres,
-		tper.Apellidos,
-		tper.Sexo,
-		tper.Telefono,
-		tper.Correo,
-		tper.idFparroquiaCodigo,
-		tper.Estatus AS EstatusPersona,
-		tips.descripcion,
-		tips.requisitos
-		FROM tsolicitud AS tsoli
-		INNER JOIN tpersonas AS tper ON tsoli.idFSolicitante=tper.idTpersonas	
-		INNER JOIN tipo_solicitud AS tips ON tsoli.idFtipoSolicitud=tips.idTipoSolicitud	
-		WHERE tsoli.EstadoSolicitud='0' AND (tpersonas.Cedula like '%".$criterio."%' OR tsoli.idTSolicitud like '%".$criterio."%')
-		ORDER BY tsoli.FechaCita ASC,tsoli.HoraCita ASC";
+			$lsSql="SELECT 
+				tsoli.idTSolicitud,
+				tsoli.idFSolicitante,
+				tsoli.idFtipoSolicitud,
+				tsoli.FechaCita,
+				tsoli.HoraCita,
+				tsoli.FechaRegistro,
+				tsoli.EstadoSolicitud,
+				tsoli.Estatus AS EstatusSoli,
+				tper.Cedula,
+				tper.Nombres,
+				tper.Apellidos,
+				tper.Sexo,
+				tper.Telefono,
+				tper.Correo,
+				tper.idFparroquiaCodigo,
+				tper.Estatus AS EstatusPersona,
+				tips.descripcion,
+				tips.requisitos
+				FROM tsolicitud AS tsoli
+				INNER JOIN tpersonas AS tper ON tsoli.idFSolicitante=tper.idTpersonas	
+				INNER JOIN tipo_solicitud AS tips ON tsoli.idFtipoSolicitud=tips.idTipoSolicitud	
+				WHERE tsoli.EstadoSolicitud='0' AND (tpersonas.Cedula like '%".$criterio."%' OR tsoli.idTSolicitud like '%".$criterio."%')
+				ORDER BY tsoli.FechaCita ASC,tsoli.HoraCita ASC";
 
 			$laMatriz=array();
 			$this->fpConectar();

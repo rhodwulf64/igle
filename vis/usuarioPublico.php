@@ -134,8 +134,8 @@ echo utf8_Decode('
 							<th colspan="2"><center><h4>Datos Para el Usuario</h4></center></th>
 						</tr>
 						<tr>
-							<th><div class="form-group has-default" id="haf_clavePri"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Contraseña:</font><input type="password" name="f_clavePri" id="f_clavePri" onblur="vCampoVacio(this.id);" class="form-control" value=""><div class="tool-tip  slideIn" id="ttipf_clavePri" style="display:none;"></div></div></div></th>
-							<th><div class="form-group has-default" id="haf_claveSeg"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Repita la Contraseña:</font><input type="password" name="f_claveSeg" id="f_claveSeg" onblur="vCampoVacio(this.id);" class="form-control" value=""><div class="tool-tip  slideIn" id="ttipf_claveSeg" style="display:none;"></div></div></div></th>
+							<th><div class="form-group has-default" id="haf_clavePri"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Contraseña:</font><input type="password" name="f_clavePri" id="f_clavePri" onblur="vCampoVacio(this.id);" class="form-control" value="" minlength="6" maxlength="8"><div class="tool-tip  slideIn" id="ttipf_clavePri" style="display:none;"></div></div></div></th>
+							<th><div class="form-group has-default" id="haf_claveSeg"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Repita la Contraseña:</font><input type="password" name="f_claveSeg" id="f_claveSeg" onblur="vCampoVacio(this.id);" class="form-control" value="" minlength="6" maxlength="8"><div class="tool-tip  slideIn" id="ttipf_claveSeg" style="display:none;"></div></div></div></th>
 						</tr>
 						<tr>
 							<th><div class="form-group has-default" id="haf_AskUser"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Pregunta de Seguridad:</font><input type="text" name="f_AskUser" id="f_AskUser" onblur="vCampoVacio(this.id);" class="form-control" value=""><div class="tool-tip  slideIn" id="ttipf_AskUser" style="display:none;"></div></div></div></th>
@@ -765,7 +765,7 @@ echo utf8_Decode('
 
 					');
 			}
-		echo utf8_decode('
+		echo ('
 			if(vCampoVacio("f_fechaNac"))
 			{
 				invalido=1;
@@ -809,7 +809,16 @@ echo utf8_Decode('
 			if(vCampoVacio("f_claveSeg"))
 			{
 				invalido=1;
+			}			
+			if(vValidaPass("f_clavePri")==false)
+			{
+				invalido=1;
 			}
+			if(vValidaPass("f_claveSeg")==false)
+			{
+				invalido=1;
+			}
+
 			if(loF.f_clavePri.value != loF.f_claveSeg.value)
 			{
 				NotificaE("Las Claves ingresadas no coinciden");

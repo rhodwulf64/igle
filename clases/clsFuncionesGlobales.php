@@ -14,6 +14,38 @@ class clsFunciones extends clsDatos
 		{
 		}
 
+	function fncreateComboSelectSolicitudes($tabla, $value, $text, $text2, $selected)
+	{
+
+		$lsSql="SELECT * FROM $tabla ORDER BY Estatus DESC";
+	
+		$this->fpConectar();
+		$lrTb=$this->frFiltro($lsSql);
+
+		while($laArreglo=$this->faProximo($lrTb))
+		{	
+			
+				if ($laArreglo["Estatus"]=="0")
+				{
+					if( (isset($selected)) && ($selected == trim($laArreglo[$value])) ){
+						$llEnc=$llEnc."<option value='".trim($laArreglo[$value])."*".trim($laArreglo[$text])."*".trim($laArreglo[$text2])."' id='".$prefijo.trim($laArreglo[$value])."' style=\"background:url('img/desac.png') no-repeat center left; padding-left:20px;\" class='".$prefijo.trim($laArreglo[$idtabla])."' selected>".$laArreglo[$text]."</option>";
+					}else{
+						$llEnc=$llEnc."<option value='".trim($laArreglo[$value])."*".trim($laArreglo[$text])."*".trim($laArreglo[$text2])."' style=\"background:url('img/desac.png') no-repeat center left; padding-left:20px;\" class='".$prefijo.trim($laArreglo[$idtabla])."'>".$laArreglo[$text]."</option>";
+					}
+				}
+				elseif ($laArreglo["Estatus"]=="1")
+				{
+					if( (isset($selected)) && ($selected == trim($laArreglo[$value])) ){
+						$llEnc=$llEnc."<option value='".trim($laArreglo[$value])."*".trim($laArreglo[$text])."*".trim($laArreglo[$text2])."' id='".$prefijo.trim($laArreglo[$value])."' style=\"background:url('img/acti.png') no-repeat center left; padding-left:20px;\" class='".$prefijo.trim($laArreglo[$idtabla])."' selected>".$laArreglo[$text]."</option>";
+					}else{
+						$llEnc=$llEnc."<option value='".trim($laArreglo[$value])."*".trim($laArreglo[$text])."*".trim($laArreglo[$text2])."' id='".$prefijo.trim($laArreglo[$value])."' style=\"background:url('img/acti.png') no-repeat center left; padding-left:20px;\" class='".$prefijo.trim($laArreglo[$idtabla])."'>".$laArreglo[$text]."</option>";
+					}
+				}		
+		}
+		$this->fpCierraFiltro($lrTb);
+		return $llEnc;
+	}		
+
 	function fncreateComboSelectConfDos($tabla, $value, $text, $selected)
 	{
 		$prefijo="Na";
@@ -216,6 +248,23 @@ class clsFunciones extends clsDatos
 		}
 		$this->fpCierraFiltro($lrTb);
 		return $llEnc;
+	}	
+
+	function solicitudesPendientes($idPersona)
+	{
+		$lsSql="select * from $tabla where $padre = $value_padre";
+		$this->fpConectar();
+		$lrTb=$this->frFiltro($lsSql);
+		while($laArreglo=$this->faProximo($lrTb))
+		{	
+			if( (isset($selected)) && ($selected == trim($laArreglo[$value])) ){
+				$llEnc=$llEnc."<option value='".trim($laArreglo[$value])."' selected>".$laArreglo[$text]."</option>";
+			}else{
+				$llEnc=$llEnc."<option value='".trim($laArreglo[$value])."'>".$laArreglo[$text]."</option>";
+			}
+		}
+		$this->fpCierraFiltro($lrTb);
+		return $llEnc;
 	}
 
 	function DameCIyNaci($string)			//Regresa un arreglo de la CI y la Nacionalidad
@@ -295,11 +344,24 @@ class clsFunciones extends clsDatos
   		return $string;
 	}
 
+	function fRestaDiasAfecha($fecha,$diasArestar)
+	{
+		$fecha = strtotime ( '-'.$diasArestar.' day' , strtotime ( $fecha ) ) ;
+		$fecha = date ( 'Y-m-j' , $fecha );
+		return $fecha;
+	}
+
+	function fSumaDiasAfecha($fecha,$diasAsumar)
+	{
+		$fecha = strtotime ( '+'.$diasAsumar.' day' , strtotime ( $fecha ) ) ;
+		$fecha = date ( 'Y-m-j' , $fecha );
+		return $fecha;
+	}
 
 }
 
 
-
+	
 
 
 

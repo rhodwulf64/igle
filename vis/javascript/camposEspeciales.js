@@ -323,17 +323,17 @@ function vFechaEvento(fechaid) {	//verifica que la fecha del evento sea posterio
 	f1=new Date(fechi);
 	f2=new Date();
 	if (f1<f2)
-  {
-  	document.getElementById("ha"+fechaid).className = "form-group has-error";
-  	document.getElementById("ttip"+fechaid).style.display = "block";
-  	document.getElementById("ttip"+fechaid).textContent = "Ingrese una fecha que no haya transcurrido aun";
-  }
+	{
+		document.getElementById("ha"+fechaid).className = "form-group has-error";
+		document.getElementById("ttip"+fechaid).style.display = "block";
+		document.getElementById("ttip"+fechaid).textContent = "Ingrese una fecha que no haya transcurrido aun";
+  	}
   else
-  {
-  	document.getElementById("ha"+fechaid).className = "form-group has-default";
-  	document.getElementById("ttip"+fechaid).style.display = "none";
-  	respu=true;
-  }
+	{
+		document.getElementById("ha"+fechaid).className = "form-group has-default";
+		document.getElementById("ttip"+fechaid).style.display = "none";
+		respu=true;
+	}
   return respu;
 }
 
@@ -486,3 +486,27 @@ function consulta_ajax(url,parametros){
 	http.send();
 }
 
+function vValidaPass(campoid){
+	var getObjeto=document.getElementById(campoid);
+	var respu=false;
+    var largopass = getObjeto.value.length;
+    
+         if(largopass < 6)
+         {
+                  Notificalo("El password debe ser al menos de 6 caracteres.","error");
+                  getObjeto.focus();
+	     }
+	     else
+	     {
+	     	if(largopass <=8)
+	        {
+	        	respu=true;
+	        }
+	        else
+	        {
+	        	  Notificalo("El password debe contener un máximo de 8 caracteres.","error");
+                  getObjeto.focus();
+	        }
+	     }
+    return respu;
+}

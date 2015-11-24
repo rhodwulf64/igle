@@ -61,8 +61,8 @@
 						<th></th>
 						</tr>
 					<tr>
-						<th><div class="form-group has-default" id="haf_clavePri"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Contraseña:</font><input type="password" name="f_clavePri" id="f_clavePri" class="form-control" value=""><div class="tool-tip  slideIn" id="ttipf_clavePri" style="display:none;"></div></div></div></th>
-						<th><div class="form-group has-default" id="haf_claveSeg"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Repita la Contraseña:</font><input type="password" name="f_claveSeg" id="f_claveSeg" class="form-control" value=""><div class="tool-tip  slideIn" id="ttipf_claveSeg" style="display:none;"></div></div></div></th>
+						<th><div class="form-group has-default" id="haf_clavePri"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Contraseña:</font><input type="password" name="f_clavePri" id="f_clavePri" class="form-control" value="" minlength="6" maxlength="8"><div class="tool-tip  slideIn" id="ttipf_clavePri" style="display:none;"></div></div></div></th>
+						<th><div class="form-group has-default" id="haf_claveSeg"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Repita la Contraseña:</font><input type="password" name="f_claveSeg" id="f_claveSeg" class="form-control" value="" minlength="6" maxlength="8"><div class="tool-tip  slideIn" id="ttipf_claveSeg" style="display:none;"></div></div></div></th>
 					</tr>
 					<tr>
 						<th><div class="form-group has-default" id="haf_AskUser"><div class="on-focus clearfix" style="position: relative;"><span class="control-label" style="margin-right:2px;font-size:18px;color:red;">*</span><font class="control-label">Pregunta de Seguridad:</font><input type="text" name="f_AskUser" id="f_AskUser" class="form-control" value=""><div class="tool-tip  slideIn" id="ttipf_AskUser" style="display:none;"></div></div></div></th>
@@ -82,10 +82,6 @@
 							<input type="hidden" name="KestadoActual" id="KestadoActual" value="">
 							<input type="hidden" name="txtIDTusuario" id="txtIDTusuario" value="">
 							<input type="hidden" name="txtIDTpersona" id="txtIDTpersona" value="">
-							<input type="button" class="btn btn-default" name="b_Nuevo" value="" disabled>
-							<input type="button" class="btn btn-default" name="b_Modificar" value="Modificar" onclick="fpModificar()">
-							<input type="button" class="btn btn-default" name="b_Buscar" value="" disabled>
-							<input type="button" class="btn btn-default" name="b_Eliminar" value="Desactivar" onclick="fpDesactivar()">
 							<input type="button" class="btn btn-default" name="b_Guardar" value="Guardar" onclick="fpGuardar()">
 							<input type="button" class="btn btn-default" name="b_Cancelar" value="Cancelar" onclick="fpCancelar()"></center>
 						</th>
@@ -104,21 +100,13 @@
 			var loF=document.fr_usuarios;
 			function fpInicio()
 			{	
-					fpInicial();
+					fpInicial2();
 					fpCancelar();
 					fpPerderFocus();
 
 			}
 				
-				function fpNuevo()
-				{
-					fpCambioN();
-					fpEncender();
-					loF.txtOperacion.value="incluir";
-					loF.txtHacer.value="buscar";
-					loF.f_cedula.focus();
-				}
-				
+	
 				function fpEncender()
 				{
 					loF.f_cedula.disabled=false;
@@ -148,26 +136,11 @@
 					loF.f_AskUser.disabled=false;
 					loF.f_AnswerUser.disabled=false;
 				}
-				function fpApagar()
-				{
-					loF.f_cedula.disabled=true;
-					loF.f_nombres.disabled=true;
-					loF.f_apellidos.disabled=true;
-					loF.f_sexo.disabled=true;
-					loF.f_direccion.disabled=true;
-					loF.f_telefono.disabled=true;
-					loF.f_fechaNac.disabled=true;
-					loF.f_clavePri.disabled=true;
-					loF.f_claveSeg.disabled=true;
-					loF.f_AskUser.disabled=true;
-					loF.f_AnswerUser.disabled=true;
-					fpEstadoActual();
-				}
 				
 				function fpCancelar()
 				{
-					loF.txtOperacion.value="buscar";
-					loF.txtHacer.value="buscar";
+					loF.txtOperacion.value="modificar";
+					loF.txtHacer.value="modificar";
 					loF.txtHay.value=0;
 					loF.f_cedula.value="";
 					loF.f_nombres.value="";
@@ -192,11 +165,10 @@
 					document.getElementById("haf_claveSeg").className = "form-group has-default";
 					document.getElementById("haf_AskUser").className = "form-group has-default";
 					document.getElementById("haf_AnswerUser").className = "form-group has-default";
-					fpApagar();
-					fpInicial();
-					loF.b_Buscar.disabled=true;
-					loF.b_Nuevo.disabled=true;
-					loF.KestadoActual.value=1;
+					
+					fpEncender();
+					fpCambioN2();
+				
 				}
 				
 				function fpBuscar()
@@ -204,13 +176,15 @@
 					loF.txtOperacion.value="buscar";
 					loF.txtHacer.value="buscar";
 					loF.f_cedula.disabled=false;
-					fpCambioB();
+					fpCambioB2();
 					loF.f_cedula.focus();
 				}
 				
 				function fpPerderFocus()
 				{
-											
+					loF.txtOperacion.value="buscar";
+					loF.txtHacer.value="buscar";
+					loF.txtHay.value=0;			
 								
 						var $forme = $("#fr_usuarios");
 
@@ -233,9 +207,14 @@
 										loF.f_AskUser.value = data.lsPreguntaSecreta;
 										loF.f_AnswerUser.value = data.lsRespuestaSecreta;
 										loF.KestadoActual.value = data.lsEstatus;
-											fpCambioE();
-											fpApagar();
-									}else if((data.lsCedula!=null)&&(data.lsRol==null)&&(loF.txtOperacion.value=="incluir")){
+										fpCambioN2();
+										loF.txtOperacion.value="modificar";
+										loF.txtHacer.value="modificar";
+										loF.txtHay.value=0;
+										loF.f_cedula.disabled=true;
+										loF.f_nombres.focus();
+									}
+									else if((data.lsCedula!=null)&&(data.lsRol==null)&&(loF.txtOperacion.value=="incluir")){
 									
 										loF.f_nombres.value = data.lsNombre;
 										loF.f_apellidos.value = data.lsApellido;
@@ -247,8 +226,13 @@
 										loF.txtHacer.value = "incluir";
 										loF.txtHay.value = 1;
 										loF.KestadoActual.value = data.lsEstatus;
-										fpCambioN();
+										fpCambioN2();
 										fpEncenderUsuario();
+										loF.txtOperacion.value="modificar";
+										loF.txtHacer.value="modificar";
+										loF.txtHay.value=0;
+										loF.f_cedula.disabled=true;
+										loF.f_nombres.focus();
 									}
 									else
 									{
@@ -263,7 +247,7 @@
 											loF.txtHacer.value="incluir";
 											loF.txtHay.value=0;
 
-													fpCambioN();
+													fpCambioN2();
 													fpEncender();
 													loF.f_cedula.disabled=true;
 													loF.f_nombres.focus();
@@ -278,7 +262,7 @@
 												loF.txtHacer.value="incluir";
 												loF.txtHay.value=0;
 
-													fpCambioN();
+													fpCambioN2();
 													fpEncender();
 													loF.f_cedula.disabled=true;
 													loF.f_nombres.focus();
@@ -311,7 +295,7 @@
 									{
 											fpCancelar();
 											NotificaS("Usuario Incluido");
-											fpInicial();
+											fpInicial2();
 											loF.KestadoActual.value=1;
 									}
 									if((loF.txtHacer.value=="incluir")&&(data.liHay==2))
@@ -334,14 +318,14 @@
 												
 											fpCancelar();
 											NotificaS("Usuario Modificado");
-											fpInicial();
+											fpInicial2();
 											loF.KestadoActual.value=1;
 									}
 									if ((data.lsOperacion=="modificar")&&(data.liHay==2))
 									{
 											fpCancelar();
 											NotificaS("Datos de Identidad Modificados");
-											fpInicial();
+											fpInicial2();
 											loF.KestadoActual.value=1;
 									}
 									if ((data.lsOperacion=="modificar")&&(data.liHay==0))
@@ -410,6 +394,14 @@
 						loF.f_claveSeg.value="";
 						loF.f_clavePri.focus();
 					}
+					if(vValidaPass("f_clavePri")==false)
+					{
+						invalido=1;
+					}
+					if(vValidaPass("f_claveSeg")==false)
+					{
+						invalido=1;
+					}					
 					if(vCampoVacio("f_AskUser"))
 					{
 						invalido=1;
@@ -424,109 +416,7 @@
 					}
 					return lbValido;
 				}
-				
-				function fpModificar()
-				{
-					fpEncender();
-					fpCambioN();
-					loF.txtOperacion.value="modificar";
-					loF.txtHacer.value="modificar";
-					loF.txtHay.value=0;
-					loF.f_cedula.disabled=true;
-					loF.f_nombres.focus();
-				}
-				
-				function fpEstadoActual()
-				{
-					var KedoActual=loF.KestadoActual.value;
-					if(KedoActual==1)
-					{
-						loF.b_Eliminar.value="Desactivar";
-					}
-					else
-					{
-						loF.b_Eliminar.value="Reactivar";
-					}
 					
-				}
-
-				function fpDesactivar()
-				{
-					if (loF.b_Eliminar.value=="Reactivar")
-					{
-						if(confirm("Desea Reactivar el Usuario?"))
-						{
-							loF.f_cedula.disabled=false;
-							loF.txtOperacion.value="reactivar";
-							loF.txtHacer.value="reactivar";
-							
-							var $forme = $("#fr_usuarios");
-
-							$.ajax({
-								url: \'../cntller/corUsuarioActual.php\',
-								dataType: \'json\',
-								type: \'post\',
-								data: $forme.serialize(),
-						        success: function(data){
-									if(data.liHay==1)
-									{
-											fpCancelar();
-											NotificaS("Usuario Reactivado");
-											fpInicial();
-											loF.KestadoActual.value=1;
-									}
-									else	
-									{
-											fpCancelar();
-											NotificaE("No se pudo Reactivar el Usuario");
-											fpInicial();
-											loF.KestadoActual.value=1;
-											
-									}
-								}
-							});
-
-
-						}
-					}
-					else
-					{
-						if(confirm("Desea Desactivar el Usuario?"))
-						{
-							loF.f_cedula.disabled=false;
-							loF.txtOperacion.value="eliminar";
-							loF.txtHacer.value="eliminar";
-							var $forme = $("#fr_usuarios");
-
-							$.ajax({
-								url: \'../cntller/corUsuarioActual.php\',
-								dataType: \'json\',
-								type: \'post\',
-								data: $forme.serialize(),
-						        success: function(data){
-									if(data.liHay==1)
-									{
-											fpCancelar();
-											NotificaS("Usuario Desactivado");
-											fpInicial();
-											loF.KestadoActual.value=1;
-									}
-									else	
-									{
-											fpCancelar();
-											NotificaE("No se pudo Desactivar el Usuario");
-											fpInicial();
-											loF.KestadoActual.value=1;
-											
-									}
-								}
-							});
-
-						}
-					}
-				}
-
-
 
 		</script>
 		</html>

@@ -121,6 +121,33 @@ function fpCambioEd()
 }
 
 
+function fpInicial2()
+{
+
+	loF.b_Guardar.disabled=true;
+	loF.b_Cancelar.disabled=true;
+
+}
+
+function fpCambioN2()
+{
+	loF.b_Guardar.disabled=false;
+	loF.b_Cancelar.disabled=false;
+}
+
+function fpCambioB2()
+{
+	loF.b_Guardar.disabled=true;
+	loF.b_Cancelar.disabled=false;
+}
+
+function fpCambioE2()
+{
+	loF.b_Guardar.disabled=true;
+	loF.b_Cancelar.disabled=false;
+}
+
+
 function fpCuestionamiento(praccion,prsujeto,prorigen)
 {
 	var respu=false;

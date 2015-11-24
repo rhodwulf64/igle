@@ -313,11 +313,11 @@ echo utf8_decode('
 		                        <div class="panel-body">
 		                            
 											<font class="control-label">Usuario:</font>
-											<input type="text" class="form-control" name="textUsuario" maxlength="8" onkeypress="vSoloNumeros()">
+											<input type="text" class="form-control" name="textUsuario" onkeypress="vSoloNumeros()">
 										
 										
 											<font class="control-label">Clave:</font>
-											<input type="password" class="form-control" maxlength="25" name="textClave">
+											<input type="password" class="form-control" minlength="6" maxlength="8" name="textClave">
 										
 		                        </div>
 		                        <div class="panel-footer">

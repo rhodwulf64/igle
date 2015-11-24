@@ -8,8 +8,9 @@
 	require_once("menu_principal.php");
 	require_once("encabezado.php");
 	require_once("../clases/clsFuncionesGlobales.php");
-		$loFuncion =new clsFunciones;
-
+	require_once("../clases/claAgendaCitas.php");
+	$loCitas=new claAgendaCitas();
+	$loFuncion =new clsFunciones;
 
     $lsOperacion=$_GET["lsOperacion"];
 	$lsHacer=$_GET["lsHacer"];
@@ -27,12 +28,13 @@
 			$FunIncio="fpBusquedaForanea();";
 		}
 	}
+	$loCitas->asidtPersona=$_SESSION["IDTpersona"];
 
 	echo utf8_Decode('
 <!DOCTYPE html>
 <html lang="es">
   <head>
-		<title>'.$_SESSION['title'].' - Registro de Grupo Apostolado</title>
+		<title>'.$_SESSION['title'].' - Registro de Solicitudes</title>
 
 	');
 			print(encabezado_menu("../"));
@@ -48,18 +50,19 @@ echo utf8_Decode('
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" onclick="salir();" aria-hidden="true">×</button>
-                <h4 class="modal-title" id="myModalLabel">Buscador</h4>
+                <h4 class="modal-title" id="myModalLabel">Motivo de Anulación</h4>
             </div>
             <div class="modal-body pre-scrollable">
 				<table>
 					<tr>
-						<td><input type="text" onkeyup="buscar_like(this);" class="form-control" style="width:640px;" placeholder="Ingrese una palabra clave..." name="txtbuscador" id="txtbuscador"/></td>
+						<td><input type="text" class="form-control" style="width:640px;" placeholder="Ingrese un motivo para anular la cita" name="txtCita" id="txtCita"/></td>
 					</tr>
 				</table>
 				<br>
 				<table id="cargar" class="table table-striped table-bordered table-hover" style="width:640px;"></table>
           	 </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="fpAnularCita();salir();">Continuar</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal" onclick="salir();">Cerrar</button>
             </div>
         </div>
@@ -83,9 +86,9 @@ echo utf8_Decode('
 						<tr>
 							<th colspan="2">
 								<center>
-									<div class="form-group has-default" id="haf_listarTipoSolicitud" style="width:400px;"><div class="on-focus clearfix" style="position: relative;"><font class="control-label">Tipo de Solicitud:</font><br><select name="f_listarTipoSolicitud" class="form-control" size="1" tabindex="1" onblur="vCampoVacio(this.id);" id="f_listarTipoSolicitud" value=""><option value="0">*Seleccione un tipo de Solicitud</opction>');
+									<div class="form-group has-default" id="haf_listarTipoSolicitud" style="width:400px;"><div class="on-focus clearfix" style="position: relative;"><font class="control-label">Tipo de Solicitud:</font><br><select name="f_listarTipoSolicitud" class="form-control" size="1" tabindex="1" onblur="vCampoVacio(this.id);" onchange="fpSeleccionaSolicitud(this.value);" id="f_listarTipoSolicitud" value=""><option value="0">*Seleccione un tipo de Solicitud</opction>');
 
-									echo utf8_decode($loFuncion->fncreateComboSelect("tipo_solicitud", "","idTipoSolicitud","", ' ',"","descripcion", $selectTipoSolicitud,"", "", "")); 
+									echo utf8_decode($loFuncion->fncreateComboSelectSolicitudes("tipo_solicitud", "idTipoSolicitud","descripcion","requisitos", $selectTipoSolicitud)); 
 									echo utf8_Decode('
 									</select><div class="tool-tip  slideIn" id="ttipf_listarTipoSolicitud" style="display:none;"></div></div></div>
 								</center>
@@ -96,11 +99,17 @@ echo utf8_Decode('
 								<font class="control-label">Requisitos:</font>
 								<textarea name="f_Requisitos" id="f_Requisitos" class="form-control" maxlength="100" tabindex="2" style="height:200px;" disabled></textarea>
 							</th>
-							<th><font class="control-label">Citas Pendientes a la fecha:</font><br><select name="f_listarCitasPendientes" class="form-control" size="11" tabindex="1" onchange="SeleccionaItem(this.value);" id="f_listarCitasPendientes" value="" disabled>');
-
-									//echo utf8_decode($loFuncion->fncreateComboSelect("tipo_solicitud", "","idTipoSolicitud","", ' ',"","descripcion", $selectTipoSolicitud,"", "", "")); 
-									echo utf8_Decode('
-									</select>
+							<th><font class="control-label">Citas Pendientes a la fecha:</font><br>
+							');
+								$arrCitas=$loCitas->fpListaCitasFeligresPendiente();	
+								$i=0;
+								foreach ($arrCitas as &$ACitas) 
+								{
+									$i++;
+									echo utf8_decode('<div class="alert alert-success" id="citas'.$i.'"><div style="display: inline-block;" val="'.$ACitas['idTSolicitud'].'*'.$ACitas['descripcion'].'*'.$ACitas['requisitos'].'" onclick="fpSeleccionaSolicitudListaC($(this).attr(\'val\'));">'.$i.'-'.$ACitas['descripcion'].' ('.$loFuncion->fDameFechaEscrita($ACitas['FechaCita']).' - '.$loFuncion->fDameHoraEstandar($ACitas['HoraCita']).')</div> <input type="button" class="btn btn-danger" name="b_Anular" value="Anular" onclick="fpPreAnularCitaMotivo(\''.$ACitas['idTSolicitud'].'\',\''.$ACitas['descripcion'].'\','.$i.');"></div>');
+								}
+								echo utf8_Decode('
+									
 							</th>
 						</tr>
 					</table>
@@ -116,18 +125,22 @@ echo utf8_Decode('
 						<input type="hidden" name="txtHay" id="txtHay" value="'.$liHay.'">
 						<input type="hidden" name="KestadoActual" id="KestadoActual" value="">
 						<input type="hidden" name="KopcionCita" id="KopcionCita" value="">
-						<input type="hidden" name="txtIdApostolado" id="txtIdApostolado" value="">		
+						<input type="hidden" name="txtIdCita" id="txtIdCita" value="">		
+						<input type="hidden" name="txtDescriCita" id="txtDescriCita" value="">		
+						<input type="hidden" name="txtNumeCita" id="txtNumeCita" value="">		
+						<input type="hidden" name="txtMotivoCita" id="txtMotivoCita" value="">		
+						<input type="hidden" name="txtDescripcionCita" id="txtDescripcionCita" value="">		
 						<input type="hidden" name="temporal" id="temporal" value="">		
-						<input type="button" class="btn btn-default" name="b_Nuevo" value="Nuevo" onclick="fpNuevo()">
-						<input type="button" class="btn btn-default" name="b_Modificar" value="Modificar" onclick="fpModificar()">
-						<input type="button" class="btn btn-default" name="b_Buscar" value="Buscar" onclick="fpBuscarLike()">
-						<input type="button" class="btn btn-default" name="b_Eliminar" value="Desactivar" onclick="fpDesactivar()">
-						<input type="button" class="btn btn-default" name="b_Guardar" value="Guardar" onclick="fpGuardar()">
+						<input type="button" class="btn btn-default" name="b_Guardar" value="Solicitar" onclick="fpGuardar()">
 						<input type="button" class="btn btn-default" name="b_Cancelar" value="Cancelar" onclick="fpCancelar()"></center>
 					</th>
 				</tr>
 			</table>
-		</div>');
+		</div>
+
+
+
+		');
 
 
 	footer(); // pie de pagina
@@ -138,111 +151,23 @@ echo utf8_Decode('
 </body>
 	<script>
 	var loF=document.fr_solicitudes;
-	function fpInicio()
-	{
-	
-			switch(loF.txtOperacion.value)
-			{
-				case "":
-					fpInicial();
-					fpCancelar();
-					break;
-				case "buscar":
-					if(loF.txtHay.value==1)
-					{
-
-						fpCambioE();
-						fpApagar();
-
-					}
-					else
-					{
-						NotificaE("No Existe");
-						fpCancelar();
-					}
-					break;
-				case "incluir":
-					if ((loF.txtHacer.value=="buscar")&&(loF.txtHay.value==1))
-					{
-						NotificaS("Ese Registro Existe");
-						fpCambioE();
-						fpApagar();
-					}
-					if((loF.txtHacer.value=="buscar")&&(loF.txtHay.value==0))
-					{
-						loF.txtOperacion.value="incluir";
-						loF.txtHacer.value="incluir";
-						loF.txtHay.value=0;
-						fpCambioN();
-						fpEncender();
-						loF.f_nombre.focus();
-					}
-					if((loF.txtHacer.value=="incluir")&&(loF.txtHay.value==1))
-					{
-						NotificaS("Registro Incluido");
-						
-						fpCancelar();
-					}
-					if((loF.txtHacer.value=="incluir")&&(loF.txtHay.value==2))
-					{
-						NotificaE("Registro No Incluido");
-						
-						fpCancelar();
-					}
-					break;
-				case "modificar":
-					if(loF.txtHay.value==1)
-					{
-						NotificaS("Registro Modificado");
-						
-						fpCancelar();
-					}
-					else
-					{
-						NotificaE("Registro No Modificado");
-						
-						fpCancelar();
-					}
-					break;
-				case "eliminar":
-					if(loF.txtHay.value==1)
-					{
-						NotificaS("Registro Eliminado");
-						
-						fpCancelar();
-					}
-					else
-					{
-						NotificaE("Registro No Eliminado");
-						
-						fpCancelar();
-					}
-					break;
-			}
+		function fpInicio()
+		{
+			fpInicial2();
+			loF.txtOperacion.value="";
+			loF.txtHacer.value="";
+			loF.txtHay.value=0;
+			loF.f_listarTipoSolicitud.value="0";
+			fpCambioN2();
 		}
 		
 		function fpNuevo()
 		{
-			fpCambioN();
+			fpCambioN2();
 			fpEncender();
 			loF.txtOperacion.value="incluir";
 			loF.txtHacer.value="buscar";
 			loF.f_nombre.focus();
-		}
-		
-		function fpEncender()
-		{
-			loF.f_mision.disabled=false;
-			loF.f_nombre.disabled=false;
-			loF.f_vision.disabled=false;
-		}
-		
-		function fpApagar()
-		{
-			loF.f_mision.disabled=true;
-			loF.f_nombre.disabled=true;
-			loF.f_vision.disabled=true;
-			fpEstadoActual();
 		}
 		
 		function fpCancelar()
@@ -250,17 +175,11 @@ echo utf8_Decode('
 			loF.txtOperacion.value="";
 			loF.txtHacer.value="";
 			loF.txtHay.value=0;
-			loF.f_mision.value="";
-			loF.f_nombre.value="";
-			loF.f_vision.value="";
-
-			document.getElementById("haf_mision").className = "form-group has-default";
-			document.getElementById("haf_nombre").className = "form-group has-default";
-			document.getElementById("haf_vision").className = "form-group has-default";
-
-			fpApagar();
-			fpInicial();
-			loF.KestadoActual.value=1;
+			loF.f_listarTipoSolicitud.value="0";
+			loF.f_Requisitos.innerHTML="";
+			fpCambioN2();
+			$( ".tool-tip.slideIn" ).each(function(i) {$(this).css( "display", "none" );});
+			$( ".form-group.has-error" ).each(function(i) {$(this).attr( "class", "form-group has-default" );});
 		}
 		function buscar_like(e){
 			var parametros = "?AccionGet=buscar_like&txtcadena="+e.value;
@@ -269,15 +188,15 @@ echo utf8_Decode('
 			document.getElementById("cargar").innerHTML = document.getElementById("temporal").value;
 		}
 
-		function fpBuscarLike()
+		function fpSeleccionar()
 		{
-			var mas = document.getElementById("mascara");
-			var bus = document.getElementById("buscador");
+			loF.txtOperacion.value="seleccionar";
+			loF.txtHay.value=0;
+			loF.f_listarCitasPendientes.disabled=false;
 
-			mas.style.display = "block";
-			bus.style.display = "block";
 
-			document.getElementById("txtbuscador").focus();
+			fpCambioE2();
+			
 		}
 
 		function fpSelectLike(idlke)
@@ -289,7 +208,7 @@ echo utf8_Decode('
 			mas.style.display = "none";
 			bus.style.display = "none";
 			loF.f_nombre.value=lke.nvaNombre.value;
-			loF.txtIdApostolado.value=lke.nvaidApostolado.value;
+			loF.txtIdCita.value=lke.nvaidApostolado.value;
 			loF.txtOperacion.value="buscar";
 			loF.txtHacer.value="buscar";
 			loF.txtHay.value="0";
@@ -310,42 +229,13 @@ echo utf8_Decode('
 			fpCancelar();			
 		}
 
-		function SeleccionaItem()
-		{
-			var valueIndex=loF.f_listarCitasPendientes.selectedIndex;
-			loF.KopcionCita.value=loF.f_listarCitasPendientes.options[valueIndex].text;
-			loF.txtOperacion.value="busEstatus";
-			var $forme = $("#fr_solicitudes");
-
-			$.ajax({
-				url: \'../cntller/cn_solicitudFeligres.php\',
-				dataType: \'json\',
-				type: \'post\',
-				data: $forme.serialize(),
-		        success: function(data){
-		        	var Cita=data[\'Cita\'];
-					if(Cita.liHay==1)
-					{
-							loF.KestadoActual.value=Confi.lsEstatus;	
-							fpEstadoActual();	
-					}
-					else	
-					{
-							NotificaE("Error en el Estatus del elemento.");
-															
-					}
-					
-				}
-			});
-
-		}
 
 		function fpBuscar()
 		{
 			loF.txtOperacion.value="buscar";
 			loF.txtHacer.value="buscar";
 			loF.f_nombre.disabled=false;
-			fpCambioB();
+			fpCambioB2();
 			loF.f_nombre.focus();
 		}
 
@@ -372,16 +262,16 @@ echo utf8_Decode('
 										loF.f_mision.value=arrayDato.lsMision;
 										loF.f_vision.value=arrayDato.lsVision;
 										loF.KestadoActual.value=arrayDato.lsEstatus;
-										loF.txtIdApostolado.value=arrayDato.lsidApostolado;
+										loF.txtIdCita.value=arrayDato.lsidApostolado;
 										loF.f_nombre.disabled=true;
-										fpCambioE();
+										fpCambioE2();
 										fpApagar();
 
 										if (loF.txtOperacion.value=="incluir")
 										{
 											document.getElementById("haf_mision").className = "form-group has-warning";
 											NotificaE("Esta cedula ya se encuentra registrada");
-											fpCambioE();
+											fpCambioE2();
 											fpApagar();
 										}
 									}
@@ -419,66 +309,63 @@ echo utf8_Decode('
 		
 	function fpGuardar()
 		{
-			if(fbValidar())
+			if(loF.txtDescripcionCita.value!="")
 			{
-				loF.f_nombre.disabled=false;
-				var $forme = $("#fr_solicitudes");
-				var pagAnterior="'.$_SESSION["UrlAnterior"].'";
-					$.ajax(
+				if(confirm("Desea solicitar una cita para \""+loF.txtDescripcionCita.value+"\""))
+				{
+					if(fbValidar())
 					{
-						url: \'../cntller/cn_solicitudFeligres.php\',
-						dataType: \'json\',
-						type: \'post\',
-						data: $forme.serialize(),
-				        success: function(data)
-				        {
-				        		var arrayDato=data[\'ArrDatos\'];
+						loF.txtOperacion.value="solicitaCita";
+						loF.txtHacer.value="solicitaCita";
+						loF.txtHay.value="0";
+						var $forme = $("#fr_solicitudes");
+							$.ajax(
+							{
+								url: \'../cntller/cn_solicitudFeligres.php\',
+								dataType: \'json\',
+								type: \'post\',
+								data: $forme.serialize(),
+						        success: function(data)
+						        {
 
-								if ((loF.txtHacer.value=="buscar")&&(arrayDato.liHay==1))
-								{
+						        		var arrayDato=data[\'Solici\'];
 
-									NotificaE("El Nombre de ingresado ya se encuentra registrado.");
-								}
+										if ((loF.txtHacer.value=="buscar")&&(arrayDato.liHay==1))
+										{
+											NotificaE("El Nombre de ingresado ya se encuentra registrado.");
+										}
 
-								if ((loF.txtHacer.value=="incluir")&&(arrayDato.liHay==0))
-								{
+										if ((loF.txtHacer.value=="solicitaCita")&&(arrayDato.liHay==0))
+										{
+											NotificaE("El Registro no se pudo incluir.");
+										}
 
-									NotificaE("El Registro no se pudo incluir.");
-
-								}
-
-								if ((loF.txtHacer.value=="incluir")&&(arrayDato.liHay==1))
-								{
-
-									NotificaS("Registro incluido con exito.");
-									fpCancelar();
-
-								}
+										if ((loF.txtHacer.value=="solicitaCita")&&(arrayDato.liHay==1))
+										{
+											NotificaS("Registro incluido con exito.");
+											location.reload();
+										}
 								
-						
-								if ((loF.txtHacer.value=="modificar")&&(arrayDato.liHay==0))
-								{
+										if ((loF.txtHacer.value=="modificar")&&(arrayDato.liHay==0))
+										{
+											NotificaE("El Registro no se pudo modificar.");
+										}
 
-									NotificaE("El Registro no se pudo modificar.");
+										if ((loF.txtHacer.value=="modificar")&&(arrayDato.liHay==1))
+										{
+											NotificaS("Registro modificado con exito.");
+											loF.txtOperacion.value="buscar";
+											loF.txtHacer.value="buscar";
+											loF.txtHay.value="0";
+											fpPerderFocus();
+										}
 
+									
 								}
+							});
 
-								if ((loF.txtHacer.value=="modificar")&&(arrayDato.liHay==1))
-								{
-
-									NotificaS("Registro modificado con exito.");
-									loF.txtOperacion.value="buscar";
-									loF.txtHacer.value="buscar";
-									loF.txtHay.value="0";
-									fpPerderFocus();
-
-
-								}
-
-							
-						}
-					});
-
+					}
+				}
 			}
 		}
 		
@@ -487,15 +374,7 @@ echo utf8_Decode('
 			var lbValido=false;
 			var invalido=0;
 			
-			if(vCampoVacio("f_nombre"))
-			{
-				invalido=1;
-			}
-			if(vCampoVacio("f_mision"))
-			{
-				invalido=1;
-			}			
-			if(vCampoVacio("f_vision"))
+			if(vCampoVacio("f_listarTipoSolicitud"))
 			{
 				invalido=1;
 			}
@@ -503,13 +382,14 @@ echo utf8_Decode('
 			{
 				lbValido=true;
 			}
+			
 			return lbValido;
 		}
 		
 		function fpModificar()
 		{
 			fpEncender();
-			fpCambioN();
+			fpCambioN2();
 			loF.txtOperacion.value="modificar";
 			loF.txtHacer.value="modificar";
 			loF.f_nombre.focus();
@@ -529,16 +409,29 @@ echo utf8_Decode('
 			}
 			
 		}
-		
-		function fpDesactivar()
+
+		function fpPreAnularCitaMotivo(idCita,descripcion,nume)
 		{
-			if (loF.b_Eliminar.value=="Reactivar")
-			{
-				if(confirm("Desea Reactivar Apostolado?"))
+
+			loF.txtIdCita.value=idCita;
+			loF.txtDescriCita.value=descripcion;
+			loF.txtNumeCita.value=nume;
+			var mas = document.getElementById("mascara");
+			var bus = document.getElementById("buscador");
+			mas.style.display = "block";
+			bus.style.display = "block";
+		}
+		
+		function fpAnularCita()
+		{
+			loF.txtMotivoCita.value=document.getElementById(\'txtCita\').value;
+			var idCita=loF.txtIdCita.value;
+			var descripcion=loF.txtDescriCita.value;
+			var nume=loF.txtNumeCita.value;
+				if(confirm("Desea Desactivar la cita para \""+descripcion+"\""))
 				{
-					loF.f_mision.disabled=false;
-					loF.txtOperacion.value="reactivar";
-					loF.txtHacer.value="reactivar";
+					loF.txtOperacion.value="anularCita";
+					loF.txtHacer.value="anularCita";
 					var $forme = $("#fr_solicitudes");
 
 					$.ajax({
@@ -547,63 +440,41 @@ echo utf8_Decode('
 						type: \'post\',
 						data: $forme.serialize(),
 				        success: function(data){
-				        	var arrayDato=data[\'ArrDatos\'];
+				        	var arrayDato=data[\'Solici\'];
 							if(arrayDato.liHay==1)
 							{
 									fpCancelar();
-									NotificaS("Registro de Apostolado ha sido Reactivado");
-									loF.KestadoActual.value=1;
-									fpInicial();
+									NotificaS("La cita ha sido Anulada.");
+									$( "#citas"+nume ).remove();
+									
 							}
 							else	
 							{
 									fpCancelar();
-									NotificaE("No se pudo Reactivar Apostolado");
-									loF.KestadoActual.value=1;
-									fpInicial();									
+									NotificaE("No se pudo Anular Cita");
+																	
 							}
 						}
 					});
 
 
 				}
-			}
-			else
-			{
-				if(confirm("Desea Desactivar Apostolado?"))
-				{
-					loF.f_mision.disabled=false;
-					loF.txtOperacion.value="desactivar";
-					loF.txtHacer.value="desactivar";
+		}
 
-					var $forme = $("#fr_solicitudes");
+		function fpSeleccionaSolicitud(valor)
+		{
+			var valores = valor.split("*");
+			var xIDsolicitud=valores["0"];
+			loF.KopcionCita.value=xIDsolicitud;
+			loF.txtDescripcionCita.value=valores["1"];
+			loF.f_Requisitos.innerHTML=valores["1"]+"\n"+valores["2"];
+		}
 
-					$.ajax({
-						url: \'../cntller/cn_solicitudFeligres.php\',
-						dataType: \'json\',
-						type: \'post\',
-						data: $forme.serialize(),
-				        success: function(data){
-				        	var arrayDato=data[\'ArrDatos\'];
-							if(arrayDato.liHay==1)
-							{
-									fpCancelar();
-									NotificaS("Registro de Apostolado ha sido Desactivado");
-									loF.KestadoActual.value=1;
-									fpInicial();							
-							}
-							else	
-							{
-									fpCancelar();
-									NotificaE("No se pudo Desactivar Apostolado.");
-									loF.KestadoActual.value=1;
-									fpInicial();									
-							}
-						}
-					});
-
-				}
-			}
+		function fpSeleccionaSolicitudListaC(valor)
+		{
+			var valores = valor.split("*");
+			var xIDsolicitud=valores["0"];
+			loF.f_Requisitos.innerHTML=valores["1"]+"\n"+valores["2"];
 		}
 
 </script>
