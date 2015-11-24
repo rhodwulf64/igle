@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 05-11-2015 a las 16:26:04
+-- Tiempo de generación: 24-11-2015 a las 04:29:31
 -- Versión del servidor: 5.1.41
 -- Versión de PHP: 5.3.1
 
@@ -29,7 +29,8 @@ CREATE TABLE IF NOT EXISTS `archiprestazgo` (
   `codigoArchiPrestazgo` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,
   `Estatus` char(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`codigoArchiPrestazgo`)
+  PRIMARY KEY (`codigoArchiPrestazgo`),
+  UNIQUE KEY `nombre` (`nombre`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
@@ -50,6 +51,7 @@ CREATE TABLE IF NOT EXISTS `certificado` (
   `codigo_sacra` int(11) NOT NULL,
   `Estatus` char(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`codigo`),
+  UNIQUE KEY `codigo_sacra` (`codigo_sacra`),
   KEY `fsacra_codigo_idx` (`codigo_sacra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -70,6 +72,7 @@ CREATE TABLE IF NOT EXISTS `ciudad` (
   `cod_foraneo` int(11) NOT NULL,
   `Estatus` char(1) COLLATE utf8_spanish2_ci NOT NULL DEFAULT '1',
   PRIMARY KEY (`cod_ciudad`),
+  UNIQUE KEY `descripcion` (`descripcion`),
   KEY `cod_foraneo` (`cod_foraneo`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci AUTO_INCREMENT=13 ;
 
@@ -78,8 +81,8 @@ CREATE TABLE IF NOT EXISTS `ciudad` (
 --
 
 INSERT INTO `ciudad` (`cod_ciudad`, `descripcion`, `cod_foraneo`, `Estatus`) VALUES
-(1, 'ARAURE', 1, '1'),
-(12, 'ACARIGUA', 48, '1');
+(1, 'ACARIGUA', 1, '1'),
+(12, 'MARACAIBO', 17, '1');
 
 -- --------------------------------------------------------
 
@@ -99,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `detalle_grupo` (
   KEY `codigo_idx` (`codigo_grupo`),
   KEY `fk_codigoPersona_idx` (`codigo_persona`),
   KEY `idFparroquiaIglesia` (`idFparroquiaIglesia`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=23 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=25 ;
 
 --
 -- Volcar la base de datos para la tabla `detalle_grupo`
@@ -108,13 +111,14 @@ CREATE TABLE IF NOT EXISTS `detalle_grupo` (
 INSERT INTO `detalle_grupo` (`Detalle_Grupocol`, `codigo_persona`, `codigo_grupo`, `idFparroquiaIglesia`, `FechaRegistro`, `Estatus`) VALUES
 (1, 980, 2, 2, '2015-11-02 11:05:13', '1'),
 (2, 974, 2, 2, '2015-11-02 11:05:13', '1'),
-(5, 975, 3, 4, '2015-11-02 11:21:44', '1'),
+(5, 975, 3, 4, '2015-11-02 11:21:44', '0'),
 (6, 984, 3, 2, '2015-11-02 11:21:44', '1'),
 (9, 1000, 3, 2, '2015-11-02 15:35:43', '1'),
 (19, 1030, 3, 2, '2015-11-02 15:50:21', '1'),
 (20, 1031, 1, 3, '2015-11-02 16:16:58', '1'),
 (21, 2, 2, 4, '2015-11-03 00:55:11', '1'),
-(22, 1033, 1, 2, '2015-11-03 01:05:11', '1');
+(22, 1033, 1, 2, '2015-11-03 01:05:11', '1'),
+(24, 948, 2, 4, '2015-11-08 23:19:05', '1');
 
 -- --------------------------------------------------------
 
@@ -129,9 +133,10 @@ CREATE TABLE IF NOT EXISTS `detalle_pastoral` (
   `FechaRegistro` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `Estatus` char(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`Detalle_Pastoralcol`),
+  UNIQUE KEY `codigo_persona` (`codigo_persona`,`codigo_pastoral`),
   KEY `fk_codigo_pastoral_idx` (`codigo_pastoral`),
   KEY `fk_codigo_persona_idx` (`codigo_persona`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=37 ;
 
 --
 -- Volcar la base de datos para la tabla `detalle_pastoral`
@@ -140,7 +145,13 @@ CREATE TABLE IF NOT EXISTS `detalle_pastoral` (
 INSERT INTO `detalle_pastoral` (`Detalle_Pastoralcol`, `codigo_persona`, `codigo_pastoral`, `FechaRegistro`, `Estatus`) VALUES
 (1, 983, 2, '0000-00-00 00:00:00', '1'),
 (2, 975, 2, '0000-00-00 00:00:00', '1'),
-(3, 982, 2, '0000-00-00 00:00:00', '1');
+(3, 982, 2, '0000-00-00 00:00:00', '1'),
+(10, 981, 3, '2015-11-08 23:12:09', '1'),
+(11, 948, 3, '2015-11-08 23:14:17', '1'),
+(15, 1, 3, '2015-11-08 23:23:05', '1'),
+(25, 1040, 3, '2015-11-08 23:43:20', '1'),
+(26, 1135, 1, '2015-11-08 23:49:15', '1'),
+(36, 945, 4, '2015-11-09 00:08:58', '1');
 
 -- --------------------------------------------------------
 
@@ -161,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `estado` (
 --
 
 INSERT INTO `estado` (`cod_estado`, `descripcion`, `Estatus`) VALUES
-(1, 'LARA', '1'),
+(1, 'ZULIA', '1'),
 (17, 'PORTUGUESA', '1');
 
 -- --------------------------------------------------------
@@ -176,6 +187,7 @@ CREATE TABLE IF NOT EXISTS `municipio` (
   `cod_foraneo` int(11) NOT NULL,
   `Estatus` char(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`cod_municipio`),
+  UNIQUE KEY `descripcion` (`descripcion`),
   KEY `cod_estado` (`cod_foraneo`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=30 ;
 
@@ -197,7 +209,8 @@ CREATE TABLE IF NOT EXISTS `parentescorepre` (
   `idTparentescoRepre` int(11) NOT NULL AUTO_INCREMENT,
   `Nombre` varchar(60) COLLATE utf8_spanish2_ci NOT NULL,
   `Estatus` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`idTparentescoRepre`)
+  PRIMARY KEY (`idTparentescoRepre`),
+  UNIQUE KEY `Nombre` (`Nombre`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci AUTO_INCREMENT=7 ;
 
 --
@@ -224,6 +237,7 @@ CREATE TABLE IF NOT EXISTS `parroquia` (
   `cod_foraneo` int(11) NOT NULL,
   `Estatus` char(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`cod_parroquia`),
+  UNIQUE KEY `descripcion` (`descripcion`),
   KEY `cod_municipio` (`cod_foraneo`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=49 ;
 
@@ -246,7 +260,9 @@ CREATE TABLE IF NOT EXISTS `rol` (
   `Prefijo` char(1) COLLATE utf8_spanish2_ci NOT NULL,
   `Descripcion` varchar(45) COLLATE utf8_spanish2_ci NOT NULL,
   `Estatus` char(1) COLLATE utf8_spanish2_ci NOT NULL DEFAULT '1',
-  PRIMARY KEY (`idTRol`)
+  PRIMARY KEY (`idTRol`),
+  UNIQUE KEY `Prefijo` (`Prefijo`),
+  UNIQUE KEY `Descripcion` (`Descripcion`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci AUTO_INCREMENT=5 ;
 
 --
@@ -258,30 +274,6 @@ INSERT INTO `rol` (`idTRol`, `Prefijo`, `Descripcion`, `Estatus`) VALUES
 (2, 'A', 'Administrador', '1'),
 (3, 'O', 'Operador', '1'),
 (4, 'F', 'Feligres', '1');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `solicitud_sacramento`
---
-
-CREATE TABLE IF NOT EXISTS `solicitud_sacramento` (
-  `numero_solicitud` int(11) NOT NULL AUTO_INCREMENT,
-  `fecha_solicitud` date NOT NULL,
-  `codigo_sacramento` int(11) NOT NULL,
-  `codigo_persona` int(11) NOT NULL,
-  `descripcion` varchar(100) NOT NULL,
-  `tipo_p` char(1) NOT NULL,
-  `Estatus` char(1) NOT NULL,
-  PRIMARY KEY (`numero_solicitud`),
-  KEY `scarmento_idx` (`codigo_sacramento`),
-  KEY `fk_codigoPersona_idx` (`codigo_persona`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
---
--- Volcar la base de datos para la tabla `solicitud_sacramento`
---
-
 
 -- --------------------------------------------------------
 
@@ -305,7 +297,7 @@ CREATE TABLE IF NOT EXISTS `tactividad` (
 INSERT INTO `tactividad` (`codigoActividad`, `nombre`, `tipo_actividad`, `Estatus`) VALUES
 (1, 'Curso bla bla', 1, '1'),
 (3, 'Juegos Varios', 3, '1'),
-(4, 'CHARADAS', 3, '1'),
+(4, 'CHARADAS', 3, '0'),
 (5, 'Fiesta', 3, '1'),
 (6, 'Baile ', 1, '1'),
 (7, 'QWEQWE', 2, '1'),
@@ -337,7 +329,7 @@ CREATE TABLE IF NOT EXISTS `tagendadiocesana` (
   KEY `idFcodigo_actividad_2` (`idFcodigo_actividad`),
   KEY `idFcodigo_pastoral` (`idFcodigo_pastoral`),
   KEY `idFcodigo_grupo` (`idFcodigo_grupo`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=45 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=46 ;
 
 --
 -- Volcar la base de datos para la tabla `tagendadiocesana`
@@ -371,7 +363,8 @@ INSERT INTO `tagendadiocesana` (`codigoAgenda`, `idFcodigo_actividad`, `fecha_ac
 (41, 4, '2015-11-02', '19:00:00', '0000-00-00', '00:00:00', 3, 'CAPILLA', 1, '2015-11-02 22:51:04', b'0', '1'),
 (42, 3, '2015-11-10', '12:03:00', '0000-00-00', '00:00:00', 1, 'qweqweq', 1, '2015-11-05 16:11:34', b'1', '0'),
 (43, 9, '2015-11-10', '12:03:00', '0000-00-00', '00:00:00', 1, 'wqeqwe', 2, '2015-11-05 16:11:58', b'1', '1'),
-(44, 4, '2015-11-12', '14:13:00', '0000-00-00', '00:00:00', 1, 'qweqwe', 3, '2015-11-05 16:23:19', b'1', '1');
+(44, 4, '2015-11-12', '14:13:00', '0000-00-00', '00:00:00', 1, 'qweqwe', 3, '2015-11-05 16:23:19', b'1', '1'),
+(45, 3, '2015-11-02', '12:31:00', '0000-00-00', '00:00:00', 3, 'sdfsdfs', 2, '2015-11-09 21:19:08', b'1', '1');
 
 -- --------------------------------------------------------
 
@@ -515,15 +508,72 @@ CREATE TABLE IF NOT EXISTS `tcapilla` (
   `correo` varchar(45) NOT NULL,
   `Estatus` char(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`codigoCapilla`),
+  UNIQUE KEY `nombre` (`nombre`),
   KEY `codigo_idx` (`codigo_parroquia`),
   KEY `idFestado` (`idFestado`),
   KEY `idFciudad` (`idFciudad`),
   KEY `idFmunicipio` (`idFmunicipio`),
   KEY `idFparroquia` (`idFparroquia`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
 -- Volcar la base de datos para la tabla `tcapilla`
+--
+
+INSERT INTO `tcapilla` (`codigoCapilla`, `nombre`, `direccion`, `idFestado`, `idFciudad`, `idFmunicipio`, `idFparroquia`, `codigo_parroquia`, `telefono`, `fecha_creacion`, `correo`, `Estatus`) VALUES
+(3, 'ASDASDAS', 'QWEQWEQ', 17, 1, 29, 1, 3, '(123)1231231', '1980-03-12', 'QWEQWEQWE', '1'),
+(6, 'ASDASDWEQ', 'QWEQWE', 17, 1, 29, 1, 3, '(123)1231231', '1980-03-12', 'QWEQWEQW', '1'),
+(8, 'QWEQWER', 'QWEQWE', 17, 1, 29, 1, 2, '(231)1231231', '1980-03-12', 'QWEQWEQ@ASDASD', '1');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tcitas_dias_desactivados`
+--
+
+CREATE TABLE IF NOT EXISTS `tcitas_dias_desactivados` (
+  `codigoDiasDesactivados` int(11) NOT NULL AUTO_INCREMENT,
+  `idFresponsableDes` int(11) NOT NULL,
+  `FechaInicioDes` date NOT NULL,
+  `HoraInicioDes` time NOT NULL,
+  `FechaFinDes` date NOT NULL,
+  `HoraFinDes` time NOT NULL,
+  `motivoDes` varchar(100) NOT NULL,
+  `FechaRegistroDes` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `Estatus` char(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`codigoDiasDesactivados`),
+  UNIQUE KEY `FechaInicioDes` (`FechaInicioDes`,`HoraInicioDes`),
+  UNIQUE KEY `FechaFinDes` (`FechaFinDes`,`HoraFinDes`),
+  KEY `idFresponsableDes` (`idFresponsableDes`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+
+--
+-- Volcar la base de datos para la tabla `tcitas_dias_desactivados`
+--
+
+INSERT INTO `tcitas_dias_desactivados` (`codigoDiasDesactivados`, `idFresponsableDes`, `FechaInicioDes`, `HoraInicioDes`, `FechaFinDes`, `HoraFinDes`, `motivoDes`, `FechaRegistroDes`, `Estatus`) VALUES
+(1, 70, '2015-11-01', '08:00:00', '2015-11-17', '06:00:00', 'Dias de Remodelacion', '2015-11-20 22:11:52', '1'),
+(2, 40, '2015-11-26', '14:00:00', '2015-11-26', '16:00:00', 'Visita al medico', '2015-11-20 22:12:46', '1'),
+(3, 64, '2015-11-26', '15:40:00', '2015-11-26', '17:30:00', 'cita de pasaporte', '2015-11-21 04:21:35', '1');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tconfiguracion`
+--
+
+CREATE TABLE IF NOT EXISTS `tconfiguracion` (
+  `idTconfiguracion` int(11) NOT NULL AUTO_INCREMENT,
+  `maximo_intentosClave` int(11) NOT NULL,
+  `maximo_citasDia` int(11) NOT NULL,
+  `maximo_actividadesDia` int(11) NOT NULL,
+  `maximo_solicitudDia` int(11) NOT NULL,
+  `maximo_DiasAsignablesCitas` int(11) NOT NULL,
+  PRIMARY KEY (`idTconfiguracion`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- Volcar la base de datos para la tabla `tconfiguracion`
 --
 
 
@@ -555,25 +605,6 @@ INSERT INTO `tgrupo` (`codigoGrupo`, `nombre`, `mision`, `vision`, `FechaRegistr
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tiposolicitud`
---
-
-CREATE TABLE IF NOT EXISTS `tiposolicitud` (
-  `idTipoSolicitud` int(11) NOT NULL AUTO_INCREMENT,
-  `Descripcion` varchar(45) NOT NULL,
-  `Requisitos` varchar(100) NOT NULL,
-  `Estatus` char(1) NOT NULL,
-  PRIMARY KEY (`idTipoSolicitud`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
---
--- Volcar la base de datos para la tabla `tiposolicitud`
---
-
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `tipo_actividad`
 --
 
@@ -582,8 +613,9 @@ CREATE TABLE IF NOT EXISTS `tipo_actividad` (
   `nombre` varchar(45) NOT NULL,
   `descripcion` varchar(160) NOT NULL,
   `Estatus` char(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`idtipo_actividad`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+  PRIMARY KEY (`idtipo_actividad`),
+  UNIQUE KEY `nombre` (`nombre`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
 -- Volcar la base de datos para la tabla `tipo_actividad`
@@ -591,8 +623,36 @@ CREATE TABLE IF NOT EXISTS `tipo_actividad` (
 
 INSERT INTO `tipo_actividad` (`idtipo_actividad`, `nombre`, `descripcion`, `Estatus`) VALUES
 (1, 'CURSO', 'REALIZADOS PARA ASD', '1'),
-(2, 'ASZZX', 'WEQWE', '1'),
-(3, 'DASD', 'asqwhsdf', '1');
+(2, 'CLASE', 'WEQWE', '1'),
+(3, 'DASDSAD', 'WQEWEQ', '1'),
+(4, 'CURSOWE', 'DASD', '1'),
+(5, 'CASDAQ', 'QWEQW', '1');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tipo_solicitud`
+--
+
+CREATE TABLE IF NOT EXISTS `tipo_solicitud` (
+  `idTipoSolicitud` int(11) NOT NULL AUTO_INCREMENT,
+  `descripcion` varchar(45) NOT NULL,
+  `cod_foraneo` int(11) NOT NULL,
+  `requisitos` varchar(100) NOT NULL,
+  `SolicitudUnica` bit(1) NOT NULL,
+  `Estatus` char(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`idTipoSolicitud`),
+  KEY `cod_foraneo` (`cod_foraneo`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+
+--
+-- Volcar la base de datos para la tabla `tipo_solicitud`
+--
+
+INSERT INTO `tipo_solicitud` (`idTipoSolicitud`, `descripcion`, `cod_foraneo`, `requisitos`, `SolicitudUnica`, `Estatus`) VALUES
+(1, 'Inscripción de Matrimonio', 2, 'blablabla insc', b'0', '1'),
+(2, 'Inscripción de Bautizo', 1, 'blablabla insc baut', b'0', '1'),
+(3, 'Certificado de Bautizo', 1, 'certificado requisitos bau ', b'0', '1');
 
 -- --------------------------------------------------------
 
@@ -665,6 +725,34 @@ INSERT INTO `tmatrimoniopadrinos` (`idTmatrimonioPadrinos`, `idFmatrimonio`, `id
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `tnoticia`
+--
+
+CREATE TABLE IF NOT EXISTS `tnoticia` (
+  `codigo` int(11) NOT NULL,
+  `tipo` char(1) COLLATE utf8_spanish_ci NOT NULL,
+  `descripccion` varchar(4000) COLLATE utf8_spanish_ci NOT NULL,
+  `fecha_ini` date DEFAULT NULL,
+  `fecha_fin` date DEFAULT NULL,
+  `hora_ini` time DEFAULT NULL,
+  `hora_fin` time DEFAULT NULL,
+  `titulo` varchar(300) COLLATE utf8_spanish_ci NOT NULL,
+  PRIMARY KEY (`codigo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci COMMENT='	';
+
+--
+-- Volcar la base de datos para la tabla `tnoticia`
+--
+
+INSERT INTO `tnoticia` (`codigo`, `tipo`, `descripccion`, `fecha_ini`, `fecha_fin`, `hora_ini`, `hora_fin`, `titulo`) VALUES
+(1, '3', 'ENCUENTRO CON JESUS SACRAMENTADO CON LA PARTICIPACIÓN DEL CLERO DIOCESANO Y LOS FIELES DE TODAS LAS PAROQUIAS DE NUESTRA DIÓCESIS DIA 22 DE NOVIEMBRE DEL 2014 PARTIENDO DE LA IGLESIA SACRADA FAMILIA HASTA LA CATEDRAR DE NUESTRA SEÑORA DE LA CORTEZA', '2014-10-11', '2014-11-23', '09:00:00', '10:00:00', 'ENCUENTRO EUCARISTICO'),
+(2, '3', 'ENCUENTRO CON LAS DIFERENTES PASTORALES QUE FUNCIONAN EN LAS DIFERENTESPAROQUIAS DE NUESTRAS DIÓCESIS Y SUS ASENTES DEPASTORAL EL DIA 28 DE NOVIEMBRE DEL 2014', '2014-10-10', '2014-11-29', '09:00:00', '10:00:00', 'ASAMBLEA DIOCESA DE PASTORAL'),
+(3, '2', 'GLORIA A TI, SEÑOR.\r\nEN AQUEL TIEMPO, LA MULTITUD SE ''APIÑABA ALREDEDOR DE JESÚS Y ÉSTE COMENZÓ A DECIRLES: "LA GENTE DE ESTE TIEMPO ES UNA GENTE PERVERSA. PIDE UNA SEÑAL, PERO NO SE LE DARÁ MAS SEÑAL QUE LA DE JONÁS. PUES ASÍ COMO JONÁS FUÉ UNA SEÑAL PARA LOS HABITANTES DE NÍNIVE, LO MISMO SERÁ EL HIJO DEL HOMBRE PARA LA GENTE DE ESTE TIEMPO.\r\nCUANDO SEAN JUZGADOS LOS HOMBRES DE ESTE TIEMPO, LA REINA DEL SUR SE LEVANTARÁ EL DÍA DEL JUICIO PARA CONDENARLOS, PORQUE ELLA VINO DESDE LOS ULTIMOS RINCONES DE LA TIERRA PARA ESCUCHAR LA SABIDURÍA DE SALOMÓN, Y AQUÍ HAY UNO QUE ES MÁS DE SALOMÓN.\r\nCUANDO SEA JUZGADA LA GENTE DE ESTE TIEMPO, LOS HOMBRES DE NÍNIVE SE LEVANTARÁN EL DÍA DEL JUICIO PARA CONDENARLA, PORQUE ELLOS SE CONVIRTIERON CON LA PREDICACIÓN DE JONÁS Y AQUÍ HAY UNO QUE ES MÁS QUE JÓNAS"''.\r\nPALABRA DEL SEÑOR. "GLORIA A TI, SEÑOR JESÚS".', '2014-10-12', '2014-10-13', '12:00:00', '11:59:00', 'LECTURA DEL SANTO EVANGELIO SEGÚN SAN LUCAS. GLORIA A TÍ SEÑOR'),
+(4, '1', 'JESÚS NO CEDÍO ANTE QUIENES LE RECLAMABAN MAYORES EVIDENCIAS PARA CREER EN ÉL. \r\nLAS SEÑALES QUE LO AUTETIFICABAN ERAS SUFICIENTES. CADA QUIEN ASUME EL RIESGO DE CREER O NO CREER.', '2014-10-12', '2014-10-13', '12:00:00', '11:59:00', '"¿QUE OÍSTE? - ¿QUÉ ESCUCHASTE?"');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `tobispo`
 --
 
@@ -710,6 +798,7 @@ CREATE TABLE IF NOT EXISTS `tparroquiaiglesia` (
   `codigo_archi` int(11) NOT NULL,
   `Estatus` char(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`codigoParroquiaIglesia`),
+  UNIQUE KEY `nombre` (`nombre`),
   KEY `codigo_idx` (`codigo_archi`),
   KEY `idFestado` (`idFestado`),
   KEY `idFciudad` (`idFciudad`),
@@ -722,7 +811,7 @@ CREATE TABLE IF NOT EXISTS `tparroquiaiglesia` (
 --
 
 INSERT INTO `tparroquiaiglesia` (`codigoParroquiaIglesia`, `nombre`, `mision`, `vision`, `direccion`, `telefono`, `correo`, `idFestado`, `idFciudad`, `idFmunicipio`, `idFparroquia`, `fecha_creacion`, `codigo_archi`, `Estatus`) VALUES
-(2, 'SAN ROQUE', 'ASDAS', 'ASDASD', 'DIREC', '21312313', 'ASDASDASD@GMAIL.COM', 17, 12, 29, 48, '1997-10-13', 1, '1'),
+(2, 'SAN ROQUES', 'ASDAS', 'ASDASD', 'DIREC', '21312313', 'ASDASDASD@GMAIL.COM', 17, 12, 29, 48, '1997-10-13', 1, '1'),
 (3, 'LA CORTEZA', 'QWEQWE', 'QWEQWEQWE', 'QWEQWEQWE', '(321)3123131', 'QWEQWE@SDFSDFSD', 17, 12, 29, 48, '1980-12-23', 1, '1'),
 (4, 'SAN MIGUEL', 'MISION', 'VISION', 'QWEQWEQWEQ', '(123)1241241', 'QWEQWEQWE@ASDASD', 17, 1, 29, 1, '1970-03-12', 1, '1');
 
@@ -740,7 +829,7 @@ CREATE TABLE IF NOT EXISTS `tpastoral` (
   `FechaRegistroPastoral` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `Estatus` char(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`codigoPastoral`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- Volcar la base de datos para la tabla `tpastoral`
@@ -748,8 +837,9 @@ CREATE TABLE IF NOT EXISTS `tpastoral` (
 
 INSERT INTO `tpastoral` (`codigoPastoral`, `nombre`, `mision`, `vision`, `FechaRegistroPastoral`, `Estatus`) VALUES
 (1, 'SAN MIGUEL', 'QWEQWE', 'QWEQWE', '2015-11-01 13:20:58', '1'),
-(2, 'SAN ROQUE', 'MISION1', 'VISION1', '2015-11-01 13:25:34', '0'),
-(3, 'LA CORTEZA', 'ASDEQWE', 'ADASDA', '2015-11-01 13:29:27', '1');
+(2, 'SAN ROQUE', 'MISION1', 'VISION1', '2015-11-01 13:25:34', '1'),
+(3, 'LA CORTEZA', 'ASDEQWE', 'ADASDA', '2015-11-01 13:29:27', '1'),
+(4, 'EWQEQWE', 'QWEQQWE', 'QWEQWE', '2015-11-08 23:25:36', '1');
 
 -- --------------------------------------------------------
 
@@ -775,14 +865,10 @@ CREATE TABLE IF NOT EXISTS `tpersonas` (
   `idFmadre` int(11) DEFAULT NULL,
   `FechaNacimiento` date DEFAULT NULL,
   `FechaRegistro` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `idFgradoEstudio` int(11) DEFAULT NULL,
-  `idFtallaFranela` int(11) DEFAULT NULL,
   `idFparroquiaCodigo` int(11) DEFAULT NULL,
   `Estatus` char(1) COLLATE utf8_spanish2_ci NOT NULL DEFAULT '1',
   PRIMARY KEY (`idTpersonas`),
   UNIQUE KEY `Cedula` (`Cedula`),
-  KEY `idFgradoEstudio` (`idFgradoEstudio`),
-  KEY `idFtallaFranela` (`idFtallaFranela`),
   KEY `idFmadre` (`idFmadre`),
   KEY `idFpadre` (`idFpadre`),
   KEY `idFestado` (`idFestado`),
@@ -790,63 +876,64 @@ CREATE TABLE IF NOT EXISTS `tpersonas` (
   KEY `idFmunicipio` (`idFmunicipio`),
   KEY `idFparroquia` (`idFparroquia`),
   KEY `idFparroquiaCodigo` (`idFparroquiaCodigo`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci AUTO_INCREMENT=1095 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci AUTO_INCREMENT=1136 ;
 
 --
 -- Volcar la base de datos para la tabla `tpersonas`
 --
 
-INSERT INTO `tpersonas` (`idTpersonas`, `Nacionalidad`, `Cedula`, `Nombres`, `Apellidos`, `Sexo`, `Direccion`, `idFestado`, `idFciudad`, `idFmunicipio`, `idFparroquia`, `Telefono`, `Correo`, `idFpadre`, `idFmadre`, `FechaNacimiento`, `FechaRegistro`, `idFgradoEstudio`, `idFtallaFranela`, `idFparroquiaCodigo`, `Estatus`) VALUES
-(1, 'V', 'V-12345678', 'GABRIELA', 'FERNANDEZ', 'F', 'PUES', 17, 12, 29, 48, '(412)2312312', 'asdasdasd@ewrwer.com', 947, 974, '1990-03-12', '2015-10-04 02:15:30', 1, 1, 2, '1'),
-(2, 'V', 'V-20390749', 'FRANCISCO', 'HERNANDEZE', 'M', 'ACARIIGUA', NULL, NULL, NULL, NULL, '(412)5279313', 'ASDASDASD@EWRWER.COM', NULL, NULL, '1992-12-01', '2015-10-04 14:58:29', 1, 1, NULL, '1'),
-(945, 'V', 'V-123456', 'ESTEBAN', 'GONZALES', 'M', 'ASDASDASDASDA', 17, 12, 29, 48, '(412)5786523', 'asdasdasd@ewrwer.com', NULL, NULL, '1980-05-22', '2015-10-04 15:38:21', 1, 1, NULL, '1'),
-(946, 'V', 'V-654365', 'MANUEL', 'PEREZ', 'M', 'ASDASDASD', NULL, NULL, NULL, NULL, '(412)5656888', 'asdasdasd@ewrwer.com', NULL, NULL, '1990-10-04', '0000-00-00 00:00:00', 1, 1, 2, '1'),
-(947, 'V', 'V-987698', 'PEDRO', 'BARRIOS', 'M', 'WQEWEQWE', 17, 12, 29, 48, '(412)5878777', 'asdasdasd@ewrwer.com', NULL, NULL, '1992-10-04', '0000-00-00 00:00:00', 1, 1, 2, '1'),
-(948, 'V', 'V-654321', 'JOSE', 'PEREZ', 'M', NULL, NULL, NULL, NULL, NULL, NULL, 'asdasdasd@ewrwer.com', NULL, NULL, NULL, '2015-10-23 17:58:20', NULL, NULL, 2, '1'),
-(949, 'V', 'V-987654', 'MANUEL', 'BARRIOS', 'M', 'WQEQWE QWE', 17, 12, 29, 48, '(412)5477877', 'asdasdasd@ewrwer.com', 2, 1, '1970-03-12', '2015-10-23 17:58:20', 1, 1, 2, '1'),
-(974, 'V', 'V-321314', 'MARIAX', 'PARRA', 'F', 'QWEQWEQEQW', 17, 12, 29, 48, '(412)2312312', 'asdasdasd@ewrwer.com', NULL, NULL, '1970-03-12', '2015-10-24 01:52:14', 1, 1, 4, '1'),
-(975, 'V', 'V-342342', 'FRANCISCO', 'ESCALONA', 'M', 'ASDASDA', 17, 12, 29, 48, '(412)5742125', 'asdasdasd@ewrwer.com', NULL, NULL, '1975-10-09', '2015-10-24 04:06:24', 1, 1, NULL, '1'),
-(980, 'V', 'V-34246345', 'YTAS', 'QWE', 'M', 'QWEQWEQWE', 17, 12, 29, 48, '(412)5888778', 'asdasdasd@ewrwer.com', NULL, NULL, '1970-03-12', '2015-10-24 04:29:41', 1, 1, 3, '1'),
-(981, 'V', 'V-123123', 'WQEQWE', 'QWEQWEQWE', 'M', 'QWEQWEQWE', 17, 12, 29, 48, '(412)5787874', 'asdasdasd@ewrwer.com', NULL, NULL, '1970-03-12', '2015-10-24 04:43:21', 1, 1, NULL, '1'),
-(982, 'V', 'V-32434234', 'rwqerwer', 'werwer', 'M', NULL, NULL, NULL, NULL, NULL, NULL, 'asdasdasd@ewrwer.com', NULL, NULL, NULL, '2015-10-24 16:47:28', NULL, NULL, NULL, '1'),
-(983, 'V', 'V-23112312', 'wqeqweqwe', 'qweqweqwe', 'F', '', NULL, NULL, NULL, NULL, '', 'asdasdasd@ewrwer.com', NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', 1, 1, NULL, '1'),
-(984, 'V', 'V-21312312', 'jesus', 'escalona', 'M', '', NULL, NULL, NULL, NULL, '(342)2423424', 'asdasdasd@ewrwer.com', NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', 1, 1, 4, '1'),
-(989, 'V', 'V-1231231', 'QWEQW', 'QWEQWE', 'M', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2015-10-29 00:24:50', 1, 1, NULL, '1'),
-(992, 'V', 'V-612345', 'JOSEA', 'NIEVESA', 'M', 'SADASDAAS', NULL, NULL, NULL, NULL, '(412)8778784', 'asdasdasd@ewrwer.com', NULL, NULL, '1970-03-12', '2015-10-29 02:09:40', 1, 1, NULL, '1'),
-(1000, 'V', 'V-23423456', 'rafael', 'blanco', 'M', NULL, NULL, NULL, NULL, NULL, '(234)2342342', 'weqweqwe@sdfaaf', NULL, NULL, NULL, '2015-11-02 15:35:43', NULL, NULL, 3, '1'),
-(1030, 'V', 'V-48775565', 'Jessica', 'Dash', 'F', NULL, NULL, NULL, NULL, NULL, '(234)2342342', 'dqweqweqa@asddasd', NULL, NULL, NULL, '2015-11-02 15:50:21', NULL, NULL, 3, '1'),
-(1031, 'V', 'V-43234234', 'asdasda', 'weqqweq', 'F', NULL, NULL, NULL, NULL, NULL, '(324)2342342', '23erqw@asdad ', NULL, NULL, NULL, '2015-11-02 16:16:58', NULL, NULL, 2, '1'),
-(1033, 'V', 'V-32423443', 'qweqwe', 'qweqwe', 'F', NULL, NULL, NULL, NULL, NULL, '(234)2342342', 'qweqweeqwe', NULL, NULL, NULL, '2015-11-03 01:05:11', NULL, NULL, 3, '1'),
-(1034, 'V', 'V-20642644', 'JOSE', 'FIGUEROA', 'M', 'ACARIGUA', NULL, NULL, NULL, NULL, '(416)0599041', NULL, NULL, NULL, '1990-12-27', '2015-11-03 11:11:04', 1, 1, NULL, '1'),
-(1035, 'V', 'V-21057849', 'YETZINET', 'RODRIGUEZ', 'F', 'ARAURE', 17, 1, 29, 1, '(343)2546546', NULL, NULL, NULL, '1988-12-12', '2015-11-03 11:13:38', 1, 1, 2, '1'),
-(1036, 'V', 'V-29642644', 'jose', 'FIGUEROA', 'M', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2015-11-03 11:20:05', NULL, NULL, NULL, '1'),
-(1037, 'V', 'V-22100831', 'JAINI', 'PEREIRA', 'F', '', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', 1, 1, NULL, '1'),
-(1038, 'V', 'V-20363699', 'AARON', 'RODRRGUEZ', 'F', '', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', 1, 1, NULL, '1'),
-(1039, 'V', 'V-21057847', 'A', 'A', 'F', 'SAFSA', 17, 12, 29, 48, '(121)2321434', NULL, NULL, NULL, '1988-12-12', '2015-11-03 11:26:24', 1, 1, 2, '1'),
-(1040, 'V', 'V-7581523', 'ANA', 'DORANTE', 'F', 'ASDQWEQWEQWE', 17, 12, 29, 48, '(123)1231234', NULL, NULL, NULL, '1970-03-21', '2015-11-03 11:26:32', 1, 1, 2, '1'),
-(1041, 'V', '12345678', 'GABRIELA', 'FERNANDEZ', 'F', '', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, '2015-11-03', '0000-00-00 00:00:00', 1, 1, NULL, '1'),
-(1042, 'V', '123456', 'ESTEBAN', 'GONZALES', 'M', '', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, '2015-11-03', '0000-00-00 00:00:00', 1, 1, NULL, '1'),
-(1058, 'V', 'V-321432', 'ESTETTTTTTT', 'AAAAAAAAA', 'M', 'EQWEQWEQWE', 17, 12, 29, 48, '(123)4514124', NULL, NULL, NULL, '1970-03-12', '2015-11-03 11:40:27', 1, 1, 3, '1'),
-(1060, 'V', 'V-1245466', 'DADASDASD', 'QWEQWE', 'M', 'QWEQWE', 17, 1, 29, 1, '(123)1231231', NULL, NULL, NULL, '1970-03-12', '2015-11-03 11:44:53', 1, 1, 4, '1'),
-(1061, 'V', 'V-5323523', 'QWEQWE', 'QWEQWE', 'M', 'QWEQWEQWE', 17, 12, 29, 48, '(123)2312312', NULL, NULL, NULL, '1970-03-21', '2015-11-03 11:45:53', 1, 1, 4, '1'),
-(1062, 'V', 'V-456123', 'ASDQWEQ', 'QWEQWE', 'F', 'ASDADASDAS', 17, 12, 29, 48, '(124)1424412', NULL, NULL, NULL, '1970-03-12', '2015-11-03 11:49:35', 1, 1, 3, '1'),
-(1064, 'V', 'V-34234234', 'QWEQWEQWE', 'QWEQWE', 'M', '2QEWQWEQW', NULL, NULL, NULL, NULL, '(213)1231231', NULL, NULL, NULL, '1970-03-12', '2015-11-03 11:59:02', 1, 1, NULL, '1'),
-(1068, 'V', 'V-324234', 'QEDQWE', 'QWE', 'M', 'QWEQWEQWE', NULL, NULL, NULL, NULL, '(123)1231231', NULL, NULL, NULL, '1970-03-21', '2015-11-03 12:04:37', 1, 1, NULL, '1'),
-(1071, 'V', 'V-6564646', 'HJHY', 'HHH', 'F', '12QWEQW', NULL, NULL, NULL, NULL, '(213)1231231', NULL, NULL, NULL, '1970-03-12', '2015-11-03 12:12:46', 1, 1, NULL, '1'),
-(1072, 'V', 'V-65646434', 'HJHY', 'HHH', 'F', '12QWEQW', NULL, NULL, NULL, NULL, '(213)1231231', NULL, NULL, NULL, '1970-03-12', '2015-11-03 12:14:44', 1, 1, NULL, '1'),
-(1073, 'V', 'V-1234123', 'HJGHJGHJ', 'BVNVNVB', 'F', 'ASDASDSDA', 17, 12, 29, 48, '(123)1231231', NULL, NULL, NULL, '1989-02-12', '2015-11-03 12:17:33', 1, 1, 3, '1'),
-(1076, 'V', 'V-12345665', 'ASDADS', 'ADSASDQWE', 'M', 'QWEQWEQWEQWE', NULL, NULL, NULL, NULL, '(655)6576655', NULL, NULL, NULL, '1978-03-12', '2015-11-03 12:37:06', 1, 1, NULL, '1'),
-(1079, 'V', 'V-575776', ' BVBVBV', 'FHFHG', 'M', 'GUGJJHJHJ', NULL, NULL, NULL, NULL, '(434)5354354', NULL, NULL, NULL, '1990-01-12', '2015-11-03 13:26:59', 1, 1, NULL, '1'),
-(1080, 'V', 'V-23466336', 'ASDASD', 'ASDASD', 'M', 'ASDASDASD', NULL, NULL, NULL, NULL, '(213)1231231', NULL, NULL, NULL, '1990-03-12', '2015-11-03 13:27:48', 1, 1, NULL, '1'),
-(1082, 'V', 'V-21057848', 'MARIA', 'RODRIGUEZ', 'F', 'ACARIGUA', NULL, NULL, NULL, NULL, '(223)1231231', NULL, NULL, NULL, '1991-08-23', '2015-11-03 13:34:27', 1, 1, NULL, '1'),
-(1084, 'V', 'V-21057840', 'AARON', 'RODRIGUEZ', 'M', 'ACARIGUA', 17, 12, 29, 48, '(892)7389273', NULL, NULL, NULL, '1990-12-12', '2015-11-03 13:41:13', 1, 1, 4, '1'),
-(1087, 'V', 'V-32423423', 'QWEQWE', 'QWEQWE', 'M', 'QWEQWEQWE', NULL, NULL, NULL, NULL, '(123)1541515', NULL, NULL, NULL, '1970-03-12', '2015-11-03 14:03:16', 1, 1, NULL, '1'),
-(1088, 'V', 'V-2108744', 'JAINI', 'RODRIGUEZ', 'F', 'QWEQWEQW', NULL, NULL, NULL, NULL, '(312)3123123', NULL, NULL, NULL, '1990-03-12', '2015-11-03 14:16:02', 1, 1, NULL, '1'),
-(1089, 'V', 'V-10504601', 'ana', 'yanet', 'F', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2015-11-03 14:16:02', NULL, NULL, NULL, '1'),
-(1090, 'V', 'V-43254365', 'fhfhg', 'fhjhfgkh', 'F', '', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', 1, 1, NULL, '1'),
-(1091, 'V', 'V-52346676', 'jnghk', 'dfdgfjkgjh', 'F', '', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', 1, 1, NULL, '1'),
-(1093, 'V', 'V-23423452', 'FOPOOOOOOO', 'POOIIIIII', 'M', 'QWEQWEQWEQWE', 17, 12, 29, 48, '(455)4545545', NULL, NULL, NULL, '1946-03-12', '2015-11-04 00:31:07', 1, 1, 3, '1'),
-(1094, 'V', 'V-23423666', 'QUEESES', 'ESOSOOO', 'M', 'QWEQWEQWEQWE', 17, 12, 29, 48, '(562)5325235', NULL, NULL, NULL, '1980-03-12', '2015-11-04 00:36:48', 1, 1, 4, '1');
+INSERT INTO `tpersonas` (`idTpersonas`, `Nacionalidad`, `Cedula`, `Nombres`, `Apellidos`, `Sexo`, `Direccion`, `idFestado`, `idFciudad`, `idFmunicipio`, `idFparroquia`, `Telefono`, `Correo`, `idFpadre`, `idFmadre`, `FechaNacimiento`, `FechaRegistro`, `idFparroquiaCodigo`, `Estatus`) VALUES
+(1, 'V', 'V-12345678', 'GABRIELA', 'FERNANDEZ', 'F', 'PUES', 17, 12, 29, 48, '(412)2312312', 'ASDASDASD@EWRWER.COM', 947, 974, '1990-03-12', '2015-10-04 02:15:30', 3, '1'),
+(2, 'V', 'V-20390749', 'FRANCISCO', 'HERNANDEZE', 'M', 'ACARIIGUA', NULL, NULL, NULL, NULL, '(412)5279313', 'ASDASDASD@EWRWER.COM', NULL, NULL, '1992-12-01', '2015-10-04 14:58:29', 3, '1'),
+(945, 'V', 'V-123456', 'ESTEBAN', 'GONZALES', 'M', 'ASDASDASDASDA', 17, 12, 29, 48, '(412)5786523', 'ASDASDASD@EWRWER.COM', NULL, NULL, '1980-05-22', '2015-10-04 15:38:21', 2, '1'),
+(946, 'V', 'V-654365', 'MANUEL', 'PEREZ', 'M', 'ASDASDASD', NULL, NULL, NULL, NULL, '(412)5656888', 'asdasdasd@ewrwer.com', NULL, NULL, '1990-10-04', '0000-00-00 00:00:00', 2, '1'),
+(947, 'V', 'V-987698', 'PEDRO', 'BARRIOS', 'M', 'WQEWEQWE', 17, 12, 29, 48, '(412)5878777', 'asdasdasd@ewrwer.com', NULL, NULL, '1992-10-04', '0000-00-00 00:00:00', 2, '1'),
+(948, 'V', 'V-654321', 'JOSE', 'PEREZ', 'M', NULL, NULL, NULL, NULL, NULL, '(342)3423423', 'EWRWERW@SADASD', NULL, NULL, NULL, '2015-10-23 17:58:20', 2, '1'),
+(949, 'V', 'V-987654', 'MANUEL', 'BARRIOS', 'M', 'WQEQWE QWE', 17, 12, 29, 48, '(412)5477877', 'asdasdasd@ewrwer.com', 2, 1, '1970-03-12', '2015-10-23 17:58:20', 2, '1'),
+(974, 'V', 'V-321314', 'MARIAX', 'PARRA', 'F', 'QWEQWEQEQW', 17, 12, 29, 48, '(412)2312312', 'asdasdasd@ewrwer.com', NULL, NULL, '1970-03-12', '2015-10-24 01:52:14', 4, '1'),
+(975, 'V', 'V-342342', 'FRANCISCO', 'ESCALONA', 'M', 'ASDASDA', 17, 12, 29, 48, '(412)5742125', 'asdasdasd@ewrwer.com', NULL, NULL, '1975-10-09', '2015-10-24 04:06:24', 2, '1'),
+(980, 'V', 'V-34246345', 'YTAS', 'QWE', 'M', 'QWEQWEQWE', 17, 12, 29, 48, '(412)5888778', 'asdasdasd@ewrwer.com', NULL, NULL, '1970-03-12', '2015-10-24 04:29:41', 3, '1'),
+(981, 'V', 'V-123123', 'WQEQWE', 'QWEQWEQWE', 'M', 'QWEQWEQWE', 17, 12, 29, 48, '(412)5787874', 'ASDASDASD@EWRWER.COM', NULL, NULL, '1970-03-12', '2015-10-24 04:43:21', 4, '1'),
+(982, 'V', 'V-32434234', 'rwqerwer', 'werwer', 'M', NULL, NULL, NULL, NULL, NULL, '(457)8787878', 'asdasdasd@ewrwer.com', NULL, NULL, NULL, '2015-10-24 16:47:28', 2, '1'),
+(983, 'V', 'V-23112312', 'wqeqweqwe', 'qweqweqwe', 'F', '', NULL, NULL, NULL, NULL, '(457)4545778', 'asdasdasd@ewrwer.com', NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', 4, '1'),
+(984, 'V', 'V-21312312', 'jesus', 'escalona', 'M', '', NULL, NULL, NULL, NULL, '(342)2423424', 'asdasdasd@ewrwer.com', NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', 4, '1'),
+(989, 'V', 'V-1231231', 'QWEQW', 'QWEQWE', 'M', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2015-10-29 00:24:50', NULL, '1'),
+(992, 'V', 'V-612345', 'JOSEA', 'NIEVESA', 'M', 'SADASDAAS', NULL, NULL, NULL, NULL, '(412)8778784', 'asdasdasd@ewrwer.com', NULL, NULL, '1970-03-12', '2015-10-29 02:09:40', NULL, '1'),
+(1000, 'V', 'V-23423456', 'rafael', 'blanco', 'M', NULL, NULL, NULL, NULL, NULL, '(234)2342342', 'weqweqwe@sdfaaf', NULL, NULL, NULL, '2015-11-02 15:35:43', 3, '1'),
+(1030, 'V', 'V-48775565', 'Jessica', 'Dash', 'F', NULL, NULL, NULL, NULL, NULL, '(234)2342342', 'dqweqweqa@asddasd', NULL, NULL, NULL, '2015-11-02 15:50:21', 3, '1'),
+(1031, 'V', 'V-43234234', 'ASDASDA', 'WEQQWEQ', 'F', NULL, NULL, NULL, NULL, NULL, '(324)2342342', '23ERQW@ASDAD', NULL, NULL, NULL, '2015-11-02 16:16:58', 2, '1'),
+(1033, 'V', 'V-32423443', 'QWEQWE', 'QWEQWE', 'F', NULL, NULL, NULL, NULL, NULL, '(234)2342342', 'QWEQWEEQWE', NULL, NULL, NULL, '2015-11-03 01:05:11', 3, '1'),
+(1034, 'V', 'V-20642644', 'JOSE', 'FIGUEROA', 'M', 'ACARIGUA', NULL, NULL, NULL, NULL, '(416)0599041', NULL, NULL, NULL, '1990-12-27', '2015-11-03 11:11:04', NULL, '1'),
+(1035, 'V', 'V-21057849', 'YETZINET', 'RODRIGUEZ', 'F', 'ARAURE', 17, 1, 29, 1, '(343)2546546', NULL, NULL, NULL, '1988-12-12', '2015-11-03 11:13:38', 2, '1'),
+(1036, 'V', 'V-29642644', 'jose', 'FIGUEROA', 'M', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2015-11-03 11:20:05', NULL, '1'),
+(1037, 'V', 'V-22100831', 'JAINI', 'PEREIRA', 'F', '', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', NULL, '1'),
+(1038, 'V', 'V-20363699', 'AARON', 'RODRRGUEZ', 'F', '', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', NULL, '1'),
+(1039, 'V', 'V-21057847', 'A', 'A', 'F', 'SAFSA', 17, 12, 29, 48, '(121)2321434', NULL, NULL, NULL, '1988-12-12', '2015-11-03 11:26:24', 2, '1'),
+(1040, 'V', 'V-7581523', 'ANA', 'DORANTE', 'F', 'ASDQWEQWEQWE', 17, 12, 29, 48, '(123)1231234', '', NULL, NULL, '1970-03-21', '2015-11-03 11:26:32', 2, '1'),
+(1041, 'V', '12345678', 'GABRIELA', 'FERNANDEZ', 'F', '', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, '2015-11-03', '0000-00-00 00:00:00', NULL, '1'),
+(1042, 'V', '123456', 'ESTEBAN', 'GONZALES', 'M', '', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, '2015-11-03', '0000-00-00 00:00:00', NULL, '1'),
+(1058, 'V', 'V-321432', 'ESTETTTTTTT', 'AAAAAAAAA', 'M', 'EQWEQWEQWE', 17, 12, 29, 48, '(123)4514124', NULL, NULL, NULL, '1970-03-12', '2015-11-03 11:40:27', 3, '1'),
+(1060, 'V', 'V-1245466', 'DADASDASD', 'QWEQWE', 'M', 'QWEQWE', 17, 1, 29, 1, '(123)1231231', NULL, NULL, NULL, '1970-03-12', '2015-11-03 11:44:53', 4, '1'),
+(1061, 'V', 'V-5323523', 'QWEQWE', 'QWEQWE', 'M', 'QWEQWEQWE', 17, 12, 29, 48, '(123)2312312', NULL, NULL, NULL, '1970-03-21', '2015-11-03 11:45:53', 4, '1'),
+(1062, 'V', 'V-456123', 'MARIA', 'PAEZ', 'F', 'ZOOM PRINCIPAL DE ACARIGUA, EDO-PORTUGUESA.', NULL, NULL, NULL, NULL, '(545)4534534', 'rodescobar44@gmail.com', NULL, NULL, '1980-11-10', '2015-11-03 11:49:35', NULL, '1'),
+(1064, 'V', 'V-34234234', 'QWEQWEQWE', 'QWEQWE', 'M', '2QEWQWEQW', NULL, NULL, NULL, NULL, '(213)1231231', NULL, NULL, NULL, '1970-03-12', '2015-11-03 11:59:02', NULL, '1'),
+(1068, 'V', 'V-324234', 'QEDQWE', 'QWE', 'M', 'QWEQWEQWE', NULL, NULL, NULL, NULL, '(123)1231231', NULL, NULL, NULL, '1970-03-21', '2015-11-03 12:04:37', NULL, '1'),
+(1071, 'V', 'V-6564646', 'HJHY', 'HHH', 'F', '12QWEQW', NULL, NULL, NULL, NULL, '(213)1231231', NULL, NULL, NULL, '1970-03-12', '2015-11-03 12:12:46', NULL, '1'),
+(1072, 'V', 'V-65646434', 'HJHY', 'HHH', 'F', '12QWEQW', NULL, NULL, NULL, NULL, '(213)1231231', NULL, NULL, NULL, '1970-03-12', '2015-11-03 12:14:44', NULL, '1'),
+(1073, 'V', 'V-1234123', 'HJGHJGHJ', 'BVNVNVB', 'F', 'ASDASDSDA', 17, 12, 29, 48, '(123)1231231', NULL, NULL, NULL, '1989-02-12', '2015-11-03 12:17:33', 3, '1'),
+(1076, 'V', 'V-12345665', 'ASDADS', 'ADSASDQWE', 'M', 'QWEQWEQWEQWE', NULL, NULL, NULL, NULL, '(655)6576655', NULL, NULL, NULL, '1978-03-12', '2015-11-03 12:37:06', NULL, '1'),
+(1079, 'V', 'V-575776', ' BVBVBV', 'FHFHG', 'M', 'GUGJJHJHJ', NULL, NULL, NULL, NULL, '(434)5354354', NULL, NULL, NULL, '1990-01-12', '2015-11-03 13:26:59', NULL, '1'),
+(1080, 'V', 'V-23466336', 'ASDASD', 'ASDASD', 'M', 'ASDASDASD', NULL, NULL, NULL, NULL, '(213)1231231', NULL, NULL, NULL, '1990-03-12', '2015-11-03 13:27:48', NULL, '1'),
+(1082, 'V', 'V-21057848', 'MARIA', 'RODRIGUEZ', 'F', 'ACARIGUA', NULL, NULL, NULL, NULL, '(223)1231231', NULL, NULL, NULL, '1991-08-23', '2015-11-03 13:34:27', NULL, '1'),
+(1084, 'V', 'V-21057840', 'AARON', 'RODRIGUEZ', 'M', 'ACARIGUA', 17, 12, 29, 48, '(892)7389273', NULL, NULL, NULL, '1990-12-12', '2015-11-03 13:41:13', 4, '1'),
+(1087, 'V', 'V-32423423', 'QWEQWE', 'QWEQWE', 'M', 'QWEQWEQWE', NULL, NULL, NULL, NULL, '(123)1541515', NULL, NULL, NULL, '1970-03-12', '2015-11-03 14:03:16', NULL, '1'),
+(1088, 'V', 'V-2108744', 'JAINI', 'RODRIGUEZ', 'F', 'QWEQWEQW', NULL, NULL, NULL, NULL, '(312)3123123', NULL, NULL, NULL, '1990-03-12', '2015-11-03 14:16:02', NULL, '1'),
+(1089, 'V', 'V-10504601', 'ana', 'yanet', 'F', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2015-11-03 14:16:02', NULL, '1'),
+(1090, 'V', 'V-43254365', 'fhfhg', 'fhjhfgkh', 'F', '', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', NULL, '1'),
+(1091, 'V', 'V-52346676', 'jnghk', 'dfdgfjkgjh', 'F', '', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, '0000-00-00', '0000-00-00 00:00:00', NULL, '1'),
+(1093, 'V', 'V-23423452', 'FOPOOOOOOO', 'POOIIIIII', 'M', 'QWEQWEQWEQWE', 17, 12, 29, 48, '(455)4545545', NULL, NULL, NULL, '1946-03-12', '2015-11-04 00:31:07', 3, '1'),
+(1094, 'V', 'V-23423666', 'QUEESES', 'ESOSOOO', 'M', 'QWEQWEQWEQWE', 17, 12, 29, 48, '(562)5325235', NULL, NULL, NULL, '1980-03-12', '2015-11-04 00:36:48', 4, '1'),
+(1135, 'V', 'V-2312313', 'qweqwe', 'qweqwe', 'F', NULL, NULL, NULL, NULL, NULL, '(435)3453534', '345werwe', NULL, NULL, NULL, '2015-11-08 23:49:15', 3, '1');
 
 -- --------------------------------------------------------
 
@@ -884,16 +971,18 @@ INSERT INTO `tsacerdote` (`idTsacerdote`, `idFiglesia`, `idFpersona`, `FechaRegi
 
 CREATE TABLE IF NOT EXISTS `tsacramento` (
   `codigoSacramento` int(11) NOT NULL AUTO_INCREMENT,
-  `Nombre` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish2_ci NOT NULL,
-  `tipo_sacramento` char(1) NOT NULL,
-  `Estatus` char(1) NOT NULL,
+  `descripcion` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish2_ci NOT NULL,
+  `Estatus` char(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`codigoSacramento`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Volcar la base de datos para la tabla `tsacramento`
 --
 
+INSERT INTO `tsacramento` (`codigoSacramento`, `descripcion`, `Estatus`) VALUES
+(1, 'Bautizo', '1'),
+(2, 'Matrimonio', '1');
 
 -- --------------------------------------------------------
 
@@ -908,17 +997,25 @@ CREATE TABLE IF NOT EXISTS `tsolicitud` (
   `FechaCita` date NOT NULL,
   `HoraCita` time NOT NULL,
   `FechaRegistro` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `EstadoSolicitud` bit(1) NOT NULL,
+  `EstadoSolicitud` char(1) NOT NULL DEFAULT '0',
   `Estatus` char(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`idTSolicitud`),
+  UNIQUE KEY `FechaCita` (`FechaCita`,`HoraCita`),
   KEY `idFsolicitante_idx` (`idFSolicitante`),
   KEY `idFtipoSolicitud_idx` (`idFtipoSolicitud`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=74 ;
 
 --
 -- Volcar la base de datos para la tabla `tsolicitud`
 --
 
+INSERT INTO `tsolicitud` (`idTSolicitud`, `idFSolicitante`, `idFtipoSolicitud`, `FechaCita`, `HoraCita`, `FechaRegistro`, `EstadoSolicitud`, `Estatus`) VALUES
+(1, 1062, 2, '2015-11-26', '14:00:00', '2015-11-14 16:55:28', '0', '1'),
+(2, 1062, 1, '2015-11-26', '08:00:00', '2015-11-14 18:17:30', '3', '1'),
+(3, 1062, 3, '2015-11-26', '09:00:00', '2015-11-14 18:20:53', '3', '1'),
+(71, 1062, 2, '2015-11-26', '17:30:00', '2015-11-21 05:13:54', '0', '1'),
+(72, 1062, 2, '2015-11-26', '18:00:00', '2015-11-23 23:02:42', '0', '1'),
+(73, 1062, 2, '2015-11-27', '08:00:00', '2015-11-24 03:54:35', '0', '1');
 
 -- --------------------------------------------------------
 
@@ -941,7 +1038,7 @@ CREATE TABLE IF NOT EXISTS `tusuarios` (
   UNIQUE KEY `Usuario` (`Usuario`),
   UNIQUE KEY `idFpersonas` (`idFpersonas`),
   KEY `Rol` (`Rol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci AUTO_INCREMENT=88 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci AUTO_INCREMENT=87 ;
 
 --
 -- Volcar la base de datos para la tabla `tusuarios`
@@ -949,13 +1046,13 @@ CREATE TABLE IF NOT EXISTS `tusuarios` (
 
 INSERT INTO `tusuarios` (`idTusuario`, `idFpersonas`, `Usuario`, `Clave`, `Rol`, `PreguntaSecreta`, `RespuestaSecreta`, `UltimoIngreso`, `FechaRegistro`, `Estatus`) VALUES
 (35, 2, '20390749', '3ea48a72acdcd768cbc56e5fdaf3580da935e1bb', 1, 'Mi primera mascota?', 'TEEMO', '2015-05-26 00:00:00', '2015-11-03 14:36:17', 1),
-(39, 992, '612345', '63982e54a7aeb0d89910475ba6dbd3ca6dd4e5a1', 4, 'COMO QUE?', 'ALO', '0000-00-00 00:00:00', '2015-10-29 02:58:58', 1),
-(40, 1034, '20642644', 'd6eb5edae35cc7e93d8c0a8e943e225f1ef0b25a', 1, 'bla', 'BLO', '0000-00-00 00:00:00', '2015-11-03 11:11:28', 1),
+(39, 992, '612345', '2d8b4b5b1d50ccb2887d0f8f9e04eaaf86347314', 4, 'COMO QUE?', 'ALO', '0000-00-00 00:00:00', '2015-10-29 02:58:58', 1),
+(40, 1034, '20642644', '4937a6c28433d7d918bb6aed450f111cc0c517a0', 1, 'bla', 'BLO', '0000-00-00 00:00:00', '2015-11-03 11:11:28', 1),
 (41, 1039, '21057847', '02B312C882D0A7A910B7C0100E72B93246D3A83F', 4, '123', '123', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1),
 (57, 1058, '321432', '10470C3B4B1FED12C3BAAC014BE15FAC67C6E815', 4, 'EWQ', 'EWQ', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1),
 (58, 1060, '1245466', '234AC936FA59F96A70F91882EB66A6BD', 4, 'AS', 'AS', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1),
 (59, 1061, '5323523', '3EA48A72ACDCD768CBC56E5FDAF3580DA935E1BB', 4, '12', '12', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1),
-(60, 1062, '456123', 'fe703d258c7ef5f50b71e06565a65aa07194907f', 4, 'ADS', 'ADS', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1),
+(60, 1062, '456123', 'b58a4e82cc4694e5abb4b75cfe2ed371a8d158c8', 4, 'DA', 'DA', '2015-11-14 10:14:12', '2015-11-14 15:41:42', 1),
 (61, 1064, '34234234', 'adcd7048512e64b48da55b027577886ee5a36350', 3, 'qwe', 'QWE', '0000-00-00 00:00:00', '2015-11-03 11:59:26', 1),
 (62, 1068, '324234', '63982e54a7aeb0d89910475ba6dbd3ca6dd4e5a1', 4, 'qw', 'QW', '0000-00-00 00:00:00', '2015-11-03 12:05:01', 1),
 (63, 1071, '6564646', '63982e54a7aeb0d89910475ba6dbd3ca6dd4e5a1', 4, 'ew', 'EW', '0000-00-00 00:00:00', '2015-11-03 12:13:10', 1),
@@ -969,10 +1066,9 @@ INSERT INTO `tusuarios` (`idTusuario`, `idFpersonas`, `Usuario`, `Clave`, `Rol`,
 (71, 1087, '32423423', '63982e54a7aeb0d89910475ba6dbd3ca6dd4e5a1', 4, 'wqeqweqwe', 'QWEQWEQWE', '0000-00-00 00:00:00', '2015-11-03 14:03:40', 1),
 (76, 1040, '7581523', '63982e54a7aeb0d89910475ba6dbd3ca6dd4e5a1', 4, 'RE', 'RE', '0000-00-00 00:00:00', '2015-11-03 14:35:46', 1),
 (78, 1088, '2108744', '63982e54a7aeb0d89910475ba6dbd3ca6dd4e5a1', 4, 'EW', 'EW', '0000-00-00 00:00:00', '2015-11-03 14:39:02', 1),
-(80, 1038, '20363699', '63982e54a7aeb0d89910475ba6dbd3ca6dd4e5a1', 1, 'EWQ', 'EWQ', '0000-00-00 00:00:00', '2015-11-03 14:41:10', 1),
-(84, 989, '1231231', '63982e54a7aeb0d89910475ba6dbd3ca6dd4e5a1', 4, 'ew', 'EW', '0000-00-00 00:00:00', '2015-11-03 15:32:34', 1),
-(86, 1093, '23423452', '63982e54a7aeb0d89910475ba6dbd3ca6dd4e5a1', 4, 'EWQ', 'EWQ', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1),
-(87, 1094, '23423666', '63982e54a7aeb0d89910475ba6dbd3ca6dd4e5a1', 4, 'RES', 'RES', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1);
+(80, 1038, '20363699', '9593f3a5a8c8167704f8906ea6f4407b6e2a4478', 1, 'EWQ', 'EWQ', '0000-00-00 00:00:00', '2015-11-03 14:41:10', 1),
+(84, 989, '1231231', '8c986d1489801af6ade738178c1c72560559c255', 3, 'ew', 'EW', '0000-00-00 00:00:00', '2015-11-03 15:32:34', 1),
+(86, 1093, '23423452', '63982e54a7aeb0d89910475ba6dbd3ca6dd4e5a1', 4, 'EWQ', 'EWQ', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1);
 
 --
 -- Filtros para las tablas descargadas (dump)
@@ -988,7 +1084,7 @@ ALTER TABLE `certificado`
 -- Filtros para la tabla `ciudad`
 --
 ALTER TABLE `ciudad`
-  ADD CONSTRAINT `ciudad_ibfk_1` FOREIGN KEY (`cod_foraneo`) REFERENCES `parroquia` (`cod_parroquia`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `ciudad_ibfk_1` FOREIGN KEY (`cod_foraneo`) REFERENCES `estado` (`cod_estado`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Filtros para la tabla `detalle_grupo`
@@ -1018,13 +1114,6 @@ ALTER TABLE `parroquia`
   ADD CONSTRAINT `parroquia_ibfk_1` FOREIGN KEY (`cod_foraneo`) REFERENCES `municipio` (`cod_municipio`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Filtros para la tabla `solicitud_sacramento`
---
-ALTER TABLE `solicitud_sacramento`
-  ADD CONSTRAINT `fk_codigoPersona_idx` FOREIGN KEY (`codigo_persona`) REFERENCES `tpersonas` (`idTpersonas`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `scarmento_idx` FOREIGN KEY (`codigo_sacramento`) REFERENCES `tsacramento` (`codigoSacramento`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
 -- Filtros para la tabla `tactividad`
 --
 ALTER TABLE `tactividad`
@@ -1034,17 +1123,17 @@ ALTER TABLE `tactividad`
 -- Filtros para la tabla `tagendadiocesana`
 --
 ALTER TABLE `tagendadiocesana`
-  ADD CONSTRAINT `tagendadiocesana_ibfk_3` FOREIGN KEY (`idFcodigo_grupo`) REFERENCES `tgrupo` (`codigoGrupo`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `tagendadiocesana_ibfk_1` FOREIGN KEY (`idFcodigo_actividad`) REFERENCES `tactividad` (`codigoActividad`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `tagendadiocesana_ibfk_2` FOREIGN KEY (`idFcodigo_pastoral`) REFERENCES `tpastoral` (`codigoPastoral`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `tagendadiocesana_ibfk_2` FOREIGN KEY (`idFcodigo_pastoral`) REFERENCES `tpastoral` (`codigoPastoral`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `tagendadiocesana_ibfk_3` FOREIGN KEY (`idFcodigo_grupo`) REFERENCES `tgrupo` (`codigoGrupo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Filtros para la tabla `tagendaparroquial`
 --
 ALTER TABLE `tagendaparroquial`
-  ADD CONSTRAINT `tagendaparroquial_ibfk_4` FOREIGN KEY (`idFcodigo_pastoral`) REFERENCES `tpastoral` (`codigoPastoral`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `tagendaparroquial_ibfk_1` FOREIGN KEY (`idFcodigo_actividad`) REFERENCES `tactividad` (`codigoActividad`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `tagendaparroquial_ibfk_3` FOREIGN KEY (`idFcodigo_grupo`) REFERENCES `tgrupo` (`codigoGrupo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `tagendaparroquial_ibfk_3` FOREIGN KEY (`idFcodigo_grupo`) REFERENCES `tgrupo` (`codigoGrupo`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `tagendaparroquial_ibfk_4` FOREIGN KEY (`idFcodigo_pastoral`) REFERENCES `tpastoral` (`codigoPastoral`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Filtros para la tabla `tbautizo`
@@ -1076,6 +1165,18 @@ ALTER TABLE `tcapilla`
   ADD CONSTRAINT `tcapilla_ibfk_2` FOREIGN KEY (`idFciudad`) REFERENCES `ciudad` (`cod_ciudad`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `tcapilla_ibfk_3` FOREIGN KEY (`idFmunicipio`) REFERENCES `municipio` (`cod_municipio`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `tcapilla_ibfk_4` FOREIGN KEY (`idFparroquia`) REFERENCES `parroquia` (`cod_parroquia`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Filtros para la tabla `tcitas_dias_desactivados`
+--
+ALTER TABLE `tcitas_dias_desactivados`
+  ADD CONSTRAINT `tcitas_dias_desactivados_ibfk_1` FOREIGN KEY (`idFresponsableDes`) REFERENCES `tusuarios` (`idTusuario`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Filtros para la tabla `tipo_solicitud`
+--
+ALTER TABLE `tipo_solicitud`
+  ADD CONSTRAINT `tipo_solicitud_ibfk_1` FOREIGN KEY (`cod_foraneo`) REFERENCES `tsacramento` (`codigoSacramento`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Filtros para la tabla `tmatrimonio`
@@ -1132,7 +1233,7 @@ ALTER TABLE `tsacerdote`
 --
 ALTER TABLE `tsolicitud`
   ADD CONSTRAINT `idFsolicitante` FOREIGN KEY (`idFSolicitante`) REFERENCES `tpersonas` (`idTpersonas`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `idFtipoSolicitud` FOREIGN KEY (`idFtipoSolicitud`) REFERENCES `tiposolicitud` (`idTipoSolicitud`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `idFtipoSolicitud` FOREIGN KEY (`idFtipoSolicitud`) REFERENCES `tipo_solicitud` (`idTipoSolicitud`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Filtros para la tabla `tusuarios`
