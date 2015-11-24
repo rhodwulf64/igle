@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 24-11-2015 a las 04:29:31
+-- Tiempo de generación: 24-11-2015 a las 05:24:07
 -- Versión del servidor: 5.1.41
 -- Versión de PHP: 5.3.1
 
@@ -998,24 +998,24 @@ CREATE TABLE IF NOT EXISTS `tsolicitud` (
   `HoraCita` time NOT NULL,
   `FechaRegistro` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `EstadoSolicitud` char(1) NOT NULL DEFAULT '0',
+  `MotivoSuspension` varchar(200) NOT NULL,
+  `MotivoAnulacion` varchar(200) NOT NULL,
   `Estatus` char(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`idTSolicitud`),
   UNIQUE KEY `FechaCita` (`FechaCita`,`HoraCita`),
   KEY `idFsolicitante_idx` (`idFSolicitante`),
   KEY `idFtipoSolicitud_idx` (`idFtipoSolicitud`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=74 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=93 ;
 
 --
 -- Volcar la base de datos para la tabla `tsolicitud`
 --
 
-INSERT INTO `tsolicitud` (`idTSolicitud`, `idFSolicitante`, `idFtipoSolicitud`, `FechaCita`, `HoraCita`, `FechaRegistro`, `EstadoSolicitud`, `Estatus`) VALUES
-(1, 1062, 2, '2015-11-26', '14:00:00', '2015-11-14 16:55:28', '0', '1'),
-(2, 1062, 1, '2015-11-26', '08:00:00', '2015-11-14 18:17:30', '3', '1'),
-(3, 1062, 3, '2015-11-26', '09:00:00', '2015-11-14 18:20:53', '3', '1'),
-(71, 1062, 2, '2015-11-26', '17:30:00', '2015-11-21 05:13:54', '0', '1'),
-(72, 1062, 2, '2015-11-26', '18:00:00', '2015-11-23 23:02:42', '0', '1'),
-(73, 1062, 2, '2015-11-27', '08:00:00', '2015-11-24 03:54:35', '0', '1');
+INSERT INTO `tsolicitud` (`idTSolicitud`, `idFSolicitante`, `idFtipoSolicitud`, `FechaCita`, `HoraCita`, `FechaRegistro`, `EstadoSolicitud`, `MotivoSuspension`, `MotivoAnulacion`, `Estatus`) VALUES
+(1, 1062, 2, '2015-11-26', '14:00:00', '2015-11-14 16:55:28', '0', '', '', '1'),
+(2, 1062, 1, '2015-11-26', '08:00:00', '2015-11-14 18:17:30', '0', '', '', '1'),
+(3, 1062, 3, '2015-11-26', '09:00:00', '2015-11-14 18:20:53', '0', '', '', '1'),
+(92, 1062, 2, '2015-11-26', '17:30:00', '2015-11-24 05:23:03', '0', '', '', '1');
 
 -- --------------------------------------------------------
 
